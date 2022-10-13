@@ -1,0 +1,14 @@
+version: '3'
+services:
+  db:
+    image: postgres:14-alpine
+    container_name: postgres
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: non_manaka
+      POSTGRES_DB: hccc_judge
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      #- db_store:/var/lib/postgresql/data
+      - ./scripts:/docker-entrypoint-initdb.d
