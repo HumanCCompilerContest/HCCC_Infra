@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% import "_submit.html" as submit %}
+
+{% block app %}
+
+<form action="/submit" method="post" class="form mb-6">
+    <div class="field">
+        <div class="control">
+            <textarea name="asem" class="textarea" placeholder="write assembly"></textarea>
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <button class="button is-success">
+                submit
+            </button>
+        </div>
+    </div>
+</form>
+
+{% for s in submits %}
+{% call submit::render(s) %}
+{% endfor %}
+
+{% endblock %}

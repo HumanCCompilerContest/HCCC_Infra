@@ -1,0 +1,10 @@
+{% macro render(submit) %}
+<div class="notification mt-4">
+    <button class="delete" type="submit"></button>
+    <p class="is-size-5 mb-4">{{submit.asem}}</p>
+    <p>
+    <span class="is-size-6">{{submit.user_id}}</span>
+    <span class="is-size-7">{{submit.time}}</span>
+    </p>
+</div>
+{% endmacro %}

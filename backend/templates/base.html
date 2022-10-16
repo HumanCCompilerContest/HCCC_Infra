@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Rust Webapp Tutorial</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <style lang="text/css">
+    .container {
+      display: flex;
+      justify-content: center;
+      margin-top: 100px;
+    }
+    .app {
+      width: 960px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="app">
+    {% block app %}{% endblock %}
+  </div>
+</div>
+
+</body>
+</html>
