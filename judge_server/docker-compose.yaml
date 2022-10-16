@@ -10,5 +10,7 @@ services:
       POSTGRES_DB: hccc_judge
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      #- db_store:/var/lib/postgresql/data
+      - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
+volumes:
+  db_store:
