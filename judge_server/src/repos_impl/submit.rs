@@ -10,7 +10,7 @@ pub struct SubmitImpl<'a> {
 
 #[axum::async_trait]
 impl<'a> Submits for SubmitImpl<'a> {
-    async fn get_submit(&self, user_id: u32, submit_id: u32) -> Option<Submit> {
+    async fn get_submit(&self, user_id: i32, submit_id: i32) -> Option<Submit> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
             .query_opt("SELECT * FROM submits WHERE id = $1 AND user_id = $2", &[&submit_id, &user_id])

@@ -31,7 +31,7 @@ async fn post(form: Form<SubmitForm>, Extension(repository_provider): Extension<
 
 #[derive(Deserialize)]
 struct SubmitForm {
-    user_id: u32,
-    submit_id: u32,
+    user_id: i32,
+    submit_id: i32,
 }
 
