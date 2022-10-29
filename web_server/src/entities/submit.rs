@@ -4,6 +4,7 @@ use postgres_types::{ToSql, FromSql};
 #[derive(Debug, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
 pub enum JudgeResult {
+    Pending,
     AC,
     WA,
     AE,
@@ -37,7 +38,7 @@ impl Submit {
             user_id: 0,
             time: Utc::now(),
             asem: asem.to_string(),
-            result: JudgeResult::SystemError,
+            result: JudgeResult::Pending,
         }
     }
 

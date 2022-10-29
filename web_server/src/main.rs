@@ -7,7 +7,7 @@ async fn main() {
     }
     tracing_subscriber::fmt::init();
 
-    let app = backend::app().await;
+    let app = web_server::app().await;
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     tracing::debug!("listening on {}", addr);

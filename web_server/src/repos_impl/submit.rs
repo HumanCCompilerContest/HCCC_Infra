@@ -34,13 +34,11 @@ impl<'a> Submits for SubmitImpl<'a> {
     
     async fn store(&self, entity: &Submit) {
         let conn = self.pool.get().await.unwrap();
-        dbg!(&entity.result);
         conn.execute(
             "INSERT INTO submits (user_id, time, asem, result) VALUES ($1, $2, $3, $4)",
             &[&entity.user_id, &entity.time, &entity.asem, &entity.result],
         )
         .await
-        //.ok();
         .unwrap();
     }
 }
