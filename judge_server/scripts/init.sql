@@ -8,7 +8,7 @@ CREATE TYPE JudgeResult AS ENUM (
     'SystemError'
 );
 
-CREATE TABLE players ( -- ユーザ
+CREATE TABLE accounts ( -- ユーザ
 	id serial primary key,
 	name text not null,
 	password text not null
