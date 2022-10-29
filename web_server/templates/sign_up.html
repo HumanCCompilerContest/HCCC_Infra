@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block app %}
+
+<form action="/accounts/new" method="post">
+  <div class="field">
+    <p class="control has-icons-left">
+      <input class="input is-large" name="email" type="email" placeholder="メールアドレス">
+      <span class="icon is-medium is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control has-icons-left">
+      <input class="input is-large" name="password" type="password" placeholder="パスワード">
+      <span class="icon is-medium is-left">
+      <i class="fas fa-lock"></i>
+    </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control has-icons-left">
+      <input class="input is-large" name="display_name" type="text" placeholder="表示名">
+      <span class="icon is-medium is-left">
+      <i class="fas fa-id-badge"></i>
+    </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control">
+      <button class="button is-primary is-large">
+        新規登録
+      </button>
+    </p>
+  </div>
+</form>
+
+{% endblock %}

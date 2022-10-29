@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block app %}
+
+{% if error %}
+
+<div class="notification is-danger is-light">
+  メールアドレスまたはパスワードが違います。
+</div>
+
+{% endif %}
+
+<form action="/accounts/session" method="post">
+  <div class="field">
+    <p class="control has-icons-left">
+      <input class="input is-large" name="email" type="email" placeholder="メールアドレス">
+      <span class="icon is-medium is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control has-icons-left">
+      <input class="input is-large" name="password" type="password" placeholder="パスワード">
+      <span class="icon is-medium is-left">
+      <i class="fas fa-lock"></i>
+    </span>
+    </p>
+  </div>
+  <div class="field">
+    <p class="control">
+      <button class="button is-primary is-large">
+        ログイン
+      </button>
+    </p>
+  </div>
+  <p class="mt-5">
+    <a href="/register">新規登録</a>
+  </p>
+</form>
+
+{% endblock %}
