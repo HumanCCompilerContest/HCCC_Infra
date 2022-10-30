@@ -7,6 +7,8 @@ async fn main() {
     }
     tracing_subscriber::fmt::init();
 
+    web_server::setup_session_store().await;
+
     let app = web_server::app().await;
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));

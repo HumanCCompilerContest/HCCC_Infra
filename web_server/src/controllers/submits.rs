@@ -6,6 +6,7 @@ use axum::{
 };
 use serde::Deserialize;
 
+use crate::request::UserContext;
 use crate::database::RepositoryProvider;
 use crate::services;
 
@@ -14,9 +15,13 @@ pub fn submit() -> Router {
         .route("/", routing::post(post))
 }
 
-async fn post(form: Form<SubmitForm>, Extension(repository_provider): Extension<RepositoryProvider>) -> impl IntoResponse {
+async fn post(
+    user_context: UserContext,
+    form: Form<SubmitForm>,
+    Extension(repository_provider): Extension<RepositoryProvider>
+) -> impl IntoResponse {
     let submit_repo = repository_provider.submit();
-    services::create_submit(&submit_repo, &form.asem).await;
+    services::create_submit(&submit_repo, user_context.user_id, &form.asem).await;
     Redirect::to("/")
 }
 

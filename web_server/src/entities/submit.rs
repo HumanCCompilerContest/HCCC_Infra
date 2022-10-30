@@ -32,10 +32,10 @@ impl Submit {
         }
     }
 
-    pub fn create(asem: &str) -> Submit {
+    pub fn create(user_id: i32, asem: &str) -> Submit {
         Submit { 
             id: 0,
-            user_id: 0,
+            user_id,
             time: Utc::now(),
             asem: asem.to_string(),
             result: JudgeResult::Pending,
