@@ -15,3 +15,4 @@ Cargo.lock
 
 *.s
 *.o
+test_target
