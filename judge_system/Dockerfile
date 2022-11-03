@@ -4,6 +4,8 @@ ENTRYPOINT ["/work/judge_system"]
 WORKDIR /work
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN mkdir /work/build
+RUN mkdir /work/build/src
 
 COPY Cargo.toml /work/build
 COPY src/ /work/build/src/
