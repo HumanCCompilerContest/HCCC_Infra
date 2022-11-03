@@ -10,7 +10,7 @@ CREATE TYPE JudgeResult AS ENUM (
 
 CREATE TABLE accounts ( -- ユーザ
 	id serial primary key,
-	name text not null,
+	name text unique not null,
 	password text not null
     -- session data?
 );
