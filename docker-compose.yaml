@@ -12,5 +12,11 @@ services:
     volumes:
       - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
+  judge_system:
+    build:
+      context: ./judge_system
+      dockerfile: Dockerfile
+    container_name: judge_system
+
 volumes:
   db_store:
