@@ -1,10 +1,12 @@
+mod run_test;
+
 use std::fs::File;
-use tokio::process::Command;
 use std::io::Write;
-use std::time::Duration;
+use tokio::process::Command;
+use clap::arg;
 
 #[allow(dead_code)]
-enum ExitCode {
+pub enum ExitCode {
     AC = 0,
     WA,
     AE,
@@ -14,59 +16,75 @@ enum ExitCode {
     SystemError,
 }
 
+pub enum ExeOption {
+    JustRun,
+    ExitCode,
+    Output,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    const TLE_MSEC: u64 = 2000;
-    let args: Vec<String> = std::env::args().collect();
+    let app = clap::app_from_crate!()
+            .arg(arg!(--justrun ... "just run").required(false))
+            .arg(arg!(--exitcode <testcase_number> ... "check exitcode").required(false))
+            .arg(arg!(--output <testcase_number> "check stdout").required(false))
+            .arg(arg!(<asem> "assembly"))
+            .get_matches();
+    let flag_map = | | {
+        (
+            app.is_present("justrun"),
+            app.is_present("exitcode"),
+            app.is_present("output"),
+        )
+    };
+    let exe_option = match flag_map() {
+        (true, _, _) => ExeOption::JustRun,
+        (_, true, _) => ExeOption::ExitCode,
+        (_, _, true) => ExeOption::Output,
+        _ => ExeOption::JustRun,
+    };
+
+    let asem = match app.value_of("asem") {
+        Some(a) => a.to_string(),
+        None => panic!("please specify target ELF file."),
+    };
     let mut file = File::create("./submit.s")?;
-    writeln!(file, "{}", args[1])?;
+    writeln!(file, "{}", asem)?;
     file.flush()?;
 
-    let object = Command::new("bash")
+    // assemble
+    Command::new("bash")
         .arg("-c")
         .arg("as submit.s -o tmp.o")
         .output()
-        .await;
+        .await
+        .unwrap_or_else(|_| {
+            eprintln!("Assembling Error");
+            std::process::exit(ExitCode::AE as i32);
+        });
 
-    if let Err(_) = object {
-        eprintln!("Assembling Error");
-        std::process::exit(ExitCode::AE as i32);
-    }
-
-    let elf = Command::new("bash")
+    // link
+    Command::new("bash")
         .arg("-c")
         .arg("gcc -v -static -no-pie tmp.o -o test_target")
         .output()
-        .await;
+        .await
+        .unwrap_or_else(|_| {
+            eprintln!("Linking Error");
+            std::process::exit(ExitCode::LE as i32);
+        });
 
-    if let Err(_) = elf {
-        eprintln!("Linking Error");
-        std::process::exit(ExitCode::LE as i32);
-    }
-
-    let test = tokio::time::timeout(
-        Duration::from_millis(TLE_MSEC as u64),
-        Command::new("bash")
-            .kill_on_drop(true)
-            .arg("-c")
-            .arg("./test_target")
-            .output()
-    )
-    .await
-    .unwrap_or_else(|_| {
-        eprintln!("Time Limit Exceeded");
-        std::process::exit(ExitCode::TLE as i32);
-    });
-
-    let output = match test {
-        Ok(r) => r,
-        Err(_) => {
-            eprintln!("Runtime Error");
-            std::process::exit(ExitCode::RE as i32);
+    match exe_option {
+        ExeOption::JustRun => run_test::just_exec().await,
+        ExeOption::ExitCode => {
+            let testcase_number = app.value_of("exitcode").unwrap();
+            run_test::with_testcase(testcase_number, exe_option).await;
         },
-    };
-
-    println!("{:?}", String::from_utf8_lossy(&output.stdout));
+        ExeOption::Output => {
+            let testcase_number = app.value_of("output").unwrap();
+            run_test::with_testcase(testcase_number, exe_option).await;
+        },
+    }
 
     Ok(())
 }
