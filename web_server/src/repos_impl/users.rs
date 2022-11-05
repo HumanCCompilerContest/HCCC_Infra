@@ -19,6 +19,18 @@ impl<'a> Users for UserImpl<'a> {
 
         row.map(|r| r.into())
     }
+
+    async fn all_users(&self) -> Vec<User> {
+        let conn = self.pool.get().await.unwrap();
+        let row = conn
+            .query_opt("SELECT * FROM accounts", &[])
+            .await
+            .unwrap();
+
+        row.into_iter()
+            .map(|r| r.into())
+            .collect()
+    }
 }
 
 impl From<Row> for User {

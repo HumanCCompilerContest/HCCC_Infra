@@ -1,7 +1,7 @@
 use crate::entities::User;
 use crate::repositories::Users;
 
-pub async fn get_me(repo: &impl Users, user_id: i32) -> User {
+pub async fn get_user(repo: &impl Users, user_id: i32) -> User {
    repo.find_user(user_id)
        .await
        .unwrap_or(
@@ -14,3 +14,6 @@ pub async fn get_me(repo: &impl Users, user_id: i32) -> User {
         )
 }
 
+pub async fn get_all_users(repo: &impl Users) -> Vec<User> {
+   repo.all_users().await
+}

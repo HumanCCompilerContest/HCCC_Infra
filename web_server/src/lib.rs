@@ -60,7 +60,7 @@ mod services {
 
     pub use accounts::{create_account, create_session, SessionToken};
     pub use submits::{create_submit, list_submit};
-    pub use users::get_me;
+    pub use users::{get_user, get_all_users};
 }
 
 mod request;
