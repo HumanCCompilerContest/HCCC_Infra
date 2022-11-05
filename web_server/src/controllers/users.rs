@@ -6,7 +6,7 @@ use axum::{
 };
 
 use crate::services;
-use crate::entities::User;
+use crate::entities::{User, AllUsers};
 use crate::request::UserContext;
 use crate::database::RepositoryProvider;
 
@@ -20,7 +20,7 @@ pub fn user() -> Router {
 async fn all_user(
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
-) -> Json<Vec<User>> {
+) -> Json<AllUsers> {
     let user_repo = repository_provider.user();
     Json(services::get_all_users(&user_repo).await)
 }

@@ -1,4 +1,4 @@
-use crate::entities::User;
+use crate::entities::{User, AllUsers};
 use crate::repositories::Users;
 
 pub async fn get_user(repo: &impl Users, user_id: i32) -> User {
@@ -14,6 +14,10 @@ pub async fn get_user(repo: &impl Users, user_id: i32) -> User {
         )
 }
 
-pub async fn get_all_users(repo: &impl Users) -> Vec<User> {
-   repo.all_users().await
+pub async fn get_all_users(repo: &impl Users) -> AllUsers {
+    AllUsers {
+        status: "ok".to_string(),
+        users: repo.all_users().await,
+        errorMessage: None,
+    }
 }

@@ -1,7 +1,7 @@
 use tokio_postgres::Row;
 
 use crate::database::ConnectionPool;
-use crate::entities::User;
+use crate::entities::{User, UserObject};
 use crate::repositories::Users;
 
 pub struct UserImpl<'a> {
@@ -20,7 +20,7 @@ impl<'a> Users for UserImpl<'a> {
         row.map(|r| r.into())
     }
 
-    async fn all_users(&self) -> Vec<User> {
+    async fn all_users(&self) -> Vec<UserObject> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
             .query_opt("SELECT * FROM accounts", &[])
@@ -44,5 +44,13 @@ impl From<Row> for User {
     }
 }
 
+impl From<Row> for UserObject {
+    fn from(r: Row) -> Self {
+        UserObject::new(
+            r.get("id"),
+            r.get("name"),
+        )
+    }
+}
 
 

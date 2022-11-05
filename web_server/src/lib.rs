@@ -30,7 +30,7 @@ mod entities {
 
     pub use account::Account;
     pub use submit::Submit;
-    pub use users::User;
+    pub use users::{User, UserObject, AllUsers};
 }
 
 mod repos_impl {
