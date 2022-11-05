@@ -25,11 +25,11 @@ pub enum ExeOption {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = clap::app_from_crate!()
-            .arg(arg!(--justrun ... "just run").required(false))
-            .arg(arg!(--exitcode <testcase_number> ... "check exitcode").required(false))
-            .arg(arg!(--output <testcase_number> "check stdout").required(false))
-            .arg(arg!(<asem> "assembly"))
-            .get_matches();
+        .arg(arg!(--justrun ... "just run").required(false))
+        .arg(arg!(--exitcode <testcase_number> ... "check exitcode").required(false))
+        .arg(arg!(--output <testcase_number> "check stdout").required(false))
+        .arg(arg!(<asem> "assembly"))
+        .get_matches();
     let flag_map = | | {
         (
             app.is_present("justrun"),

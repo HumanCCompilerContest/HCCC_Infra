@@ -6,7 +6,7 @@ use axum::{
 };
 use serde::Deserialize;
 
-use crate::controllers::{accounts, submits};
+use crate::controllers::{accounts, submits, user};
 use crate::database::{self, RepositoryProvider};
 use crate::request::UserContext;
 use crate::response;
@@ -17,10 +17,11 @@ pub async fn app() -> Router {
     let database_layer = database::layer().await;
     Router::new()
         .route("/", routing::get(get))
-        .nest("/login", routing::get(login))
-        .nest("/register", routing::get(register))
-        .nest("/submit", submits::submit())
-        .nest("/accounts", accounts::accounts())
+        .nest("/api/login", routing::get(login))
+        .nest("/api/register", routing::get(register))
+        .nest("/api/user", user::user())
+        .nest("/api/submit", submits::submit())
+        .nest("/api/accounts", accounts::accounts())
         .layer(database_layer)
 }
 
