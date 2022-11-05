@@ -14,11 +14,13 @@ mod controllers {
     mod root;
     mod submits;
     mod users;
+    mod problems;
 
     pub use accounts::accounts;
     pub use root::app;
     pub use submits::submit;
     pub use users::user;
+    pub use problems::problem;
 }
 
 mod database;
@@ -27,40 +29,48 @@ mod entities {
     mod account;
     mod submit;
     mod users;
+    mod problem;
 
     pub use account::Account;
     pub use submit::Submit;
     pub use users::{User, UserObject, AllUsers};
+    pub use problem::{Problem, ProblemObject, AllProblems};
 }
 
 mod repos_impl {
     mod accounts;
     mod submits;
     mod users;
+    mod problems;
 
     pub use accounts::AccountsImpl;
     pub use submits::SubmitImpl;
     pub use users::UserImpl;
+    pub use problems::ProblemImpl;
 }
 
 mod repositories {
     mod accounts;
     mod submits;
     mod users;
+    mod problem;
 
     pub use accounts::Accounts;
     pub use submits::Submits;
     pub use users::Users;
+    pub use problem::Problems;
 }
 
 mod services {
     mod accounts;
     mod submits;
     mod users;
+    mod problems;
 
     pub use accounts::{create_account, create_session, SessionToken};
     pub use submits::{create_submit, list_submit};
     pub use users::{get_user, get_all_users};
+    pub use problems::{get_problem, get_all_problems};
 }
 
 mod request;
