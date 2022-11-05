@@ -15,9 +15,9 @@ pub async fn get_user(repo: &impl Users, user_id: i32) -> User {
 }
 
 pub async fn get_all_users(repo: &impl Users) -> AllUsers {
-    AllUsers {
-        status: "ok".to_string(),
-        users: repo.all_users().await,
-        errorMessage: None,
-    }
+    AllUsers::new(
+        "ok".to_string(),
+        repo.all_users().await,
+        None,
+    )
 }

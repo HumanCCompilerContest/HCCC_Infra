@@ -44,3 +44,13 @@ impl User {
     }
 }
 
+impl AllUsers {
+    pub fn new(status: String, users: Vec<UserObject>, error_message: Option<String>) -> Self {
+        AllUsers {
+            status,
+            users,
+            errorMessage: error_message,
+        }
+    }
+}
+
