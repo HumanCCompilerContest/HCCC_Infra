@@ -2,6 +2,7 @@ use axum::{
     extract::{Extension, Query},
     response::IntoResponse,
     routing,
+    Json,
     Router
 };
 use serde::Deserialize;
@@ -11,6 +12,7 @@ use crate::database::{self, RepositoryProvider};
 use crate::request::UserContext;
 use crate::response;
 use crate::services;
+use crate::entities::Ranking;
 use crate::views::{SignIn, SignUp};
 
 pub async fn app() -> Router {
@@ -19,6 +21,7 @@ pub async fn app() -> Router {
         .route("/", routing::get(get))
         .nest("/api/login", routing::get(login))
         .nest("/api/register", routing::get(register))
+        .nest("/api/ranking", routing::get(ranking))
         .nest("/api/users", users::user())
         .nest("/api/problems", problems::problem())
         .nest("/api/submit", submits::submit())
@@ -46,6 +49,14 @@ async fn login(query: Query<LoginQuery>) -> impl IntoResponse {
 
 async fn register() -> impl IntoResponse {
     response::from_template(SignUp)
+}
+
+async fn ranking(
+    user_context: UserContext,
+    Extension(repository_provider): Extension<RepositoryProvider>
+) -> Json<Ranking> {
+    let user_repo = repository_provider.user();
+    Json(services::get_ranking(&user_repo).await)
 }
 
 #[derive(Deserialize)]
