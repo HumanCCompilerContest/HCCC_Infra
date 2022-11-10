@@ -42,6 +42,17 @@ impl User {
             errorMessage: error_message,
         }
     }
+
+    pub fn error() -> Self {
+        User {
+            status: "ng".to_string(),
+            user: UserObject {
+                id: 0,
+                name: String::new(),
+            },
+            errorMessage: Some("dummy".to_string())
+        }
+    }
 }
 
 impl AllUsers {
