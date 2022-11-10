@@ -36,7 +36,6 @@ impl<'a> Problems for ProblemImpl<'a> {
 impl From<Row> for Problem {
     fn from(r: Row) -> Self {
         Problem::new(
-            "ok".to_string(),
             r.get("id"),
             r.get("title"),
             r.get("statement"),
@@ -44,7 +43,6 @@ impl From<Row> for Problem {
             r.get("input_desc"),
             r.get("output_desc"),
             r.get("score"),
-            None,
         )
     }
 }

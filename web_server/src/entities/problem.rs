@@ -63,7 +63,6 @@ impl ProblemObject {
 
 impl Problem {
     pub fn new(
-        status: String,
         id: i32,
         title: String,
         statement: String,
@@ -71,12 +70,11 @@ impl Problem {
         input_desc: String,
         output_desc: String,
         score: i32,
-        error_message: Option<String>
     ) -> Self {
         Problem {
-            status,
+            status: "ok".to_string(),
             problem: ProblemObject::new(id, title, statement, code, input_desc, output_desc, score,),
-            errorMessage: error_message,
+            errorMessage: None,
         }
     }
 
