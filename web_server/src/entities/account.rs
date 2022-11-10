@@ -1,4 +1,32 @@
+use serde::Serialize;
 use sha2::{Digest, Sha256};
+use crate::entities::UserObject;
+
+#[allow(non_snake_case)]
+#[derive(Serialize)]
+pub struct AccountResponse {
+    status: String,
+    user: UserObject,
+    errorMessage: Option<String>,
+}
+
+impl AccountResponse {
+    pub fn new(id: i32, name: String) -> Self {
+        AccountResponse {
+            status: "ok".to_string(),
+            user: UserObject::new(id, name),
+            errorMessage: None,
+        }
+    }
+
+    pub fn error() -> Self {
+        AccountResponse {
+            status: "ng".to_string(),
+            user: UserObject::dummy(),
+            errorMessage: Some("session error".to_string()),
+        }
+    }
+}
 
 pub struct Account {
     id: Option<i32>,
