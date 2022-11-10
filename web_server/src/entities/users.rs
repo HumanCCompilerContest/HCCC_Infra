@@ -1,6 +1,8 @@
 use serde::Serialize;
+use postgres_types::{ToSql, FromSql};
 
 #[derive(Serialize)]
+#[derive(Debug, ToSql, FromSql)]
 pub struct UserObject {
     id: i32,
     name: String,
@@ -8,6 +10,7 @@ pub struct UserObject {
 
 #[derive(Serialize)]
 #[allow(non_snake_case)]
+#[derive(Debug, ToSql, FromSql)]
 pub struct User {
     status: String,
     user: UserObject,
