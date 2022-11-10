@@ -4,7 +4,7 @@ use bb8_postgres::PostgresConnectionManager;
 use tokio_postgres::NoTls;
 
 use crate::constants::database_url;
-use crate::repos_impl::{AccountsImpl, SubmitImpl, UserImpl, ProblemImpl};
+use crate::repos_impl::{AccountsImpl, SubmitImpl, UserImpl, ProblemImpl, SubmissionImpl};
 
 pub type ConnectionPool = Pool<PostgresConnectionManager<NoTls>>;
 
@@ -33,5 +33,9 @@ impl RepositoryProvider {
 
     pub fn problem(&self) -> ProblemImpl {
         ProblemImpl { pool: &self.0 }
+    }
+
+    pub fn submission(&self) -> SubmissionImpl {
+        SubmissionImpl { pool: &self.0 }
     }
 }
