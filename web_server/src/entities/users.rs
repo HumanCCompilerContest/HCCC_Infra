@@ -9,8 +9,8 @@ pub struct UserObject {
 }
 
 #[derive(Serialize)]
-#[allow(non_snake_case)]
 #[derive(Debug, ToSql, FromSql)]
+#[allow(non_snake_case)]
 pub struct User {
     status: String,
     user: UserObject,

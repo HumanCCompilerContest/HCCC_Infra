@@ -15,11 +15,11 @@ pub async fn create_session(
     repo: &impl Accounts,
     user_name: &str,
     password: &str
-) -> Option<SessionToken> {
+) -> (Option<i32>, Option<SessionToken>) {
     let account = repo.find_by(user_name).await;
     if let Some(account) = account {
         if !account.matches_password(password) {
-            return None;
+            return (None, None);
         }
 
         let database_url = database_url();
@@ -33,9 +33,9 @@ pub async fn create_session(
 
         let cookie = store.store_session(session).await.unwrap().unwrap();
 
-        Some(SessionToken(cookie))
+        (account.id(), Some(SessionToken(cookie)))
     } else {
-        None
+        (None, None)
     }
 }
 
