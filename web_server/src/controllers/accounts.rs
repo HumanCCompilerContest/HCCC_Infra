@@ -1,22 +1,16 @@
 use axum::{
     extract::{Extension, Form},
-    response::{AppendHeaders, IntoResponse, Redirect},
+    response::{AppendHeaders, IntoResponse},
     http::header::SET_COOKIE,
-    routing,
-    Router,
+    Json,
 };
 use serde::Deserialize;
 
+use crate::entities::AccountResponse;
 use crate::database::RepositoryProvider;
-use crate::services::{self, SessionToken};
+use crate::services;
 
-pub fn accounts() -> Router {
-    Router::new()
-        .route("/new", routing::post(post))
-        .route("/session", routing::post(new_session))
-}
-
-async fn post(
+pub async fn register(
     form: Form<SignUpForm>,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> impl IntoResponse {
@@ -27,39 +21,43 @@ async fn post(
         &form.password,
     )
     .await;
-    let session_token = services::create_session(&account_repo, &form.user_name, &form.password).await;
-    redirect_with_session(session_token)
+    let (id, session_token) = services::create_session(&account_repo, &form.user_name, &form.password).await;
+
+    match session_token {
+        Some(session_token) => {
+            let headers = AppendHeaders([(SET_COOKIE, session_token.cookie())]);
+            let response = Json(AccountResponse::new(id.unwrap(), form.user_name.clone()));
+            Ok((headers, response))
+        },
+        None => Err(Json(AccountResponse::error()))
+    }
 }
 
-async fn new_session(
+pub async fn login(
     form: Form<SignInForm>,
     Extension(repository_provider): Extension<RepositoryProvider>,
 ) -> Result<impl IntoResponse, impl IntoResponse> {
     let account_repo = repository_provider.accounts();
-    let session_token = services::create_session(&account_repo, &form.user_name, &form.password);
-    redirect_with_session(session_token.await)
-}
+    let (id, session_token) = services::create_session(&account_repo, &form.user_name, &form.password).await;
 
-fn redirect_with_session(
-    session: Option<SessionToken>
-) -> Result<impl IntoResponse, impl IntoResponse> {
-    if let Some(session_token) = session {
-        let headers = AppendHeaders([(SET_COOKIE, session_token.cookie())]);
-        let response = Redirect::to("/");
-        Ok((headers, response))
-    } else {
-        Err(Redirect::to("/login?error=invalid"))
+    match session_token {
+        Some(session_token) => {
+            let headers = AppendHeaders([(SET_COOKIE, session_token.cookie())]);
+            let response = Json(AccountResponse::new(id.unwrap(), form.user_name.clone()));
+            Ok((headers, response))
+        },
+        None => Err(Json(AccountResponse::error()))
     }
 }
 
 #[derive(Deserialize)]
-struct SignInForm {
+pub struct SignInForm {
     user_name: String,
     password: String,
 }
 
 #[derive(Deserialize)]
-struct SignUpForm {
+pub struct SignUpForm {
     user_name: String,
     password: String,
 }
