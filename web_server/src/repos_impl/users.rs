@@ -1,7 +1,7 @@
 use tokio_postgres::Row;
 
 use crate::database::ConnectionPool;
-use crate::entities::{User, UserObject};
+use crate::entities::{User, UserObject, Rank};
 use crate::repositories::Users;
 
 pub struct UserImpl<'a> {
@@ -31,6 +31,19 @@ impl<'a> Users for UserImpl<'a> {
             .map(|r| r.into())
             .collect()
     }
+
+    async fn create_ranking(&self) -> Vec<Rank> {
+        let conn = self.pool.get().await.unwrap();
+        let row = conn
+            .query_opt("SELECT * FROM accounts WHERE id = $1", &[])
+            .await
+            .unwrap();
+
+        row.into_iter()
+            .enumerate()
+            .map(|(rank, r)| <tokio_postgres::Row as Into<Rank>>::into(r).set_rank(rank+1))
+            .collect()
+    }
 }
 
 impl From<Row> for User {
@@ -53,4 +66,12 @@ impl From<Row> for UserObject {
     }
 }
 
+impl From<Row> for Rank {
+    fn from(r: Row) -> Self {
+        Rank::new(
+            r.get("name"),
+            r.get("score"),
+        )
+    }
+}
 
