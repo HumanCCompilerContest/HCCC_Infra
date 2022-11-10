@@ -33,12 +33,14 @@ mod entities {
     mod users;
     mod problem;
     mod submission;
+    mod ranking;
 
     pub use account::Account;
     pub use submit::Submit;
     pub use users::{User, UserObject, AllUsers};
     pub use problem::{Problem, ProblemObject, AllProblems};
     pub use submission::{Submission, SubmissionObject, UserSubmissions};
+    pub use ranking::{Rank, Ranking};
 }
 
 mod repos_impl {
