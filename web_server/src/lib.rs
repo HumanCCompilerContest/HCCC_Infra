@@ -26,14 +26,12 @@ mod database;
 
 mod entities {
     mod account;
-    mod submit;
     mod users;
     mod problem;
     mod submission;
     mod ranking;
 
     pub use account::{Account, AccountResponse};
-    pub use submit::Submit;
     pub use users::{User, UserObject, AllUsers};
     pub use problem::{Problem, ProblemObject, AllProblems};
     pub use submission::{Submission, SubmissionObject, UserSubmissions};
