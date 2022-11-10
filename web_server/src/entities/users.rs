@@ -32,6 +32,13 @@ impl UserObject {
             name,
         }
     }
+
+    pub fn dummy() -> Self {
+        UserObject {
+            id: 0,
+            name: String::new(),
+        }
+    }
 }
 
 impl User {
