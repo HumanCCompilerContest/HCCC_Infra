@@ -2,7 +2,7 @@ use crate::entities::{User, AllUsers};
 use crate::repositories::Users;
 
 pub async fn get_user(repo: &impl Users, user_id: i32) -> User {
-   repo.find_user(user_id)
+    repo.find_user(user_id)
        .await
        .unwrap_or(
             User::new(
