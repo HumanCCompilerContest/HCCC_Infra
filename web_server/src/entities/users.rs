@@ -53,14 +53,14 @@ impl User {
         }
     }
 
-    pub fn error() -> Self {
+    pub fn error(msg: &str) -> Self {
         User {
             status: "ng".to_string(),
             user: UserObject {
                 id: 0,
                 name: String::new(),
             },
-            errorMessage: Some("dummy".to_string())
+            errorMessage: Some(msg.to_string())
         }
     }
 }

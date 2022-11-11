@@ -55,7 +55,7 @@ impl SubmissionObject {
             time: Local::now(),
             asem: String::new(),
             result: "SystemError".to_string(),
-            user: User::error(),
+            user: User::error("couldn't find a user"),
             problem: Problem::error(),
         }
     }
