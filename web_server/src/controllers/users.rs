@@ -21,6 +21,7 @@ async fn all_user(
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<AllUsers> {
+    tracing::debug!("/api/user");
     let user_repo = repository_provider.user();
     Json(services::get_all_users(&user_repo).await)
 }
@@ -30,6 +31,7 @@ async fn user_from_id(
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<User> {
+    tracing::debug!("/api/user/:id");
     let user_repo = repository_provider.user();
     Json(services::get_user(&user_repo, id).await)
 }
@@ -38,6 +40,7 @@ async fn me(
     user_context: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<User> {
+    tracing::debug!("/api/user/me");
     let user_repo = repository_provider.user();
     Json(services::get_user(&user_repo, user_context.user_id).await)
 }
