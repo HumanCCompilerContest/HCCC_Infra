@@ -21,6 +21,7 @@ pub async fn app() -> Router {
         .allow_methods([Method::GET, Method::POST, Method::HEAD, Method::OPTIONS])
         .allow_headers([CONTENT_TYPE]);
     let database_layer = database::layer().await;
+
     Router::new()
         .route("/", routing::get(get))
         .nest("/api/login", routing::post(accounts::login))

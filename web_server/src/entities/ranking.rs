@@ -15,6 +15,7 @@ pub struct Rank {
 #[derive(Debug, ToSql)]
 pub struct Ranking {
     status: String,
+    #[serde(rename = "items")]
     ranks: Vec<Rank>,
     errorMessage: Option<String>,
 }
