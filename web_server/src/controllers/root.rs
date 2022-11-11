@@ -39,7 +39,6 @@ async fn get() -> StatusCode {
 }
 
 async fn ranking(
-    _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<Ranking> {
     tracing::debug!("/api/ranking");
