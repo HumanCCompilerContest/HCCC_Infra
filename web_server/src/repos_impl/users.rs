@@ -35,7 +35,7 @@ impl<'a> Users for UserImpl<'a> {
     async fn create_ranking(&self) -> Vec<Rank> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query_opt("SELECT * FROM accounts WHERE id = $1", &[])
+            .query_opt("SELECT * FROM accounts", &[])
             .await
             .unwrap();
 
