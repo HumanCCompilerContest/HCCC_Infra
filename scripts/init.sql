@@ -1,3 +1,13 @@
+CREATE TYPE JudgeResult AS ENUM (
+    'Pending',
+    'AC',
+    'WA',
+    'AE',
+    'LE',
+    'TLE',
+    'SystemError'
+);
+
 CREATE TABLE accounts -- ユーザ
 (
 	id serial primary key,
@@ -33,7 +43,7 @@ CREATE TABLE submits -- submit
 	problem_id integer not null,
 	time timestamptz not null,
 	asm text not null,
-	result serial not null
+	result JudgeResult not null
 	-- FOREIGN KEY (user_id, problem_id) REFERENCES accounts(id), problems(id)
 	-- 	ON UPDATE NO ACTION ON DELETE CASCADE
 );
