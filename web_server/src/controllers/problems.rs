@@ -22,7 +22,7 @@ async fn all_problem(
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<AllProblems> {
-    tracing::debug!("/api/problem");
+    tracing::debug!("/api/problems");
     let problem_repo = repository_provider.problem();
     Json(services::get_all_problems(&problem_repo).await)
 }
@@ -32,7 +32,7 @@ async fn problem_from_id(
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<Problem> {
-    tracing::debug!("/api/problem/:id");
+    tracing::debug!("/api/problems/:id");
     let problem_repo = repository_provider.problem();
     Json(services::get_problem(&problem_repo, id).await)
 }

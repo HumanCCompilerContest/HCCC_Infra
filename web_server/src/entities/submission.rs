@@ -1,10 +1,10 @@
 use serde::Serialize;
 use chrono::{DateTime, Local};
 use postgres_types::{ToSql, FromSql};
-use crate::entities::Problem;
-use crate::entities::User;
+use crate::entities::{UserObject, ProblemObject};
 
-#[derive(Debug, Copy, Clone, ToSql, FromSql)]
+#[derive(Debug, Copy, Clone)]
+#[derive(Serialize, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
 pub enum JudgeResult {
     Pending,
@@ -22,9 +22,9 @@ pub struct SubmissionObject {
 	id: i32,
 	time: DateTime<Local>,
 	asm: String,
-	result: String,
-	user: User,
-	problem: Problem,
+	result: JudgeResult,
+	user: UserObject,
+	problem: ProblemObject,
 }
 
 #[derive(Serialize)]
@@ -49,9 +49,9 @@ impl SubmissionObject {
         id: i32,
         time: DateTime<Local>,
         asm: String,
-        result: String,
-        user: User,
-        problem: Problem,
+        result: JudgeResult,
+        user: UserObject,
+        problem: ProblemObject,
     ) -> Self {
         SubmissionObject {
             id,
@@ -68,9 +68,9 @@ impl SubmissionObject {
             id: 0,
             time: Local::now(),
             asm: String::new(),
-            result: "SystemError".to_string(),
-            user: User::error("couldn't find a user"),
-            problem: Problem::error(),
+            result: JudgeResult::SystemError,
+            user: UserObject::dummy(),
+            problem: ProblemObject::dummy(),
         }
     }
 }
@@ -80,9 +80,9 @@ impl Submission {
         id: i32,
         time: DateTime<Local>,
         asm: String,
-        result: String,
-        user: User,
-        problem: Problem,
+        result: JudgeResult,
+        user: UserObject,
+        problem: ProblemObject,
     ) -> Self {
         Submission {
             status: "ok".to_string(),
