@@ -10,7 +10,7 @@ pub trait Submissions {
         user_id: i32,
         problem_id: i32,
         submit_time: DateTime<Local>,
-        asem: &'a str,
+        asm: &'a str,
         judge_result: JudgeResult,
     ) -> Option<i32>;
 }

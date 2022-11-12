@@ -17,17 +17,17 @@ pub struct Submit {
     id: i32,
     pub user_id: i32,
     pub time: DateTime<Utc>,
-    pub asem: String,
+    pub asm: String,
     pub result: JudgeResult,
 }
 
 impl Submit {
-    pub fn new(id: i32, user_id: i32, time: DateTime<Utc>, asem: String, result: JudgeResult) -> Submit {
+    pub fn new(id: i32, user_id: i32, time: DateTime<Utc>, asm: String, result: JudgeResult) -> Submit {
         Submit {
             id,
             user_id,
             time,
-            asem,
+            asm,
             result,
         }
     }

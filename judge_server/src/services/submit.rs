@@ -6,7 +6,7 @@ pub async fn accept_submit(repo: &impl Submits, user_id: i32, submit_id: i32) ->
         .await
         .unwrap();
 
-    dbg!(submit.asem);
+    dbg!(submit.asm);
 
     JudgeResult::AC
 }

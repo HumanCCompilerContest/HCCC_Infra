@@ -26,14 +26,14 @@ impl<'a> Submissions for SubmissionImpl<'a> {
         user_id: i32,
         problem_id: i32,
         submit_time: DateTime<Local>,
-        asem: &'b str,
+        asm: &'b str,
         judge_result: JudgeResult,
     ) -> Option<i32> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
             .query_opt(
-                "INSERT INTO submits (user_id, problem_id, time, asem, result) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-                &[&user_id, &problem_id, &submit_time, &asem, &judge_result]
+                "INSERT INTO submits (user_id, problem_id, time, asm, result) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+                &[&user_id, &problem_id, &submit_time, &asm, &judge_result]
             )
             .await
             .unwrap();
@@ -59,7 +59,7 @@ impl From<Row> for Submission {
         Submission::new(
             r.get("id"),
             r.get("title"),
-            r.get("asem"),
+            r.get("asm"),
             r.get("result"),
             r.get("user"),
             r.get("problem"),
@@ -72,7 +72,7 @@ impl From<Row> for SubmissionObject {
         SubmissionObject::new(
             r.get("id"),
             r.get("title"),
-            r.get("asem"),
+            r.get("asm"),
             r.get("result"),
             r.get("user"),
             r.get("problem"),

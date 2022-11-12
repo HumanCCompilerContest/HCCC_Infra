@@ -28,7 +28,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .arg(arg!(--justrun ... "just run").required(false))
         .arg(arg!(--exitcode <testcase_number> ... "check exitcode").required(false))
         .arg(arg!(--output <testcase_number> "check stdout").required(false))
-        .arg(arg!(<asem> "assembly"))
+        .arg(arg!(<asm> "assembly"))
         .get_matches();
     let flag_map = | | {
         (
@@ -44,12 +44,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         _ => ExeOption::JustRun,
     };
 
-    let asem = match app.value_of("asem") {
+    let asm = match app.value_of("asm") {
         Some(a) => a.to_string(),
         None => panic!("please specify target ELF file."),
     };
     let mut file = File::create("./submit.s")?;
-    writeln!(file, "{}", asem)?;
+    writeln!(file, "{}", asm)?;
     file.flush()?;
 
     // assemble

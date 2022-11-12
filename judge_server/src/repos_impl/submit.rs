@@ -36,8 +36,8 @@ impl<'a> Submits for SubmitImpl<'a> {
         let conn = self.pool.get().await.unwrap();
         dbg!(&entity.result);
         conn.execute(
-            "INSERT INTO submits (user_id, time, asem, result) VALUES ($1, $2, $3, $4)",
-            &[&entity.user_id, &entity.time, &entity.asem, &entity.result],
+            "INSERT INTO submits (user_id, time, asm, result) VALUES ($1, $2, $3, $4)",
+            &[&entity.user_id, &entity.time, &entity.asm, &entity.result],
         )
         .await
         .unwrap();
@@ -50,7 +50,7 @@ impl From<Row> for Submit {
             r.get("id"),
             r.get("user_id"),
             r.get("time"),
-            r.get("asem"),
+            r.get("asm"),
             r.get("result"),
         )
     }

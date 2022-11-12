@@ -21,7 +21,7 @@ pub enum JudgeResult {
 pub struct SubmissionObject {
 	id: i32,
 	time: DateTime<Local>,
-	asem: String,
+	asm: String,
 	result: String,
 	user: User,
 	problem: Problem,
@@ -48,7 +48,7 @@ impl SubmissionObject {
     pub fn new(
         id: i32,
         time: DateTime<Local>,
-        asem: String,
+        asm: String,
         result: String,
         user: User,
         problem: Problem,
@@ -56,7 +56,7 @@ impl SubmissionObject {
         SubmissionObject {
             id,
             time,
-            asem,
+            asm,
             result,
             user,
             problem,
@@ -67,7 +67,7 @@ impl SubmissionObject {
         SubmissionObject {
             id: 0,
             time: Local::now(),
-            asem: String::new(),
+            asm: String::new(),
             result: "SystemError".to_string(),
             user: User::error("couldn't find a user"),
             problem: Problem::error(),
@@ -79,7 +79,7 @@ impl Submission {
     pub fn new(
         id: i32,
         time: DateTime<Local>,
-        asem: String,
+        asm: String,
         result: String,
         user: User,
         problem: Problem,
@@ -89,7 +89,7 @@ impl Submission {
             submission: SubmissionObject::new(
                 id,
                 time,
-                asem,
+                asm,
                 result,
                 user,
                 problem,

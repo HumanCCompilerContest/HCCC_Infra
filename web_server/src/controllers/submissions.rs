@@ -48,7 +48,7 @@ pub async fn submit(
     let problem_repo = repository_provider.problem();
     let submission_repo = repository_provider.submission();
     Json(
-        services::submit_asem(
+        services::submit_asm(
             &user_repo,
             &problem_repo,
             &submission_repo,

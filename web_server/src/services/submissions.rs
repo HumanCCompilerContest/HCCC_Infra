@@ -23,18 +23,18 @@ pub async fn get_user_submissions(repo: &impl Submissions, user_id: i32) -> User
     )
 }
 
-pub async fn submit_asem(
+pub async fn submit_asm(
     repo_user: &impl Users,
     repo_prob: &impl Problems,
     repo_submit: &impl Submissions,
     user_id: i32,
     problem_id: i32,
-    asem: String
+    asm: String
 ) -> Submission {
     let submit_time = Local::now();
     let result = Command::new("bash")
         .arg("-c")
-        .arg(format!("echo {} | xargs -0 -I{{}} sudo docker exec judge_system /work/judge_system {{}}", asem))
+        .arg(format!("echo {} | xargs -0 -I{{}} sudo docker exec judge_system /work/judge_system {{}}", asm))
         .output()
         .await;
 
@@ -49,7 +49,7 @@ pub async fn submit_asem(
             _ => JudgeResult::SystemError,
         };
 
-        let submission_id = match repo_submit.store_submission(user_id, problem_id, submit_time, &asem, judge_result).await {
+        let submission_id = match repo_submit.store_submission(user_id, problem_id, submit_time, &asm, judge_result).await {
             Some(id) => id,
             None => return Submission::error(),
         };
@@ -58,7 +58,7 @@ pub async fn submit_asem(
         let submission = Submission::new(
             submission_id,
             submit_time,
-            asem,
+            asm,
             format!("{:?}", judge_result),
             user_obj,
             problem_obj

@@ -72,7 +72,7 @@ mod services {
     pub use accounts::{create_account, create_session, SessionToken};
     pub use users::{get_user, get_all_users};
     pub use problems::{get_problem, get_all_problems};
-    pub use submissions::{get_submission, get_user_submissions, submit_asem};
+    pub use submissions::{get_submission, get_user_submissions, submit_asm};
     pub use ranking::get_ranking;
 }
 

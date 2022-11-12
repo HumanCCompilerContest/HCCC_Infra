@@ -32,7 +32,7 @@ CREATE TABLE submits -- submit
 	user_id integer not null,
 	problem_id integer not null,
 	time timestamptz not null,
-	asem text not null,
+	asm text not null,
 	result serial not null
 	-- FOREIGN KEY (user_id, problem_id) REFERENCES accounts(id), problems(id)
 	-- 	ON UPDATE NO ACTION ON DELETE CASCADE
