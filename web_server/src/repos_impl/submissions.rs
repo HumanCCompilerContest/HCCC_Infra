@@ -44,7 +44,7 @@ impl<'a> Submissions for SubmissionImpl<'a> {
     async fn user_submitted(&self, user_id: i32) -> Vec<SubmissionObject> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query_opt("SELECT * FROM submits WHERE user_id", &[&user_id])
+            .query_opt("SELECT * FROM submits WHERE user_id = $1", &[&user_id])
             .await
             .unwrap();
 
