@@ -1,7 +1,8 @@
 use tokio_postgres::Row;
+use chrono::{DateTime, Local};
 
 use crate::database::ConnectionPool;
-use crate::entities::{Submission, SubmissionObject};
+use crate::entities::{Submission, SubmissionObject, JudgeResult};
 use crate::repositories::Submissions;
 
 pub struct SubmissionImpl<'a> {
@@ -18,6 +19,26 @@ impl<'a> Submissions for SubmissionImpl<'a> {
             .unwrap();
 
         row.map(|r| r.into())
+    }
+
+    async fn store_submission<'b>(
+        &self,
+        user_id: i32,
+        problem_id: i32,
+        submit_time: DateTime<Local>,
+        asem: &'b str,
+        judge_result: JudgeResult,
+    ) -> Option<i32> {
+        let conn = self.pool.get().await.unwrap();
+        let row = conn
+            .query_opt(
+                "INSERT INTO submits (user_id, problem_id, time, asem, result) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+                &[&user_id, &problem_id, &submit_time, &asem, &judge_result]
+            )
+            .await
+            .unwrap();
+
+        row.map(|r| r.get("id"))
     }
 
     async fn user_submitted(&self, user_id: i32) -> Vec<SubmissionObject> {
