@@ -2,7 +2,13 @@ use tokio_postgres::Row;
 use chrono::{DateTime, Local};
 
 use crate::database::ConnectionPool;
-use crate::entities::{Submission, SubmissionObject, JudgeResult};
+use crate::entities::{
+    Submission,
+    SubmissionObject,
+    JudgeResult,
+    UserObject,
+    ProblemObject,
+};
 use crate::repositories::Submissions;
 
 pub struct SubmissionImpl<'a> {
@@ -14,7 +20,7 @@ impl<'a> Submissions for SubmissionImpl<'a> {
     async fn find_submission(&self, id: i32) -> Option<Submission> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query_opt("SELECT * FROM submits WHERE id = $1", &[&id])
+            .query_opt("SELECT * FROM submits JOIN accounts ON submits.user_id = accounts.id JOIN problems ON submits.problem_id = problems.id WHERE submits.id = $1", &[&id])
             .await
             .unwrap();
 
@@ -58,11 +64,22 @@ impl From<Row> for Submission {
     fn from(r: Row) -> Self {
         Submission::new(
             r.get("id"),
-            r.get("title"),
+            r.get("time"),
             r.get("asm"),
             r.get("result"),
-            r.get("user"),
-            r.get("problem"),
+            UserObject::new(
+                r.get("user_id"),
+                r.get("name"),
+            ),
+            ProblemObject::new(
+                r.get("problem_id"),
+                r.get("title"),
+                r.get("statement"),
+                r.get("code"),
+                r.get("input_desc"),
+                r.get("output_desc"),
+                r.get("score"),
+            ),
         )
     }
 }
@@ -74,12 +91,20 @@ impl From<Row> for SubmissionObject {
             r.get("title"),
             r.get("asm"),
             r.get("result"),
-            r.get("user"),
-            r.get("problem"),
+            UserObject::new(
+                r.get("user_id"),
+                r.get("name"),
+            ),
+            ProblemObject::new(
+                r.get("problem_id"),
+                r.get("title"),
+                r.get("statement"),
+                r.get("code"),
+                r.get("input_desc"),
+                r.get("output_desc"),
+                r.get("score"),
+            ),
         )
     }
 }
-
-
-
 
