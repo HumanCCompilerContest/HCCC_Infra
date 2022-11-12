@@ -1,5 +1,5 @@
 use axum::{
-    extract::{Extension, Path, Query},
+    extract::{self, Extension, Path, Query},
     routing,
     Json,
     Router,
@@ -33,6 +33,32 @@ async fn from_submit_id(
 ) -> Json<Submission> {
     let submission_repo = repository_provider.submission();
     Json(services::get_submission(&submission_repo, id).await)
+}
+
+pub async fn submit(
+    Path(id): Path<i32>,
+    extract::Json(req): extract::Json<SubmitReq>,
+    user_context: UserContext,
+    Extension(repository_provider): Extension<RepositoryProvider>
+) -> Json<Submission> {
+    let user_repo = repository_provider.user();
+    let problem_repo = repository_provider.problem();
+    let submission_repo = repository_provider.submission();
+    Json(
+        services::submit_asem(
+            &user_repo,
+            &problem_repo,
+            &submission_repo,
+            user_context.user_id,
+            id,
+            req.asm,
+        ).await
+    )
+}
+
+#[derive(Deserialize)]
+pub struct SubmitReq {
+    asm: String,
 }
 
 #[derive(Deserialize)]
