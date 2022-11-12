@@ -19,11 +19,11 @@ impl AccountResponse {
         }
     }
 
-    pub fn error() -> Self {
+    pub fn error(errmsg: &str) -> Self {
         AccountResponse {
             status: "ng".to_string(),
             user: UserObject::dummy(),
-            errorMessage: Some("session error".to_string()),
+            errorMessage: Some(errmsg.to_string()),
         }
     }
 }

@@ -30,7 +30,7 @@ pub async fn register(
             let response = Json(AccountResponse::new(id.unwrap(), account_data.name.clone()));
             Ok((headers, response))
         },
-        None => Err(Json(AccountResponse::error()))
+        None => Err(Json(AccountResponse::error("create accout failed")))
     }
 }
 
@@ -48,7 +48,7 @@ pub async fn login(
             let response = Json(AccountResponse::new(id.unwrap(), account_data.name.clone()));
             Ok((headers, response))
         },
-        None => Err(Json(AccountResponse::error()))
+        None => Err(Json(AccountResponse::error("ログイン名またはパスワードが違います．")))
     }
 }
 
