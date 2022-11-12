@@ -18,10 +18,11 @@ pub fn submissions() -> Router {
 }
 
 async fn from_user_id(
-    param: Query<UserIdParam>,
+    Query(param): Query<UserIdParam>,
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<UserSubmissions> {
+    tracing::debug!("/api/submissions");
     let submission_repo = repository_provider.submission();
     Json(services::get_user_submissions(&submission_repo, param.user_id).await)
 }
@@ -31,6 +32,7 @@ async fn from_submit_id(
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<Submission> {
+    tracing::debug!("/api/submissions/:id");
     let submission_repo = repository_provider.submission();
     Json(services::get_submission(&submission_repo, id).await)
 }
@@ -41,6 +43,7 @@ pub async fn submit(
     user_context: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<Submission> {
+    tracing::debug!("/api/problems/:id/submissions");
     let user_repo = repository_provider.user();
     let problem_repo = repository_provider.problem();
     let submission_repo = repository_provider.submission();
