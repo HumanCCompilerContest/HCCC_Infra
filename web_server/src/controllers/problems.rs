@@ -15,7 +15,7 @@ pub fn problem() -> Router {
     Router::new()
         .route("/", routing::get(all_problem))
         .route("/:id", routing::get(problem_from_id))
-        .route("/:id/submissions", routing::get(submit))
+        .route("/:id/submissions", routing::post(submit))
 }
 
 async fn all_problem(
