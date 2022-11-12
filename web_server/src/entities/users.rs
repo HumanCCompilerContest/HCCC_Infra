@@ -64,6 +64,10 @@ impl User {
             errorMessage: Some(msg.to_string())
         }
     }
+
+    pub fn get_object(self) -> UserObject {
+        self.user
+    }
 }
 
 impl AllUsers {

@@ -89,6 +89,10 @@ impl Problem {
             errorMessage: Some("problem not found".to_string()),
         }
     }
+
+    pub fn get_object(self) -> ProblemObject {
+        self.problem
+    }
 }
 
 
