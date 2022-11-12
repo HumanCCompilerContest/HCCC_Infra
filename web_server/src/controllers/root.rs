@@ -10,7 +10,6 @@ use tower_http::cors::CorsLayer;
 
 use crate::controllers::{accounts, users, problems, submissions};
 use crate::database::{self, RepositoryProvider};
-use crate::request::UserContext;
 use crate::services;
 use crate::entities::Ranking;
 

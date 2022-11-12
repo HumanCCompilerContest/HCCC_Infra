@@ -24,7 +24,7 @@ async fn all_problem(
 ) -> Json<AllProblems> {
     tracing::debug!("/api/problem");
     let problem_repo = repository_provider.problem();
-    dbg!(Json(services::get_all_problems(&problem_repo).await))
+    Json(services::get_all_problems(&problem_repo).await)
 }
 
 async fn problem_from_id(
