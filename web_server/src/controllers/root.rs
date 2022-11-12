@@ -23,9 +23,9 @@ pub async fn app() -> Router {
 
     Router::new()
         .route("/", routing::get(get))
-        .nest("/api/login", routing::post(accounts::login))
-        .nest("/api/register", routing::post(accounts::register))
-        .nest("/api/ranking", routing::get(ranking))
+        .route("/api/login", routing::post(accounts::login))
+        .route("/api/register", routing::post(accounts::register))
+        .route("/api/ranking", routing::get(ranking))
         .nest("/api/users", users::user())
         .nest("/api/problems", problems::problem())
         .nest("/api/submissions", submissions::submissions())
