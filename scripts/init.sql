@@ -1,10 +1,10 @@
 CREATE TYPE JudgeResult AS ENUM (
-    'Pending',
     'AC',
     'WA',
     'AE',
     'LE',
     'TLE',
+    'Pending',
     'SystemError'
 );
 

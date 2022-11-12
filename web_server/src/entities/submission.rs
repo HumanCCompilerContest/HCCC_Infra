@@ -7,12 +7,12 @@ use crate::entities::{UserObject, ProblemObject};
 #[derive(Serialize, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
 pub enum JudgeResult {
-    Pending,
-    AC,
+    AC = 0,
     WA,
     AE,
     LE,
     TLE,
+    Pending,
     SystemError,
 }
 
