@@ -21,22 +21,22 @@ where
     type Rejection = Json<serde_json::Value>;
 
     async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let redirect = || Json(json!({"status": "ng", "errorMessage": "session expired"}));
+        let error_json = || Json(json!({"status": "login-required", "errorMessage": "session expired"}));
 
         let database_url = database_url();
         let store = PostgresSessionStore::new(&database_url)
             .await
-            .map_err(|_| redirect())?;
+            .map_err(|_| error_json())?;
         let cookies = Option::<TypedHeader<Cookie>>::from_request(req)
             .await
             .unwrap()
-            .ok_or(redirect())?;
-        let session_str = cookies.get(AXUM_SESSION_COOKIE_NAME).ok_or(redirect())?;
+            .ok_or(error_json())?;
+        let session_str = cookies.get(AXUM_SESSION_COOKIE_NAME).ok_or(error_json())?;
         let session = store
             .load_session(session_str.to_string())
             .await
-            .map_err(|_| redirect())?;
-        let session = session.ok_or(redirect())?;
+            .map_err(|_| error_json())?;
+        let session = session.ok_or(error_json())?;
         let context = UserContext {
             user_id: session.get::<i32>(AXUM_SESSION_USER_ID_KEY).unwrap(),
         };
