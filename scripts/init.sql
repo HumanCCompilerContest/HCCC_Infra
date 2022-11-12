@@ -15,7 +15,7 @@ CREATE TABLE sessions
 		ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-CREATE TABLE probrems -- 問題
+CREATE TABLE problems -- 問題
 (
 	id serial primary key,
 	title text not null,
