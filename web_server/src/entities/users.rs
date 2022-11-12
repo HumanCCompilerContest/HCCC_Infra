@@ -21,6 +21,7 @@ pub struct User {
 #[allow(non_snake_case)]
 pub struct AllUsers {
     status: String,
+    #[serde(rename = "items")]
     users: Vec<UserObject>,
     errorMessage: Option<String>,
 }

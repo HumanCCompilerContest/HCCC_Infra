@@ -39,6 +39,7 @@ pub struct Submission {
 #[allow(non_snake_case)]
 pub struct UserSubmissions {
     status: String,
+    #[serde(rename = "items")]
     submissions: Vec<SubmissionObject>,
     errorMessage: Option<String>,
 }
