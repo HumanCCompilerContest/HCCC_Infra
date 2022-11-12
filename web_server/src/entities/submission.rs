@@ -1,7 +1,20 @@
 use serde::Serialize;
 use chrono::{DateTime, Local};
+use postgres_types::{ToSql, FromSql};
 use crate::entities::Problem;
 use crate::entities::User;
+
+#[derive(Debug, Copy, Clone, ToSql, FromSql)]
+#[postgres(name = "judgeresult")]
+pub enum JudgeResult {
+    Pending,
+    AC,
+    WA,
+    AE,
+    LE,
+    TLE,
+    SystemError,
+}
 
 #[derive(Serialize)]
 #[allow(non_snake_case)]
