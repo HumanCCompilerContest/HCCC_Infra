@@ -26,6 +26,7 @@ pub struct Problem {
 #[allow(non_snake_case)]
 pub struct AllProblems {
     status: String,
+    #[serde(rename = "items")]
     problems: Vec<ProblemObject>,
     errorMessage: Option<String>,
 }
