@@ -45,3 +45,13 @@ CREATE TABLE testcases -- テストケース
 	input text not null,
 	output text not null
 );
+
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score) VALUES (
+    0,
+    'Return 42',
+    '42を返すプログラムを作成してください．',
+    E'int main(void) {\nreturn 42;\n}',
+    '無し',
+    '無し',
+    100
+);
