@@ -38,14 +38,6 @@ CREATE TABLE submits -- submit
 	-- 	ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-CREATE TABLE testcases -- テストケース
-(
-	id serial primary key,
-	sepecial_cond serial,
-	input text not null,
-	output text not null
-);
-
 INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score) VALUES (
     0,
     'Return 42',
