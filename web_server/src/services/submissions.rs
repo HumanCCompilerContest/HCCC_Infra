@@ -40,12 +40,11 @@ pub async fn submit_asm(
 
     if let Ok(result) = result {
         let judge_result = match result.status.code().unwrap_or(6) {
-            0 => JudgeResult::Pending,
-            1 => JudgeResult::AC,
-            2 => JudgeResult::WA,
-            3 => JudgeResult::AE,
-            4 => JudgeResult::LE,
-            5 => JudgeResult::TLE,
+            0 => JudgeResult::AC,
+            1 => JudgeResult::WA,
+            2 => JudgeResult::AE,
+            3 => JudgeResult::LE,
+            4 => JudgeResult::TLE,
             _ => JudgeResult::SystemError,
         };
 
@@ -59,9 +58,9 @@ pub async fn submit_asm(
             submission_id,
             submit_time,
             asm,
-            format!("{:?}", judge_result),
-            user_obj,
-            problem_obj
+            judge_result,
+            user_obj.get_object(),
+            problem_obj.get_object()
         );
 
         submission
