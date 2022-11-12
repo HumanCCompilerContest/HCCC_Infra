@@ -17,6 +17,8 @@ services:
       context: ./judge_system
       dockerfile: Dockerfile
     container_name: judge_system
+    tty: true
+    stdin_open: true
 
 volumes:
   db_store:
