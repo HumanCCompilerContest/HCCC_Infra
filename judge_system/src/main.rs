@@ -45,11 +45,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let asm = match app.value_of("asm") {
-        Some(a) => a.to_string(),
+        Some(a) => String::from_utf8(base64::decode(a)?)?,
         None => panic!("please specify target ELF file."),
     };
     let mut file = File::create("./submit.s")?;
-    writeln!(file, "{}", asm)?;
+    writeln!(file, "{}", dbg!(asm))?;
     file.flush()?;
 
     // assemble
