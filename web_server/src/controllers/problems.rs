@@ -10,7 +10,7 @@ use crate::entities::{Problem, AllProblems};
 use crate::request::UserContext;
 use crate::database::RepositoryProvider;
 use crate::controllers::submissions::submit;
-use crate::is_contest_duration;
+use crate::is_contest_underway;
 
 pub fn problem() -> Router {
     Router::new()
@@ -24,7 +24,7 @@ async fn all_problem(
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<AllProblems> {
     tracing::debug!("/api/problems");
-    if is_contest_duration() {
+    if is_contest_underway() {
         let problem_repo = repository_provider.problem();
         Json(services::get_all_problems(&problem_repo).await)
     } else {
@@ -38,7 +38,7 @@ async fn problem_from_id(
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<Problem> {
     tracing::debug!("/api/problems/:id");
-    if is_contest_duration() {
+    if is_contest_underway() {
         let problem_repo = repository_provider.problem();
         Json(services::get_problem(&problem_repo, id).await)
     } else {

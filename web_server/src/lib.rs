@@ -102,7 +102,7 @@ pub async fn setup_session_store() {
     store.spawn_cleanup_task(std::time::Duration::from_secs(3600));
 }
 
-pub fn is_contest_duration() -> bool {
+pub fn is_contest_underway() -> bool {
     let (begin, end) = constants::contest_duration();
     let now = chrono::Local::now();
     
