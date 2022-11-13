@@ -42,5 +42,5 @@ async fn me(
 ) -> Json<User> {
     tracing::debug!("/api/user/me");
     let user_repo = repository_provider.user();
-    Json(services::get_user(&user_repo, user_context.user_id).await)
+    Json(services::get_user(&user_repo, user_context.user_id()).await)
 }

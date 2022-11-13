@@ -1,4 +1,4 @@
-use async_session::SessionStore;
+use async_session::{Session, SessionStore};
 use async_sqlx_session::PostgresSessionStore;
 use axum::extract::{FromRequest, RequestParts, TypedHeader};
 use axum::headers::Cookie;
@@ -10,7 +10,13 @@ use crate::constants::{database_url, AXUM_SESSION_COOKIE_NAME, AXUM_SESSION_USER
 
 #[derive(Deserialize, Serialize)]
 pub struct UserContext {
-    pub user_id: i32,
+    pub session: Session,
+}
+
+impl UserContext {
+    pub fn user_id(&self) -> i32 {
+        self.session.get::<i32>(AXUM_SESSION_USER_ID_KEY).unwrap()
+    }
 }
 
 #[axum::async_trait]
@@ -38,7 +44,7 @@ where
             .map_err(|_| error_json())?;
         let session = session.ok_or(error_json())?;
         let context = UserContext {
-            user_id: session.get::<i32>(AXUM_SESSION_USER_ID_KEY).unwrap(),
+            session,
         };
 
         Ok(context)

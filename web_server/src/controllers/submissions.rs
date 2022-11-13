@@ -56,7 +56,7 @@ pub async fn submit(
             &user_repo,
             &problem_repo,
             &submission_repo,
-            user_context.user_id,
+            user_context.user_id(),
             id,
             req.asm,
         ).await
