@@ -7,7 +7,7 @@ use postgres_types::ToSql;
 pub struct Rank {
     rank: i32,
     userName: String,
-    score: i32,
+    score: i64,
 }
 
 #[allow(non_snake_case)]
@@ -21,7 +21,7 @@ pub struct Ranking {
 }
 
 impl Rank {
-    pub fn new(user_name: String, score: i32) -> Self {
+    pub fn new(user_name: String, score: i64) -> Self {
         Rank {
             rank: 0,
             userName: user_name,

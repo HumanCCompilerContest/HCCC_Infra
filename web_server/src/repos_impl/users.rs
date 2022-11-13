@@ -35,7 +35,20 @@ impl<'a> Users for UserImpl<'a> {
     async fn create_ranking(&self) -> Vec<Rank> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query("SELECT * FROM accounts ORDER BY score DESC", &[])
+            .query(
+                "SELECT sub.name, SUM(sub.score)
+                FROM
+                (
+                    SELECT a.name AS name, s.problem_id AS problem_id, p.score AS score FROM submits AS s 
+                    JOIN accounts AS a ON s.user_id = a.id
+                    JOIN problems AS p ON s.problem_id = p.id
+                    WHERE s.result = 'AC'
+                    GROUP BY s.user_id, s.problem_id, p.score, a.name
+                ) AS sub
+                GROUP BY sub.name
+                ;",
+                &[]
+            )
             .await
             .unwrap();
 
@@ -70,7 +83,7 @@ impl From<Row> for Rank {
     fn from(r: Row) -> Self {
         Rank::new(
             r.get("name"),
-            r.get("score"),
+            r.get("sum"), // sum of score
         )
     }
 }

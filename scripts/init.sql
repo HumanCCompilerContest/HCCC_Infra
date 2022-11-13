@@ -13,7 +13,7 @@ CREATE TABLE accounts -- ユーザ
 (
 	id serial primary key,
 	name text unique not null,
-	password text not null,
+	password text not null
 );
 
 CREATE TABLE sessions
