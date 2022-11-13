@@ -65,7 +65,7 @@ pub async fn submit_asm(
             None => return Submission::error(),
         };
         let user_obj = repo_user.find_user(user_id).await.unwrap_or(User::error("user not found"));
-        let problem_obj = repo_prob.find_problem(problem_id).await.unwrap_or(Problem::error());
+        let problem_obj = repo_prob.find_problem(problem_id).await.unwrap_or(Problem::error("ng", "problem not found"));
         let submission = Submission::new(
             submission_id,
             submit_time,

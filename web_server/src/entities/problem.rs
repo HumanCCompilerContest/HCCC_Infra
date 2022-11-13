@@ -82,11 +82,11 @@ impl Problem {
         }
     }
 
-    pub fn error() -> Self {
+    pub fn error(status: &str, msg: &str) -> Self {
         Problem {
-            status: "ng".to_string(),
+            status: status.to_string(),
             problem: ProblemObject::dummy(),
-            errorMessage: Some("problem not found".to_string()),
+            errorMessage: Some(msg.to_string()),
         }
     }
 
@@ -106,6 +106,14 @@ impl AllProblems {
             status,
             problems,
             errorMessage: error_message,
+        }
+    }
+
+    pub fn error(status: &str, msg: &str) -> Self {
+        AllProblems {
+            status: status.to_string(),
+            problems: Vec::new(),
+            errorMessage: Some(msg.to_string()),
         }
     }
 }
