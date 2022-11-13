@@ -23,7 +23,7 @@ impl<'a> Users for UserImpl<'a> {
     async fn all_users(&self) -> Vec<UserObject> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query_opt("SELECT * FROM accounts", &[])
+            .query("SELECT * FROM accounts", &[])
             .await
             .unwrap();
 
@@ -35,7 +35,7 @@ impl<'a> Users for UserImpl<'a> {
     async fn create_ranking(&self) -> Vec<Rank> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query_opt("SELECT * FROM accounts ORDER BY score DESC", &[])
+            .query("SELECT * FROM accounts ORDER BY score DESC", &[])
             .await
             .unwrap();
 

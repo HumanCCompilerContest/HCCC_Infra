@@ -23,7 +23,7 @@ impl<'a> Problems for ProblemImpl<'a> {
     async fn all_problems(&self) -> Vec<ProblemObject> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query_opt("SELECT * FROM problems", &[])
+            .query("SELECT * FROM problems", &[])
             .await
             .unwrap();
 
