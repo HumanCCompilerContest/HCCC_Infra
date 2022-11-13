@@ -47,7 +47,8 @@ pub async fn submit_asm(
             1 => JudgeResult::WA,
             2 => JudgeResult::AE,
             3 => JudgeResult::LE,
-            4 => JudgeResult::TLE,
+            4 => JudgeResult::RE,
+            5 => JudgeResult::TLE,
             _ => JudgeResult::SystemError,
         };
 

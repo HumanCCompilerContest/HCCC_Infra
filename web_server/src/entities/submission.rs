@@ -11,6 +11,7 @@ pub enum JudgeResult {
     WA,
     AE,
     LE,
+    RE,
     TLE,
     Pending,
     SystemError,

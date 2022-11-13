@@ -3,6 +3,7 @@ CREATE TYPE JudgeResult AS ENUM (
     'WA',
     'AE',
     'LE',
+    'RE',
     'TLE',
     'Pending',
     'SystemError'
