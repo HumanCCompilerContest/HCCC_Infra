@@ -16,14 +16,18 @@ pub async fn register(
 ) -> impl IntoResponse {
     tracing::debug!("/api/register");
     let account_repo = repository_provider.accounts();
-    services::create_account(
+    let create_account_result = services::create_account(
         &account_repo,
         &account_data.name,
         &account_data.password,
     )
     .await;
-    let (id, session_token) = services::create_session(&account_repo, &account_data.name, &account_data.password).await;
 
+    if create_account_result.is_err() {
+        return Err(Json(AccountResponse::error("this username is already in use")));
+    }
+
+    let (id, session_token) = services::create_session(&account_repo, &account_data.name, &account_data.password).await;
     match session_token {
         Some(session_token) => {
             let headers = AppendHeaders([(SET_COOKIE, session_token.cookie())]);

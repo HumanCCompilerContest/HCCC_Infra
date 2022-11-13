@@ -19,14 +19,13 @@ impl<'a> Accounts for AccountsImpl<'a> {
         row.map(|r| r.into())
     }
 
-    async fn store(&self, entity: &Account) {
+    async fn store(&self, entity: &Account) -> Result<u64, tokio_postgres::Error> {
         let conn = self.pool.get().await.unwrap();
         conn.execute(
             "INSERT INTO accounts (name, password, score) VALUES ($1, $2, 0)",
             &[&entity.user_name, &entity.hashed_password]
         )
         .await
-        .ok();
     }
 }
 

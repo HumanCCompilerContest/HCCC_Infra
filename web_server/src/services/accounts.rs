@@ -6,7 +6,11 @@ use crate::constants::{database_url, AXUM_SESSION_COOKIE_NAME, AXUM_SESSION_USER
 use crate::entities::Account;
 use crate::repositories::Accounts;
 
-pub async fn create_account(repo: &impl Accounts, user_name: &str, password: &str) {
+pub async fn create_account(
+    repo: &impl Accounts,
+    user_name: &str,
+    password: &str
+) -> Result<u64, tokio_postgres::Error> {
     let new_account = Account::create(user_name, password);
     repo.store(&new_account).await
 }
