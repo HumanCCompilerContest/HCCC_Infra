@@ -4,8 +4,13 @@ use axum::{
     http::header::SET_COOKIE,
     Json,
 };
+use async_session::SessionStore;
+use async_sqlx_session::PostgresSessionStore;
+use serde_json::json;
 use serde::Deserialize;
 
+use crate::request::UserContext;
+use crate::constants::database_url;
 use crate::entities::AccountResponse;
 use crate::database::RepositoryProvider;
 use crate::services;
@@ -54,6 +59,22 @@ pub async fn login(
         },
         None => Err(Json(AccountResponse::error("ログイン名またはパスワードが違います．")))
     }
+}
+
+pub async fn logout(user_context: UserContext) -> Result<Json<serde_json::Value>, Json<serde_json::Value>> {
+    tracing::debug!("/api/logout");
+    let ok_json = || Json(json!({"status": "ok", "errorMessage": ""}));
+    let err_json = || Json(json!({"status": "ng", "errorMessage": "failed to logout"}));
+
+    let database_url = database_url();
+    let session_table = PostgresSessionStore::new(&database_url)
+        .await
+        .map_err(|_| err_json())?;
+    match session_table.destroy_session(user_context.session).await {
+        Ok(_) => Ok(ok_json()),
+        Err(_) => Err(err_json()),
+    }
+
 }
 
 #[derive(Deserialize)]
