@@ -34,7 +34,10 @@ pub async fn submit_asm(
     let submit_time = Local::now();
     let result = Command::new("bash")
         .arg("-c")
-        .arg(format!("echo {} | xargs -0 -I{{}} docker exec judge_system /work/judge_system {{}}", asm))
+        .arg(format!(
+            "sudo docker exec judge_system /work/judge_system {}",
+            base64::encode(&asm)
+        ))
         .output()
         .await;
 
