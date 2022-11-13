@@ -116,4 +116,12 @@ impl UserSubmissions {
             errorMessage: error_message,
         }
     }
+
+    pub fn error(status: &str, msg: &str) -> Self {
+        UserSubmissions {
+            status: status.to_string(),
+            submissions: Vec::new(),
+            errorMessage: Some(msg.to_string()),
+        }
+    }
 }

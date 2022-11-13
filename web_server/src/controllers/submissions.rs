@@ -10,6 +10,7 @@ use crate::services;
 use crate::entities::{Submission, UserSubmissions};
 use crate::request::UserContext;
 use crate::database::RepositoryProvider;
+use crate::is_contest_underway;
 
 pub fn submissions() -> Router {
     Router::new()
@@ -19,15 +20,23 @@ pub fn submissions() -> Router {
 
 async fn from_user_id(
     Query(param): Query<UserIdParam>,
-    _: UserContext,
+    user_context: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>
 ) -> Json<UserSubmissions> {
     tracing::debug!("/api/submissions");
     let submission_repo = repository_provider.submission();
     if let Some(user_id) = param.user_id {
-        Json(services::get_user_submissions(&submission_repo, user_id).await)
+        if !is_contest_underway() && user_context.user_id() != user_id {
+            Json(UserSubmissions::error("forbidden", "You won't be able to see other users' submissions during the contest"))
+        } else {
+            Json(services::get_user_submissions(&submission_repo, user_id).await)
+        }
     } else {
-        Json(services::get_all_users_submissions(&submission_repo).await)
+        if !is_contest_underway() {
+            Json(UserSubmissions::error("forbidden", "You won't be able to see other users' submissions during the contest"))
+        } else {
+            Json(services::get_all_users_submissions(&submission_repo).await)
+        }
     }
 }
 
