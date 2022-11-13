@@ -47,10 +47,32 @@ impl<'a> Submissions for SubmissionImpl<'a> {
         row.map(|r| r.get("id"))
     }
 
-    async fn user_submitted(&self, user_id: i32) -> Vec<SubmissionObject> {
+    async fn get_all_submissions(&self) -> Vec<SubmissionObject> {
+        const TARGET_COLUMN: &str = "submits.id, time, asm, result, user_id, name, problem_id, title, statement, code, input_desc, output_desc, problems.score";
+        const TARGET_TABLES: &str = "submits JOIN accounts ON submits.user_id = accounts.id JOIN problems ON submits.problem_id = problems.id";
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query_opt("SELECT * FROM submits WHERE user_id = $1", &[&user_id])
+            .query(
+                &format!("SELECT {} FROM {} ORDER BY time DESC", TARGET_COLUMN, TARGET_TABLES),
+                &[]
+            )
+            .await
+            .unwrap();
+
+        row.into_iter()
+            .map(|r| r.into())
+            .collect()
+    }
+
+    async fn user_submitted(&self, user_id: i32) -> Vec<SubmissionObject> {
+        const TARGET_COLUMN: &str = "submits.id, time, asm, result, user_id, name, problem_id, title, statement, code, input_desc, output_desc, problems.score";
+        const TARGET_TABLES: &str = "submits JOIN accounts ON submits.user_id = accounts.id JOIN problems ON submits.problem_id = problems.id";
+        let conn = self.pool.get().await.unwrap();
+        let row = conn
+            .query(
+                &format!("SELECT {} FROM {} WHERE user_id = $1 ORDER BY time DESC", TARGET_COLUMN, TARGET_TABLES),
+                &[&user_id]
+            )
             .await
             .unwrap();
 
@@ -88,7 +110,7 @@ impl From<Row> for SubmissionObject {
     fn from(r: Row) -> Self {
         SubmissionObject::new(
             r.get("id"),
-            r.get("title"),
+            r.get("time"),
             r.get("asm"),
             r.get("result"),
             UserObject::new(

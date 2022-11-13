@@ -24,7 +24,11 @@ async fn from_user_id(
 ) -> Json<UserSubmissions> {
     tracing::debug!("/api/submissions");
     let submission_repo = repository_provider.submission();
-    Json(services::get_user_submissions(&submission_repo, param.user_id).await)
+    if let Some(user_id) = param.user_id {
+        Json(services::get_user_submissions(&submission_repo, user_id).await)
+    } else {
+        Json(services::get_all_users_submissions(&submission_repo).await)
+    }
 }
 
 async fn from_submit_id(
@@ -66,5 +70,5 @@ pub struct SubmitReq {
 
 #[derive(Deserialize)]
 struct UserIdParam {
-    user_id: i32,
+    user_id: Option<i32>,
 }
