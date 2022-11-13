@@ -1,5 +1,6 @@
 mod constants {
     use std::env;
+    use chrono::{DateTime, Local};
 
     pub const AXUM_SESSION_COOKIE_NAME: &str = "hccc_session";
     pub const AXUM_SESSION_USER_ID_KEY: &str = "uid";
@@ -7,6 +8,18 @@ mod constants {
     pub fn database_url() -> String {
         dotenv::dotenv().ok();
         env::var("DATABASE_URL").unwrap()
+    }
+
+    pub fn contest_duration() -> (DateTime<Local>, DateTime<Local>) {
+        dotenv::dotenv().ok();
+        (
+            dbg!(DateTime::parse_from_rfc3339(&env::var("CONTEST_BEGIN").unwrap()))
+                .unwrap()
+                .with_timezone(&Local),
+            DateTime::parse_from_rfc3339(&env::var("CONTEST_END").unwrap())
+                .unwrap()
+                .with_timezone(&Local),
+        )
     }
 }
 mod controllers {
@@ -87,4 +100,11 @@ pub async fn setup_session_store() {
         .unwrap();
     store.migrate().await.unwrap();
     store.spawn_cleanup_task(std::time::Duration::from_secs(3600));
+}
+
+pub fn is_contest_duration() -> bool {
+    let (begin, end) = constants::contest_duration();
+    let now = chrono::Local::now();
+    
+    begin <= now && now <= end
 }
