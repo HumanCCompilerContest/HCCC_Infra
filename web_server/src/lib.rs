@@ -13,7 +13,7 @@ mod constants {
     pub fn contest_duration() -> (DateTime<Local>, DateTime<Local>) {
         dotenv::dotenv().ok();
         (
-            dbg!(DateTime::parse_from_rfc3339(&env::var("CONTEST_BEGIN").unwrap()))
+            DateTime::parse_from_rfc3339(&env::var("CONTEST_BEGIN").unwrap())
                 .unwrap()
                 .with_timezone(&Local),
             DateTime::parse_from_rfc3339(&env::var("CONTEST_END").unwrap())

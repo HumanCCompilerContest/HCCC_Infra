@@ -14,7 +14,6 @@ CREATE TABLE accounts -- ユーザ
 	id serial primary key,
 	name text unique not null,
 	password text not null,
-    score integer not null
 );
 
 CREATE TABLE sessions
