@@ -13,13 +13,13 @@ pub struct ProblemObject {
 	score: i32,
 }
 
-#[allow(non_snake_case)]
 #[derive(Serialize)]
 #[derive(Debug, ToSql, FromSql)]
 pub struct Problem {
     status: String,
     problem: ProblemObject,
-    errorMessage: Option<String>,
+    #[serde(rename = "errorMessage")]
+    error_message: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -28,7 +28,8 @@ pub struct AllProblems {
     status: String,
     #[serde(rename = "items")]
     problems: Vec<ProblemObject>,
-    errorMessage: Option<String>,
+    #[serde(rename = "errorMessage")]
+    error_message: Option<String>,
 }
 
 impl ProblemObject {
@@ -78,7 +79,7 @@ impl Problem {
         Problem {
             status: "ok".to_string(),
             problem: ProblemObject::new(id, title, statement, code, input_desc, output_desc, score,),
-            errorMessage: None,
+            error_message: None,
         }
     }
 
@@ -86,7 +87,7 @@ impl Problem {
         Problem {
             status: status.to_string(),
             problem: ProblemObject::dummy(),
-            errorMessage: Some(msg.to_string()),
+            error_message: Some(msg.to_string()),
         }
     }
 
@@ -105,7 +106,7 @@ impl AllProblems {
         AllProblems {
             status,
             problems,
-            errorMessage: error_message,
+            error_message,
         }
     }
 
@@ -113,7 +114,7 @@ impl AllProblems {
         AllProblems {
             status: status.to_string(),
             problems: Vec::new(),
-            errorMessage: Some(msg.to_string()),
+            error_message: Some(msg.to_string()),
         }
     }
 }

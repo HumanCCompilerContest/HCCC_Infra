@@ -43,12 +43,4 @@ impl Ranking {
             errorMessage: None,
         }
     }
-
-    pub fn error() -> Self {
-        Ranking {
-            status: "ng".to_string(),
-            ranks: Vec::new(),
-            errorMessage: Some("failed to create ranking".to_string()),
-        }
-    }
 }

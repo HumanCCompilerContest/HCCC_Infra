@@ -10,20 +10,20 @@ pub struct UserObject {
 
 #[derive(Serialize)]
 #[derive(Debug, ToSql, FromSql)]
-#[allow(non_snake_case)]
 pub struct User {
     status: String,
     user: UserObject,
-    errorMessage: Option<String>,
+    #[serde(rename = "errorMessage")]
+    error_message: Option<String>,
 }
 
 #[derive(Serialize)]
-#[allow(non_snake_case)]
 pub struct AllUsers {
     status: String,
     #[serde(rename = "items")]
     users: Vec<UserObject>,
-    errorMessage: Option<String>,
+    #[serde(rename = "errorMessage")]
+    error_message: Option<String>,
 }
 
 impl UserObject {
@@ -50,7 +50,7 @@ impl User {
                 id,
                 name,
             },
-            errorMessage: error_message,
+            error_message,
         }
     }
 
@@ -61,7 +61,7 @@ impl User {
                 id: 0,
                 name: String::new(),
             },
-            errorMessage: Some(msg.to_string())
+            error_message: Some(msg.to_string())
         }
     }
 
@@ -75,7 +75,7 @@ impl AllUsers {
         AllUsers {
             status,
             users,
-            errorMessage: error_message,
+            error_message,
         }
     }
 }
