@@ -10,10 +10,10 @@ pub struct SubmitImpl<'a> {
 
 #[axum::async_trait]
 impl<'a> Submits for SubmitImpl<'a> {
-    async fn get_pendding_submit(&self) -> Option<Submit> {
+    async fn get_pending_submit(&self) -> Option<Submit> {
         let conn = self.pool.get().await.unwrap();
         conn.query_opt(
-            "SELECT * FROM submits WHERE result = Pending ORDER BY time DESC",
+            "SELECT * FROM submits WHERE result = 'Pending' ORDER BY time DESC",
             &[],
         )
         .await
