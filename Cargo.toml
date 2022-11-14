@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "judge_system",
+  "web_server",
+  "judge_server",
+]
