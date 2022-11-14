@@ -1,9 +1,8 @@
-use crate::entities::Submit;
+use crate::entities::{Submit, JudgeResult};
 
 #[axum::async_trait]
 pub trait Submits {
-    async fn get_submit(&self, user_id: i32, submit_id: i32) -> Option<Submit>; 
-    async fn list(&self) -> Vec<Submit>;
-    async fn store(&self, entity: &Submit);
+    async fn get_pendding_submit(&self) -> Option<Submit>; 
+    async fn store_result(&self, result: JudgeResult, submit_id: i32);
 }
 
