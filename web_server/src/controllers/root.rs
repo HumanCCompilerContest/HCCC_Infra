@@ -1,17 +1,15 @@
 use axum::{
     extract::Extension,
-    http::{StatusCode, HeaderValue, Method},
     http::header::CONTENT_TYPE,
-    routing,
-    Json,
-    Router
+    http::{HeaderValue, Method, StatusCode},
+    routing, Json, Router,
 };
 use tower_http::cors::CorsLayer;
 
-use crate::controllers::{accounts, users, problems, submissions};
+use crate::controllers::{accounts, problems, submissions, users};
 use crate::database::{self, RepositoryProvider};
-use crate::services;
 use crate::entities::Ranking;
+use crate::services;
 
 pub async fn app() -> Router {
     let cors_layer = CorsLayer::new()
@@ -38,9 +36,7 @@ async fn get() -> StatusCode {
     StatusCode::NOT_FOUND
 }
 
-async fn ranking(
-    Extension(repository_provider): Extension<RepositoryProvider>
-) -> Json<Ranking> {
+async fn ranking(Extension(repository_provider): Extension<RepositoryProvider>) -> Json<Ranking> {
     tracing::debug!("/api/ranking");
     let user_repo = repository_provider.user();
     Json(services::get_ranking(&user_repo).await)

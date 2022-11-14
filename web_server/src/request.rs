@@ -20,14 +20,15 @@ impl UserContext {
 }
 
 #[axum::async_trait]
-impl<B> FromRequest<B> for UserContext 
+impl<B> FromRequest<B> for UserContext
 where
     B: Send,
 {
     type Rejection = Json<serde_json::Value>;
 
     async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let error_json = || Json(json!({"status": "login-required", "errorMessage": "session expired"}));
+        let error_json =
+            || Json(json!({"status": "login-required", "errorMessage": "session expired"}));
 
         let database_url = database_url();
         let store = PostgresSessionStore::new(&database_url)
@@ -43,9 +44,7 @@ where
             .await
             .map_err(|_| error_json())?;
         let session = session.ok_or(error_json())?;
-        let context = UserContext {
-            session,
-        };
+        let context = UserContext { session };
 
         Ok(context)
     }

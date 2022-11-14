@@ -1,14 +1,8 @@
-use tokio_postgres::Row;
 use chrono::{DateTime, Local};
+use tokio_postgres::Row;
 
 use crate::database::ConnectionPool;
-use crate::entities::{
-    Submission,
-    SubmissionObject,
-    JudgeResult,
-    UserObject,
-    ProblemObject,
-};
+use crate::entities::{JudgeResult, ProblemObject, Submission, SubmissionObject, UserObject};
 use crate::repositories::Submissions;
 
 pub struct SubmissionImpl<'a> {
@@ -53,15 +47,16 @@ impl<'a> Submissions for SubmissionImpl<'a> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
             .query(
-                &format!("SELECT {} FROM {} ORDER BY time DESC", TARGET_COLUMN, TARGET_TABLES),
-                &[]
+                &format!(
+                    "SELECT {} FROM {} ORDER BY time DESC",
+                    TARGET_COLUMN, TARGET_TABLES
+                ),
+                &[],
             )
             .await
             .unwrap();
 
-        row.into_iter()
-            .map(|r| r.into())
-            .collect()
+        row.into_iter().map(|r| r.into()).collect()
     }
 
     async fn user_submitted(&self, user_id: i32) -> Vec<SubmissionObject> {
@@ -70,15 +65,16 @@ impl<'a> Submissions for SubmissionImpl<'a> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
             .query(
-                &format!("SELECT {} FROM {} WHERE user_id = $1 ORDER BY time DESC", TARGET_COLUMN, TARGET_TABLES),
-                &[&user_id]
+                &format!(
+                    "SELECT {} FROM {} WHERE user_id = $1 ORDER BY time DESC",
+                    TARGET_COLUMN, TARGET_TABLES
+                ),
+                &[&user_id],
             )
             .await
             .unwrap();
 
-        row.into_iter()
-            .map(|r| r.into())
-            .collect()
+        row.into_iter().map(|r| r.into()).collect()
     }
 }
 
@@ -89,10 +85,7 @@ impl From<Row> for Submission {
             r.get("time"),
             r.get("asm"),
             r.get("result"),
-            UserObject::new(
-                r.get("user_id"),
-                r.get("name"),
-            ),
+            UserObject::new(r.get("user_id"), r.get("name")),
             ProblemObject::new(
                 r.get("problem_id"),
                 r.get("title"),
@@ -113,10 +106,7 @@ impl From<Row> for SubmissionObject {
             r.get("time"),
             r.get("asm"),
             r.get("result"),
-            UserObject::new(
-                r.get("user_id"),
-                r.get("name"),
-            ),
+            UserObject::new(r.get("user_id"), r.get("name")),
             ProblemObject::new(
                 r.get("problem_id"),
                 r.get("title"),
@@ -129,4 +119,3 @@ impl From<Row> for SubmissionObject {
         )
     }
 }
-

@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use postgres_types::{ToSql, FromSql};
+use postgres_types::{FromSql, ToSql};
 
 #[derive(Debug, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
@@ -25,7 +25,14 @@ pub struct Submit {
 }
 
 impl Submit {
-    pub fn new(id: i32, user_id: i32, problem_id: i32, time: DateTime<Utc>, asm: String, result: JudgeResult) -> Self {
+    pub fn new(
+        id: i32,
+        user_id: i32,
+        problem_id: i32,
+        time: DateTime<Utc>,
+        asm: String,
+        result: JudgeResult,
+    ) -> Self {
         Submit {
             id,
             user_id,
@@ -40,5 +47,3 @@ impl Submit {
         self.id
     }
 }
-
-

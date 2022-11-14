@@ -1,9 +1,8 @@
-use serde::Serialize;
 use postgres_types::ToSql;
+use serde::Serialize;
 
 #[allow(non_snake_case)]
-#[derive(Serialize)]
-#[derive(Debug, ToSql)]
+#[derive(Serialize, Debug, ToSql)]
 pub struct Rank {
     rank: i32,
     userName: String,
@@ -11,8 +10,7 @@ pub struct Rank {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize)]
-#[derive(Debug, ToSql)]
+#[derive(Serialize, Debug, ToSql)]
 pub struct Ranking {
     status: String,
     #[serde(rename = "items")]

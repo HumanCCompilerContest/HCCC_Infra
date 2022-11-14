@@ -22,4 +22,3 @@ impl RepositoryProvider {
         SubmitImpl { pool: &self.0 }
     }
 }
-

@@ -1,4 +1,4 @@
-use crate::entities::{User, UserObject, Rank};
+use crate::entities::{Rank, User, UserObject};
 
 #[axum::async_trait]
 pub trait Users {
@@ -6,4 +6,3 @@ pub trait Users {
     async fn all_users(&self) -> Vec<UserObject>;
     async fn create_ranking(&self) -> Vec<Rank>;
 }
-

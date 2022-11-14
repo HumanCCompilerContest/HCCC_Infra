@@ -1,6 +1,6 @@
+use crate::entities::UserObject;
 use serde::Serialize;
 use sha2::{Digest, Sha256};
-use crate::entities::UserObject;
 
 #[allow(non_snake_case)]
 #[derive(Serialize)]

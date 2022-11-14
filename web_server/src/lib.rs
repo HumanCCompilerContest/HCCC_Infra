@@ -1,6 +1,6 @@
 mod constants {
-    use std::env;
     use chrono::{DateTime, Local};
+    use std::env;
 
     pub const AXUM_SESSION_COOKIE_NAME: &str = "hccc_session";
     pub const AXUM_SESSION_USER_ID_KEY: &str = "uid";
@@ -24,69 +24,71 @@ mod constants {
 }
 mod controllers {
     mod accounts;
-    mod root;
-    mod users;
     mod problems;
+    mod root;
     mod submissions;
+    mod users;
 
-    pub use root::app;
-    pub use users::user;
     pub use problems::problem;
+    pub use root::app;
     pub use submissions::submissions;
+    pub use users::user;
 }
 
 mod database;
 
 mod entities {
     mod account;
-    mod users;
     mod problem;
-    mod submission;
     mod ranking;
+    mod submission;
+    mod users;
 
     pub use account::{Account, AccountResponse};
-    pub use users::{User, UserObject, AllUsers};
-    pub use problem::{Problem, ProblemObject, AllProblems};
-    pub use submission::{Submission, SubmissionObject, UserSubmissions, JudgeResult};
+    pub use problem::{AllProblems, Problem, ProblemObject};
     pub use ranking::{Rank, Ranking};
+    pub use submission::{JudgeResult, Submission, SubmissionObject, UserSubmissions};
+    pub use users::{AllUsers, User, UserObject};
 }
 
 mod repos_impl {
     mod accounts;
-    mod users;
     mod problems;
     mod submissions;
+    mod users;
 
     pub use accounts::AccountsImpl;
-    pub use users::UserImpl;
     pub use problems::ProblemImpl;
     pub use submissions::SubmissionImpl;
+    pub use users::UserImpl;
 }
 
 mod repositories {
     mod accounts;
-    mod users;
     mod problem;
     mod submissions;
+    mod users;
 
     pub use accounts::Accounts;
-    pub use users::Users;
     pub use problem::Problems;
     pub use submissions::Submissions;
+    pub use users::Users;
 }
 
 mod services {
     mod accounts;
-    mod users;
     mod problems;
-    mod submissions;
     mod ranking;
+    mod submissions;
+    mod users;
 
     pub use accounts::{create_account, create_session, SessionToken};
-    pub use users::{get_user, get_all_users};
-    pub use problems::{get_problem, get_all_problems};
-    pub use submissions::{get_submission, get_user_submissions, get_all_users_submissions, submit_asm};
+    pub use problems::{get_all_problems, get_problem};
     pub use ranking::get_ranking;
+    pub use submissions::{
+        get_all_users_submissions, get_submission, get_user_submissions, submit_asm,
+    };
+    pub use users::{get_all_users, get_user};
 }
 
 mod request;
@@ -105,6 +107,6 @@ pub async fn setup_session_store() {
 pub fn is_contest_underway() -> bool {
     let (begin, end) = constants::contest_duration();
     let now = chrono::Local::now();
-    
+
     begin <= now && now <= end
 }

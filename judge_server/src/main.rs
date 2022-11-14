@@ -1,8 +1,8 @@
-use tokio::time::{sleep, Duration};
-use tokio::process::Command;
 use judge_server::database::new_repo;
 use judge_server::entities::JudgeResult;
 use judge_server::repositories::submit::Submits;
+use tokio::process::Command;
+use tokio::time::{sleep, Duration};
 
 #[tokio::main]
 async fn main() {
@@ -18,7 +18,7 @@ async fn main() {
             Some(s) => s,
             None => {
                 continue;
-            },
+            }
         };
 
         let result = Command::new("bash")
@@ -43,7 +43,9 @@ async fn main() {
 
             repo_submit.store_result(judge_result, submit.id()).await;
         } else {
-            repo_submit.store_result(JudgeResult::SystemError, submit.id()).await;
+            repo_submit
+                .store_result(JudgeResult::SystemError, submit.id())
+                .await;
         }
         sleep(Duration::from_millis(10)).await;
     }

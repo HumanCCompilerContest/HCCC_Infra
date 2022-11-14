@@ -1,5 +1,5 @@
+use crate::entities::{JudgeResult, Submission, SubmissionObject};
 use chrono::{DateTime, Local};
-use crate::entities::{Submission, SubmissionObject, JudgeResult};
 
 #[axum::async_trait]
 pub trait Submissions {
@@ -15,5 +15,3 @@ pub trait Submissions {
         judge_result: JudgeResult,
     ) -> Option<i32>;
 }
-
-

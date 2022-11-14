@@ -1,9 +1,9 @@
 mod run_test;
 
+use clap::arg;
 use std::fs::File;
 use std::io::Write;
 use tokio::process::Command;
-use clap::arg;
 
 #[allow(dead_code)]
 pub enum ExitCode {
@@ -30,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .arg(arg!(--output <testcase_number> "check stdout").required(false))
         .arg(arg!(<asm> "assembly"))
         .get_matches();
-    let flag_map = | | {
+    let flag_map = || {
         (
             app.is_present("justrun"),
             app.is_present("exitcode"),
@@ -95,11 +95,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         ExeOption::ExitCode => {
             let testcase_number = app.value_of("exitcode").unwrap();
             run_test::with_testcase(testcase_number, exe_option).await;
-        },
+        }
         ExeOption::Output => {
             let testcase_number = app.value_of("output").unwrap();
             run_test::with_testcase(testcase_number, exe_option).await;
-        },
+        }
     }
 
     Ok(())

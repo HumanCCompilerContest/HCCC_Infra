@@ -13,7 +13,10 @@ impl<'a> Accounts for AccountsImpl<'a> {
     async fn find_by(&self, user_name: &str) -> Option<Account> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
-            .query_opt("SELECT * FROM accounts WHERE name = $1::TEXT", &[&user_name])
+            .query_opt(
+                "SELECT * FROM accounts WHERE name = $1::TEXT",
+                &[&user_name],
+            )
             .await
             .unwrap();
         row.map(|r| r.into())
@@ -23,7 +26,7 @@ impl<'a> Accounts for AccountsImpl<'a> {
         let conn = self.pool.get().await.unwrap();
         conn.execute(
             "INSERT INTO accounts (name, password) VALUES ($1, $2)",
-            &[&entity.user_name, &entity.hashed_password]
+            &[&entity.user_name, &entity.hashed_password],
         )
         .await
     }
@@ -31,12 +34,6 @@ impl<'a> Accounts for AccountsImpl<'a> {
 
 impl From<Row> for Account {
     fn from(r: Row) -> Self {
-        Account::new(
-            r.get("id"),
-            r.get("name"),
-            r.get("password"),
-        )
+        Account::new(r.get("id"), r.get("name"), r.get("password"))
     }
 }
-
-

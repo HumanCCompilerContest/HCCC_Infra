@@ -2,7 +2,7 @@ pub mod database;
 
 pub mod entities {
     mod submit;
-    pub use submit::{Submit, JudgeResult};
+    pub use submit::{JudgeResult, Submit};
 }
 
 mod repos_impl {

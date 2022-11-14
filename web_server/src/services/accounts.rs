@@ -9,7 +9,7 @@ use crate::repositories::Accounts;
 pub async fn create_account(
     repo: &impl Accounts,
     user_name: &str,
-    password: &str
+    password: &str,
 ) -> Result<u64, tokio_postgres::Error> {
     let new_account = Account::create(user_name, password);
     repo.store(&new_account).await
@@ -18,7 +18,7 @@ pub async fn create_account(
 pub async fn create_session(
     repo: &impl Accounts,
     user_name: &str,
-    password: &str
+    password: &str,
 ) -> (Option<i32>, Option<SessionToken>) {
     let account = repo.find_by(user_name).await;
     if let Some(account) = account {
@@ -53,4 +53,3 @@ impl SessionToken {
         )
     }
 }
-

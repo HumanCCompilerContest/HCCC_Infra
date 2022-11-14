@@ -1,20 +1,18 @@
+use postgres_types::{FromSql, ToSql};
 use serde::Serialize;
-use postgres_types::{ToSql, FromSql};
 
-#[derive(Serialize)]
-#[derive(Debug, ToSql, FromSql)]
+#[derive(Serialize, Debug, ToSql, FromSql)]
 pub struct ProblemObject {
     id: i32,
     title: String,
     statement: String,
-	code: String,
-	input_desc: String,
-	output_desc: String,
-	score: i32,
+    code: String,
+    input_desc: String,
+    output_desc: String,
+    score: i32,
 }
 
-#[derive(Serialize)]
-#[derive(Debug, ToSql, FromSql)]
+#[derive(Serialize, Debug, ToSql, FromSql)]
 pub struct Problem {
     status: String,
     problem: ProblemObject,
@@ -53,7 +51,7 @@ impl ProblemObject {
         }
     }
 
-    pub fn dummy() -> Self{
+    pub fn dummy() -> Self {
         ProblemObject {
             id: 0,
             title: String::new(),
@@ -78,7 +76,7 @@ impl Problem {
     ) -> Self {
         Problem {
             status: "ok".to_string(),
-            problem: ProblemObject::new(id, title, statement, code, input_desc, output_desc, score,),
+            problem: ProblemObject::new(id, title, statement, code, input_desc, output_desc, score),
             error_message: None,
         }
     }
@@ -96,12 +94,11 @@ impl Problem {
     }
 }
 
-
 impl AllProblems {
     pub fn new(
         status: String,
         problems: Vec<ProblemObject>,
-        error_message: Option<String>
+        error_message: Option<String>,
     ) -> Self {
         AllProblems {
             status,

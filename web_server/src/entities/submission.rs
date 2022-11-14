@@ -1,10 +1,9 @@
-use serde::Serialize;
+use crate::entities::{ProblemObject, UserObject};
 use chrono::{DateTime, Local};
-use postgres_types::{ToSql, FromSql};
-use crate::entities::{UserObject, ProblemObject};
+use postgres_types::{FromSql, ToSql};
+use serde::Serialize;
 
-#[derive(Debug, Copy, Clone)]
-#[derive(Serialize, ToSql, FromSql)]
+#[derive(Debug, Copy, Clone, Serialize, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
 pub enum JudgeResult {
     AC = 0,
@@ -20,12 +19,12 @@ pub enum JudgeResult {
 #[derive(Serialize)]
 #[allow(non_snake_case)]
 pub struct SubmissionObject {
-	id: i32,
-	time: DateTime<Local>,
-	asm: String,
-	result: JudgeResult,
-	user: UserObject,
-	problem: ProblemObject,
+    id: i32,
+    time: DateTime<Local>,
+    asm: String,
+    result: JudgeResult,
+    user: UserObject,
+    problem: ProblemObject,
 }
 
 #[derive(Serialize)]
@@ -87,14 +86,7 @@ impl Submission {
     ) -> Self {
         Submission {
             status: "ok".to_string(),
-            submission: SubmissionObject::new(
-                id,
-                time,
-                asm,
-                result,
-                user,
-                problem,
-            ),
+            submission: SubmissionObject::new(id, time, asm, result, user, problem),
             errorMessage: None,
         }
     }
@@ -109,7 +101,11 @@ impl Submission {
 }
 
 impl UserSubmissions {
-    pub fn new(status: String, submissions: Vec<SubmissionObject>, error_message: Option<String>) -> Self {
+    pub fn new(
+        status: String,
+        submissions: Vec<SubmissionObject>,
+        error_message: Option<String>,
+    ) -> Self {
         UserSubmissions {
             status,
             submissions,

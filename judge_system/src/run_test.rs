@@ -1,7 +1,7 @@
+use crate::{ExeOption, ExitCode};
+use serde::Deserialize;
 use std::time::Duration;
 use tokio::process::Command;
-use serde::Deserialize;
-use crate::{ExitCode, ExeOption};
 
 const TLE_SEC: u64 = 2;
 
@@ -20,7 +20,7 @@ pub async fn just_exec() {
             .kill_on_drop(true)
             .arg("-c")
             .arg("./test_target")
-            .output()
+            .output(),
     )
     .await
     .unwrap_or_else(|_| {
@@ -51,7 +51,7 @@ pub async fn with_testcase(testcase_number: &str, exe_option: ExeOption) {
                 .kill_on_drop(true)
                 .arg("-c")
                 .arg(format!("echo {} | ./test_target", case.input))
-                .output()
+                .output(),
         )
         .await
         .unwrap_or_else(|_| {
@@ -71,17 +71,15 @@ pub async fn with_testcase(testcase_number: &str, exe_option: ExeOption) {
                     eprintln!("output: {:?}", exit_status);
                     std::process::exit(ExitCode::WA as i32);
                 }
-            },
+            }
             ExeOption::Output => {
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 if stdout != case.expect {
                     eprintln!("output: {:?}", stdout);
                     std::process::exit(ExitCode::WA as i32);
                 }
-            },
+            }
             _ => panic!("invalid ExeOption"),
         }
     }
 }
-
-
