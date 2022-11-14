@@ -9,6 +9,13 @@ CREATE TYPE JudgeResult AS ENUM (
     'SystemError'
 );
 
+CREATE TABLE jobqueue -- ジョブキュー
+(
+	id serial primary key,
+	submission_id integer REFERENCES submits(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+	time timestamptz not null
+);
+
 CREATE TABLE accounts -- ユーザ
 (
 	id serial primary key,
