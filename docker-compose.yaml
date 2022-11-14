@@ -13,9 +13,7 @@ services:
       - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
   judge_system:
-    build:
-      context: ./judge_system
-      dockerfile: Dockerfile
+    image: ghcr.io/alignof/hccc_infra:develop
     container_name: judge_system
     tty: true
     stdin_open: true
