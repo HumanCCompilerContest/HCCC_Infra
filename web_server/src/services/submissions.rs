@@ -43,7 +43,7 @@ pub async fn submit_asm(
     let result = Command::new("bash")
         .arg("-c")
         .arg(format!(
-            "sudo docker exec judge_system /work/judge_system {}",
+            "sudo docker exec --memory=128M --cpus=\".05\" judge_system /work/judge_system {}",
             base64::encode(&asm)
         ))
         .output()
