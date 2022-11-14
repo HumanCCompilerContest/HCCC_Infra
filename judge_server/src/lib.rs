@@ -1,3 +1,10 @@
+mod constants {
+    pub fn database_url() -> String {
+        dotenv::dotenv().ok();
+        std::env::var("DATABASE_URL").unwrap()
+    }
+}
+
 pub mod database;
 
 pub mod entities {
