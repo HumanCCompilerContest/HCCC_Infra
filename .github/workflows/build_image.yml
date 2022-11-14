@@ -43,6 +43,6 @@ jobs:
         context: ${{ matrix.context }}
         push: ${{ github.event_name == 'push' }}
         tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        labels: ${{ matrix.context }}
         cache-from: type=gha,scope=${{ matrix.context }}
         cache-to: type=gha,mode=max,scope=${{ matrix.context }}
