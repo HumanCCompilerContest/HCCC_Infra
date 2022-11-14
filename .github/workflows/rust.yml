@@ -1,0 +1,43 @@
+name: Rust
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+
+env:
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions-rs/toolchain@v1.0.7
+        with:
+          toolchain: stable
+          components: clippy, rustfmt
+          override: true
+
+      - name: cache dependencies
+        uses: Swatinem/rust-cache@v2.2.0
+
+      - name: reviewdog / clippy
+        uses: sksat/action-clippy@v0.1.0
+        with:
+          reporter: github-pr-review
+
+      - name: format
+        uses: actions-rs/cargo@v1.0.3
+        with:
+          command: fmt
+          args: --all -- --check
+
+      - name: unit test
+        uses: actions-rs/cargo@v1.0.3
+        with:
+          command: test
