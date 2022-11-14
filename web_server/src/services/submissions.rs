@@ -40,6 +40,21 @@ pub async fn submit_asm(
     asm: String
 ) -> Submission {
     let submit_time = Local::now();
+    let submission_id = match repo_submit.store_submission(user_id, problem_id, submit_time, &asm, judge_result).await {
+        Some(id) => id,
+        None => return Submission::error(),
+    };
+    let user_obj = repo_user.find_user(user_id).await.unwrap_or(User::error("user not found"));
+    let problem_obj = repo_prob.find_problem(problem_id).await.unwrap_or(Problem::error("ng", "problem not found"));
+    Submission::new(
+        submission_id,
+        submit_time,
+        asm,
+        JudgeResult::Pending,
+        user_obj.get_object(),
+        problem_obj.get_object()
+    )
+    /*
     let result = Command::new("bash")
         .arg("-c")
         .arg(format!(
@@ -79,5 +94,6 @@ pub async fn submit_asm(
     } else {
         Submission::error()
     }
+    */
 }
 
