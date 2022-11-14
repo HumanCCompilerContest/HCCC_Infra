@@ -24,7 +24,7 @@ jobs:
       with:
         images: ghcr.io/${{ github.repository }}
         flavor: |
-          prefix=${{ format('{0}-', matrix.context }}
+          prefix=${{ format('{0}-', matrix.context) }}
 
     - name: Set up Buildx
       uses: docker/setup-buildx-action@v2
