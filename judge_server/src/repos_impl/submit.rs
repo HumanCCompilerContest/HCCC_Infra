@@ -10,16 +10,17 @@ pub struct SubmitImpl<'a> {
 
 #[axum::async_trait]
 impl<'a> Submits for SubmitImpl<'a> {
-    async fn get_pending_submit(&self) -> Option<Submit> {
+    async fn get_pending_submits(&self) -> Vec<Submit> {
         let conn = self.pool.get().await.unwrap();
-        conn.query_opt(
+        conn.query(
             "SELECT * FROM submits WHERE result = 'Pending' ORDER BY time DESC",
             &[],
         )
         .await
-        .ok()
-        .map(|row| row.map(|r| r.into()))
-        .flatten()
+        .unwrap()
+        .into_iter()
+        .map(|r| r.into())
+        .collect()
     }
 
     async fn store_result(&self, result: JudgeResult, submit_id: i32) {
