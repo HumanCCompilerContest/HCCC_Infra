@@ -31,14 +31,14 @@ impl<'a> Users for UserImpl<'a> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
             .query(
-                "SELECT sub.name, SUM(sub.score)
+                "SELECT sub.name AS name, SUM(sub.score) AS score, MAX(sub.min_time) AS max_time
                 FROM
                 (
-                    SELECT a.name AS name, s.problem_id AS problem_id, p.score AS score FROM submits AS s 
+                    SELECT a.name AS name, s.problem_id AS problem_id, p.score AS score, MIN(s.time) AS min_time FROM submits AS s 
                     JOIN accounts AS a ON s.user_id = a.id
                     JOIN problems AS p ON s.problem_id = p.id
                     WHERE s.result = 'AC'
-                    GROUP BY s.user_id, s.problem_id, p.score, a.name
+                    GROUP BY a.name, s.problem_id, p.score
                 ) AS sub
                 GROUP BY sub.name
                 ;",
