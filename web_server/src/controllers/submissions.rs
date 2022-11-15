@@ -24,7 +24,7 @@ async fn from_user_id(
     tracing::debug!("/api/submissions");
     let submission_repo = repository_provider.submission();
     if let Some(user_id) = param.user_id {
-        if !is_contest_underway() && user_context.user_id() != user_id {
+        if is_contest_underway() && user_context.user_id() != user_id {
             Json(UserSubmissions::error(
                 "forbidden",
                 "You won't be able to see other users' submissions during the contest",
@@ -33,7 +33,7 @@ async fn from_user_id(
             Json(services::get_user_submissions(&submission_repo, user_id).await)
         }
     } else {
-        if !is_contest_underway() {
+        if is_contest_underway() {
             Json(UserSubmissions::error(
                 "forbidden",
                 "You won't be able to see other users' submissions during the contest",
