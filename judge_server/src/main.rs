@@ -8,14 +8,14 @@ async fn judge(repo_submit: &dyn Submits, submit: Submit) {
     let result = Command::new("bash")
         .arg("-c")
         .arg(format!(
-            "sudo docker run --memory=128M --cpus=\"0.05\" ghcr.io/alignof/hccc_infra:judge_system-develop {}",
+            "sudo docker run --rm --memory=128M --cpus=\"0.05\" ghcr.io/alignof/hccc_infra:judge_system-develop {}",
             base64::encode(&submit.asm)
         ))
         .output()
         .await;
 
     if let Ok(result) = result {
-        let judge_result = match result.status.code().unwrap_or(6) {
+        let judge_result = match result.status.code().unwrap_or(7) {
             0 => JudgeResult::AC,
             1 => JudgeResult::WA,
             2 => JudgeResult::WC,

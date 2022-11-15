@@ -4,7 +4,7 @@ use postgres_types::{FromSql, ToSql};
 #[derive(Debug, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
 pub enum JudgeResult {
-    AC,
+    AC = 0,
     WA,
     WC,
     AE,

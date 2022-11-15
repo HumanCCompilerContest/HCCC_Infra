@@ -14,6 +14,7 @@ pub enum ExitCode {
     LE,
     RE,
     TLE,
+    Pending,
     SystemError,
 }
 
