@@ -1,6 +1,6 @@
 mod constants {
-    use std::env;
     use chrono::{DateTime, Local};
+    use std::env;
 
     pub const AXUM_SESSION_COOKIE_NAME: &str = "hccc_session";
     pub const AXUM_SESSION_USER_ID_KEY: &str = "uid";
@@ -12,12 +12,15 @@ mod constants {
 
     use async_once_cell::OnceCell;
     use sqlx::postgres::PgPool;
-    pub async fn connection_pool_for_session() -> &'static PgPool {
+    pub async fn connection_pool_for_session() -> PgPool {
+        /*
         static POOL: OnceCell<PgPool> = OnceCell::new();
         POOL.get_or_init(async {
             PgPool::connect(&database_url()).await.unwrap()
         })
         .await
+        */
+        PgPool::connect(&database_url()).await.unwrap()
     }
 
     pub fn contest_duration() -> (DateTime<Local>, DateTime<Local>) {
