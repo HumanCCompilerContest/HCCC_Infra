@@ -6,7 +6,7 @@ use axum::response::Json;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::constants::{database_url, AXUM_SESSION_COOKIE_NAME, AXUM_SESSION_USER_ID_KEY};
+use crate::constants::{connection_pool_for_session, AXUM_SESSION_COOKIE_NAME, AXUM_SESSION_USER_ID_KEY};
 
 #[derive(Deserialize, Serialize)]
 pub struct UserContext {
@@ -30,10 +30,8 @@ where
         let error_json =
             || Json(json!({"status": "login-required", "errorMessage": "session expired"}));
 
-        let database_url = database_url();
-        let store = PostgresSessionStore::new(&database_url)
-            .await
-            .map_err(|_| error_json())?;
+        let pool = connection_pool_for_session().await;
+        let store = PostgresSessionStore::from_client(*pool);
         let cookies = Option::<TypedHeader<Cookie>>::from_request(req)
             .await
             .unwrap()
@@ -44,7 +42,7 @@ where
             .await
             .map_err(|_| error_json())?;
         let session = session.ok_or(error_json())?;
-        let context = UserContext { session };
+        let context = UserContext { session: Session::new() };
 
         Ok(context)
     }

@@ -1,5 +1,5 @@
 use judge_server::database::new_repo;
-use judge_server::entities::{Submit, JudgeResult};
+use judge_server::entities::{JudgeResult, Submit};
 use judge_server::repositories::submit::Submits;
 use tokio::process::Command;
 use tokio::time::{sleep, Duration};
@@ -7,10 +7,10 @@ use tokio::time::{sleep, Duration};
 async fn judge(repo_submit: &dyn Submits, submit: Submit) {
     let result = Command::new("bash")
         .arg("-c")
-        .arg(dbg!(format!(
+        .arg(format!(
             "sudo docker run --memory=128M --cpus=\"0.05\" ghcr.io/alignof/hccc_infra:judge_system-develop {}",
             base64::encode(&submit.asm)
-        )))
+        ))
         .output()
         .await;
 
