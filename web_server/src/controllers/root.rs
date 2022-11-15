@@ -10,6 +10,7 @@ use crate::controllers::{accounts, problems, submissions, users};
 use crate::database::{self, RepositoryProvider};
 use crate::entities::Ranking;
 use crate::services;
+use crate::request;
 
 pub async fn app() -> Router {
     let cors_layer = CorsLayer::new()
@@ -18,6 +19,7 @@ pub async fn app() -> Router {
         .allow_methods([Method::GET, Method::POST, Method::HEAD, Method::OPTIONS])
         .allow_headers([CONTENT_TYPE]);
     let database_layer = database::layer().await;
+    let session_layer = request::layer().await;
 
     Router::new()
         .route("/", routing::get(get))
@@ -30,6 +32,7 @@ pub async fn app() -> Router {
         .nest("/api/submissions", submissions::submissions())
         .layer(cors_layer)
         .layer(database_layer)
+        .layer(session_layer)
 }
 
 async fn get() -> StatusCode {
