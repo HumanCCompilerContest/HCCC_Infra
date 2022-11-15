@@ -18,10 +18,11 @@ async fn judge(repo_submit: &dyn Submits, submit: Submit) {
         let judge_result = match result.status.code().unwrap_or(6) {
             0 => JudgeResult::AC,
             1 => JudgeResult::WA,
-            2 => JudgeResult::AE,
-            3 => JudgeResult::LE,
-            4 => JudgeResult::RE,
-            5 => JudgeResult::TLE,
+            2 => JudgeResult::WC,
+            3 => JudgeResult::AE,
+            4 => JudgeResult::LE,
+            5 => JudgeResult::RE,
+            6 => JudgeResult::TLE,
             _ => JudgeResult::SystemError,
         };
 

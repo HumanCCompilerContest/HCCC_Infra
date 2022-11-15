@@ -6,6 +6,7 @@ use postgres_types::{FromSql, ToSql};
 pub enum JudgeResult {
     AC,
     WA,
+    WC,
     AE,
     LE,
     RE,

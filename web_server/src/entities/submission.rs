@@ -8,6 +8,7 @@ use serde::Serialize;
 pub enum JudgeResult {
     AC = 0,
     WA,
+    WC,
     AE,
     LE,
     RE,

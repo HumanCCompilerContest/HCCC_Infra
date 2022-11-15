@@ -1,6 +1,7 @@
 CREATE TYPE JudgeResult AS ENUM (
     'AC',
     'WA',
+    'WC',
     'AE',
     'LE',
     'RE',

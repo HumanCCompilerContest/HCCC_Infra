@@ -9,6 +9,7 @@ use tokio::process::Command;
 pub enum ExitCode {
     AC = 0,
     WA,
+    WC,
     AE,
     LE,
     RE,
