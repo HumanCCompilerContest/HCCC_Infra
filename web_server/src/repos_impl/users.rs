@@ -29,7 +29,7 @@ impl<'a> Users for UserImpl<'a> {
 
     async fn create_ranking(&self) -> Vec<Rank> {
         let conn = self.pool.get().await.unwrap();
-        let row = conn
+        let ac = conn
             .query(
                 "SELECT sub.name AS name, SUM(sub.score) AS score, MAX(sub.min_time) AS max_time
                 FROM
@@ -46,10 +46,54 @@ impl<'a> Users for UserImpl<'a> {
             )
             .await
             .unwrap();
+        let not_ac = conn
+            .query(
+                "SELECT a.name AS name, COUNT(*) AS wrong_count FROM submits AS s 
+                    JOIN accounts AS a ON s.user_id = a.id
+                    WHERE s.result != 'WC'
+                    AND s.result != 'AC'
+                    GROUP BY a.name
+                    ORDER BY a.name
+                ;",
+                &[],
+            )
+            .await
+            .unwrap();
+        let wc = conn
+            .query(
+                "SELECT a.name AS name, COUNT(*) AS wc_count FROM submits AS s 
+                    JOIN accounts AS a ON s.user_id = a.id
+                    WHERE s.result = 'WC'
+                    GROUP BY a.name
+                    ORDER BY a.name
+                ;",
+                &[],
+            )
+            .await
+            .unwrap();
 
-        row.into_iter()
+        let mut ranking = ac
+            .iter()
+            .zip(not_ac.iter())
+            .zip(wc.iter())
+            .map(|((x, y), z)| {
+                Rank::new(
+                    x.get("name"),
+                    std::cmp::max(
+                        0,
+                        x.get::<&str, i64>("sum")
+                            - y.get::<&str, i64>("wrong_count")
+                            - z.get::<&str, i64>("wc_count") * 100,
+                    ),
+                )
+            })
+            .collect::<Vec<Rank>>();
+
+        ranking.sort();
+        ranking
+            .into_iter()
             .enumerate()
-            .map(|(rank, r)| <tokio_postgres::Row as Into<Rank>>::into(r).set_rank(rank + 1))
+            .map(|(rank, r)| r.set_rank(rank + 1))
             .collect()
     }
 }
@@ -63,14 +107,5 @@ impl From<Row> for User {
 impl From<Row> for UserObject {
     fn from(r: Row) -> Self {
         UserObject::new(r.get("id"), r.get("name"))
-    }
-}
-
-impl From<Row> for Rank {
-    fn from(r: Row) -> Self {
-        Rank::new(
-            r.get("name"),
-            r.get("sum"), // sum of score
-        )
     }
 }

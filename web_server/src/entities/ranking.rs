@@ -2,7 +2,7 @@ use postgres_types::ToSql;
 use serde::Serialize;
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Debug, ToSql)]
+#[derive(Eq, Ord, PartialEq, PartialOrd, Debug, Serialize, ToSql)]
 pub struct Rank {
     rank: i32,
     userName: String,
