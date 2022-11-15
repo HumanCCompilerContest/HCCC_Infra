@@ -10,19 +10,6 @@ mod constants {
         env::var("DATABASE_URL").unwrap()
     }
 
-    use async_once_cell::OnceCell;
-    use sqlx::postgres::PgPool;
-    pub async fn connection_pool_for_session() -> PgPool {
-        /*
-        static POOL: OnceCell<PgPool> = OnceCell::new();
-        POOL.get_or_init(async {
-            PgPool::connect(&database_url()).await.unwrap()
-        })
-        .await
-        */
-        PgPool::connect(&database_url()).await.unwrap()
-    }
-
     pub fn contest_duration() -> (DateTime<Local>, DateTime<Local>) {
         dotenv::dotenv().ok();
         (
@@ -109,8 +96,8 @@ mod request;
 pub use controllers::app;
 
 pub async fn setup_session_store() {
-    let database_url = constants::database_url();
-    let store = async_sqlx_session::PostgresSessionStore::new(&database_url)
+    use crate::constants::database_url;
+    let store = async_sqlx_session::PostgresSessionStore::new(&database_url())
         .await
         .unwrap();
     store.migrate().await.unwrap();

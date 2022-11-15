@@ -21,7 +21,6 @@ tokio-postgres = { version = "0.7", features = ["with-chrono-0_4"] }
 postgres-types = { version = "0.2.4", features = ["derive"] }
 sha2 = "0.10"
 sqlx = { version = "0.5.13", features = ["postgres"] }
-async-once-cell = "0.4.2"
 async-session = "3"
 async-sqlx-session = { version = "0.4.0", features = ["pg", "async_std"] }
 base64 = "0.13.1"

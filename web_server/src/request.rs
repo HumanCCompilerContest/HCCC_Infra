@@ -1,14 +1,22 @@
 use async_session::{Session, SessionStore};
-use async_sqlx_session::PostgresSessionStore;
-use axum::extract::{FromRequest, RequestParts, TypedHeader};
-use axum::headers::Cookie;
-use axum::response::Json;
+use axum::{
+    extract::{FromRequest, RequestParts, TypedHeader},
+    headers::Cookie,
+    response::Json,
+    Extension,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use sqlx::postgres::PgPool;
 
-use crate::constants::{
-    connection_pool_for_session, AXUM_SESSION_COOKIE_NAME, AXUM_SESSION_USER_ID_KEY,
-};
+use crate::constants::{database_url, AXUM_SESSION_COOKIE_NAME, AXUM_SESSION_USER_ID_KEY};
+
+pub type ConnectionPool = PgPool;
+pub async fn layer() -> Extension<ConnectionPool> {
+    let pool = PgPool::connect(&database_url()).await.unwrap();
+
+    Extension(pool)
+}
 
 #[derive(Deserialize, Serialize)]
 pub struct UserContext {
@@ -32,8 +40,11 @@ where
         let error_json =
             || Json(json!({"status": "login-required", "errorMessage": "session expired"}));
 
-        let pool = connection_pool_for_session().await;
-        let store = PostgresSessionStore::from_client(pool);
+        let Extension(pool): Extension<ConnectionPool> =
+            Extension::<ConnectionPool>::from_request(req)
+                .await
+                .expect("`SessionStore` extension missing");
+        let store = async_sqlx_session::PostgresSessionStore::from_client(pool);
         let cookies = Option::<TypedHeader<Cookie>>::from_request(req)
             .await
             .unwrap()
@@ -44,7 +55,7 @@ where
             .await
             .map_err(|_| error_json())?;
         let session = session.ok_or(error_json())?;
-        let context = UserContext { session: session };
+        let context = UserContext { session };
 
         Ok(context)
     }
