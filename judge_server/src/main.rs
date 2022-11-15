@@ -14,7 +14,7 @@ async fn main() {
     let repo = new_repo().await;
     let repo_submit = repo.submit();
     loop {
-        let submit = match repo_submit.get_pendding_submit().await {
+        let submit = match repo_submit.get_pending_submit().await {
             Some(s) => s,
             None => {
                 continue;
@@ -23,10 +23,10 @@ async fn main() {
 
         let result = Command::new("bash")
             .arg("-c")
-            .arg(format!(
-                "sudo docker run --memory=128M --cpus=\".05\" judge_system /work/judge_system {}",
+            .arg(dbg!(format!(
+                "sudo docker run --memory=128M --cpus=\"0.05\" ghcr.io/alignof/hccc_infra:judge_system-develop {}",
                 base64::encode(&submit.asm)
-            ))
+            )))
             .output()
             .await;
 
@@ -47,6 +47,6 @@ async fn main() {
                 .store_result(JudgeResult::SystemError, submit.id())
                 .await;
         }
-        sleep(Duration::from_millis(10)).await;
+        sleep(Duration::from_millis(5000)).await;
     }
 }
