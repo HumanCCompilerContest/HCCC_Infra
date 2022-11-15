@@ -81,7 +81,7 @@ impl<'a> Users for UserImpl<'a> {
                     x.get("name"),
                     std::cmp::max(
                         0,
-                        x.get::<&str, i64>("sum")
+                        x.get::<&str, i64>("score")
                             - y.get::<&str, i64>("wrong_count")
                             - z.get::<&str, i64>("wc_count") * 100,
                     ),
