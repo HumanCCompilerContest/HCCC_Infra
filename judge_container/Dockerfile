@@ -10,10 +10,10 @@ FROM chef AS builder
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
-RUN cargo build --release --bin judge_system
+RUN cargo build --release --bin judge_container
 
 FROM gcc:12.2.0
-COPY --from=builder /app/target/release/judge_system /work/
+COPY --from=builder /app/target/release/judge_container /work/
 RUN ls -l /
-RUN file /work/judge_system
-ENTRYPOINT ["/work/judge_system"]
+RUN file /work/judge_container
+ENTRYPOINT ["/work/judge_container"]
