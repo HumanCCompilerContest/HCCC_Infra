@@ -48,49 +48,39 @@ impl<'a> Users for UserImpl<'a> {
             .unwrap();
         let not_ac = conn
             .query(
-                "SELECT a.name AS name, COUNT(*) AS wrong_count FROM submits AS s 
-                    JOIN accounts AS a ON s.user_id = a.id
-                    WHERE s.result != 'WC'
-                    AND s.result != 'AC'
-                    GROUP BY a.name
-                    ORDER BY a.name
-                ;",
-                &[],
-            )
-            .await
-            .unwrap();
-        let wc = conn
-            .query(
-                "SELECT a.name AS name, COUNT(*) AS wc_count FROM submits AS s 
-                    JOIN accounts AS a ON s.user_id = a.id
-                    WHERE s.result = 'WC'
-                    GROUP BY a.name
-                    ORDER BY a.name
+                "SELECT a.name AS name, COUNT(*) AS wrong_count FROM submits AS s
+                JOIN (
+                SELECT user_id, problem_id FROM submits
+                    WHERE result = 'AC'
+                    GROUP BY user_id, problem_id
+                ) AS sub ON s.user_id = sub.user_id AND s.problem_id = sub.problem_id
+                JOIN accounts AS a ON s.user_id = a.id
+                WHERE s.result != 'AC' AND s.result != 'WC'
+                GROUP BY a.name
+                ORDER BY a.name
                 ;",
                 &[],
             )
             .await
             .unwrap();
 
-        let mut ranking = ac
+        // return null when wc is null
+        let mut ranking = dbg!(ac)
             .iter()
-            .zip(not_ac.iter())
-            .zip(wc.iter())
-            .map(|((x, y), z)| {
-                Rank::new(
-                    x.get("name"),
-                    std::cmp::max(
-                        0,
-                        x.get::<&str, i64>("score")
-                            - y.get::<&str, i64>("wrong_count")
-                            - z.get::<&str, i64>("wc_count") * 100,
-                    ),
-                )
+            .map(|x| {
+                let name = x.get("name");
+                let nac = not_ac
+                    .iter()
+                    .find(|y| y.get::<&str, String>("name") == name)
+                    .map(|y| y.get("wrong_count"))
+                    .unwrap_or(0);
+
+                Rank::new(name, std::cmp::max(0, x.get::<&str, i64>("score") - nac))
             })
             .collect::<Vec<Rank>>();
 
         ranking.sort();
-        ranking
+        dbg!(ranking)
             .into_iter()
             .enumerate()
             .map(|(rank, r)| r.set_rank(rank + 1))

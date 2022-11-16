@@ -9,8 +9,8 @@ use tower_http::cors::CorsLayer;
 use crate::controllers::{accounts, problems, submissions, users};
 use crate::database::{self, RepositoryProvider};
 use crate::entities::Ranking;
-use crate::services;
 use crate::request;
+use crate::services;
 
 pub async fn app() -> Router {
     let cors_layer = CorsLayer::new()
