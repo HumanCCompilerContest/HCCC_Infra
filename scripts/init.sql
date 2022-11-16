@@ -43,6 +43,7 @@ CREATE TABLE submits -- submit
 	time timestamptz not null,
 	asm text not null,
 	result JudgeResult not null
+	is_ce boolean not null
 );
 
 INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score) VALUES (
