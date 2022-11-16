@@ -42,6 +42,7 @@ impl From<Row> for Submit {
             r.get("problem_id"),
             r.get("time"),
             r.get("asm"),
+            r.get("is_ce"),
             r.get("result"),
         )
     }

@@ -9,7 +9,8 @@ async fn judge(submit: &Submit) -> (JudgeResult, i32) {
     let result = Command::new("bash")
         .arg("-c")
         .arg(format!(
-            "sudo docker run --rm --memory=128M --cpus=\"0.05\" ghcr.io/alignof/hccc_infra:judge_system-develop {}",
+            "sudo docker run --rm --memory=128M --cpus=\"0.05\" ghcr.io/alignof/hccc_infra:judge_system-develop {} {}",
+            submit.is_ce,
             base64::encode(&submit.asm)
         ))
         .output()

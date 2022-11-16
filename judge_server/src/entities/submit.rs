@@ -22,6 +22,7 @@ pub struct Submit {
     pub problem_id: i32,
     pub time: DateTime<Utc>,
     pub asm: String,
+    pub is_ce: bool,
     pub result: JudgeResult,
 }
 
@@ -32,6 +33,7 @@ impl Submit {
         problem_id: i32,
         time: DateTime<Utc>,
         asm: String,
+        is_ce: bool,
         result: JudgeResult,
     ) -> Self {
         Submit {
@@ -40,6 +42,7 @@ impl Submit {
             problem_id,
             time,
             asm,
+            is_ce,
             result,
         }
     }
