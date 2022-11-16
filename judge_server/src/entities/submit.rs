@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use postgres_types::{FromSql, ToSql};
 
-#[derive(Debug, ToSql, FromSql)]
+#[derive(Debug, Copy, Clone, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
 pub enum JudgeResult {
     AC = 0,

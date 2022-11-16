@@ -1,10 +1,11 @@
+use futures::future;
 use judge_server::database::new_repo;
 use judge_server::entities::{JudgeResult, Submit};
 use judge_server::repositories::submit::Submits;
 use tokio::process::Command;
 use tokio::time::{sleep, Duration};
 
-async fn judge(repo_submit: &dyn Submits, submit: Submit) {
+async fn judge(submit: &Submit) -> (JudgeResult, i32) {
     let result = Command::new("bash")
         .arg("-c")
         .arg(format!(
@@ -26,11 +27,9 @@ async fn judge(repo_submit: &dyn Submits, submit: Submit) {
             _ => JudgeResult::SystemError,
         };
 
-        repo_submit.store_result(judge_result, submit.id()).await;
+        (judge_result, submit.id())
     } else {
-        repo_submit
-            .store_result(JudgeResult::SystemError, submit.id())
-            .await;
+        (JudgeResult::SystemError, submit.id())
     }
 }
 
@@ -45,10 +44,13 @@ async fn main() {
     let repo_submit = repo.submit();
     loop {
         let submits = repo_submit.get_pending_submits().await;
-        for submit in submits {
-            judge(&repo_submit, submit).await;
-        }
+        let works: Vec<_> = submits.iter().map(|submit| judge(submit)).collect();
+        let rets = future::join_all(works).await;
 
+        for ret in rets {
+            let (judge_result, submit_id) = ret;
+            repo_submit.store_result(judge_result, submit_id).await;
+        }
         sleep(Duration::from_millis(5000)).await;
     }
 }
