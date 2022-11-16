@@ -1142,6 +1142,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "judge_container"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "clap",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "judge_server"
 version = "0.1.0"
 dependencies = [
@@ -1160,17 +1171,6 @@ dependencies = [
  "tower-http",
  "tracing",
  "tracing-subscriber",
-]
-
-[[package]]
-name = "judge_system"
-version = "0.1.0"
-dependencies = [
- "base64",
- "clap",
- "serde",
- "serde_json",
- "tokio",
 ]
 
 [[package]]

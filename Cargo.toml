@@ -1,6 +1,6 @@
 [workspace]
 members = [
-  "judge_system",
+  "judge_container",
   "web_server",
   "judge_server",
 ]

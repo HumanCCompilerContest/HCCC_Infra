@@ -17,4 +17,3 @@ COPY --from=builder /app/target/release/judge_system /work/
 RUN ls -l /
 RUN file /work/judge_system
 ENTRYPOINT ["/work/judge_system"]
-
