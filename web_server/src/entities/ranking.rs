@@ -6,7 +6,7 @@ use serde::Serialize;
 pub struct Rank {
     rank: i32,
     userName: String,
-    score: i64,
+    pub score: i64,
 }
 
 #[allow(non_snake_case)]

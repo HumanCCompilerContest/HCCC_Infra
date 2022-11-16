@@ -79,7 +79,7 @@ impl<'a> Users for UserImpl<'a> {
             })
             .collect::<Vec<Rank>>();
 
-        ranking.sort();
+        ranking.sort_by(|x, y| (-x.score).cmp(&-y.score));
         dbg!(ranking)
             .into_iter()
             .enumerate()
