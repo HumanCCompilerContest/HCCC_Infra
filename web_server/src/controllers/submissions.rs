@@ -51,7 +51,14 @@ async fn from_submit_id(
 ) -> Json<Submission> {
     tracing::debug!("/api/submissions/:id");
     let submission_repo = repository_provider.submission();
-    Json(services::get_submission(&submission_repo, id).await)
+    if is_contest_underway() && user_context.user_id() != user_id {
+        Json(UserSubmissions::error(
+            "forbidden",
+            "You won't be able to see other users' submissions during the contest",
+        ))
+    } else {
+        Json(services::get_submission(&submission_repo, id).await)
+    }
 }
 
 pub async fn submit(
