@@ -13,5 +13,6 @@ pub trait Submissions {
         submit_time: DateTime<Local>,
         asm: &'a str,
         judge_result: JudgeResult,
+        is_ce: bool,
     ) -> Option<i32>;
 }

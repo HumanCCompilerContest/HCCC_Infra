@@ -23,10 +23,18 @@ pub async fn submit_asm(
     user_id: i32,
     problem_id: i32,
     asm: String,
+    is_ce: bool,
 ) -> Submission {
     let submit_time = Local::now();
     let submission_id = match repo_submit
-        .store_submission(user_id, problem_id, submit_time, &asm, JudgeResult::Pending)
+        .store_submission(
+            user_id,
+            problem_id,
+            submit_time,
+            &asm,
+            JudgeResult::Pending,
+            is_ce,
+        )
         .await
     {
         Some(id) => id,

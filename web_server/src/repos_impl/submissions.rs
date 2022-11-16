@@ -28,12 +28,13 @@ impl<'a> Submissions for SubmissionImpl<'a> {
         submit_time: DateTime<Local>,
         asm: &'b str,
         judge_result: JudgeResult,
+        is_ce: bool,
     ) -> Option<i32> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
             .query_opt(
-                "INSERT INTO submits (user_id, problem_id, time, asm, result) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-                &[&user_id, &problem_id, &submit_time, &asm, &judge_result]
+                "INSERT INTO submits (user_id, problem_id, time, asm, result, isCE) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+                &[&user_id, &problem_id, &submit_time, &asm, &judge_result, &is_ce]
             )
             .await
             .unwrap();
