@@ -12,6 +12,12 @@ struct Testcase {
     expect: String,
 }
 
+#[derive(Deserialize)]
+pub struct Testcases {
+    pub is_wrong_code: bool,
+    tests: Vec<Testcase>,
+}
+
 pub async fn just_exec() {
     // exec
     let output = tokio::time::timeout(
@@ -35,15 +41,8 @@ pub async fn just_exec() {
     println!("{:?}", String::from_utf8_lossy(&output.stdout));
 }
 
-pub async fn with_testcase(testcase_number: &str, exe_option: ExeOption) {
-    let testcase_str = std::fs::read_to_string(format!("./testcase/case{}.json", testcase_number))
-        .unwrap_or_else(|_| {
-            eprintln!("System Error");
-            std::process::exit(ExitCode::SystemError as i32);
-        });
-    let testcases: Vec<Testcase> = serde_json::from_str(&testcase_str).unwrap();
-
-    for case in testcases {
+pub async fn with_testcase(testcases: Testcases, exe_option: ExeOption) {
+    for case in testcases.tests {
         // exec and test
         let output = tokio::time::timeout(
             Duration::from_secs(TLE_SEC as u64),
