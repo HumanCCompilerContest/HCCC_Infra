@@ -31,7 +31,7 @@ impl<'a> Users for UserImpl<'a> {
         let conn = self.pool.get().await.unwrap();
         let ac = conn
             .query(
-                "SELECT sub.name AS name, SUM(sub.score) AS score, MAX(sub.min_time) AS max_time
+                "SELECT a_outer.name AS name, coalesce(SUM(sub.score),0) AS score, MAX(sub.min_time) AS max_time
                 FROM
                 (
                     SELECT a.name AS name, s.problem_id AS problem_id, p.score AS score, MIN(s.time) AS min_time FROM submits AS s 
@@ -40,7 +40,9 @@ impl<'a> Users for UserImpl<'a> {
                     WHERE s.result = 'AC'
                     GROUP BY a.name, s.problem_id, p.score
                 ) AS sub
-                GROUP BY sub.name
+                RIGHT JOIN accounts AS a_outer ON sub.name = a_outer.name
+                GROUP BY a_outer.name
+                ORDER BY a_outer.name
                 ;",
                 &[]
             )

@@ -1,3 +1,4 @@
+use chrono::{DateTime, Local};
 use postgres_types::ToSql;
 use serde::Serialize;
 
@@ -7,6 +8,7 @@ pub struct Rank {
     rank: i32,
     userName: String,
     pub score: i64,
+    pub time: DateTime<Local>,
 }
 
 #[allow(non_snake_case)]
@@ -19,11 +21,12 @@ pub struct Ranking {
 }
 
 impl Rank {
-    pub fn new(user_name: String, score: i64) -> Self {
+    pub fn new(user_name: String, score: i64, time: DateTime<Local>) -> Self {
         Rank {
             rank: 0,
             userName: user_name,
             score,
+            time,
         }
     }
 
