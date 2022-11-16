@@ -29,14 +29,14 @@ struct CmdOption {
     exe_option: ExeOption,
     is_ce: bool,
     asm: String,
-    testcase_path: String,
+    problem_path: String,
 }
 
 fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
     let app = clap::app_from_crate!()
-        .arg(arg!(--justrun <testcase_number> ... "just run").required(false))
-        .arg(arg!(--exitcode <testcase_number> ... "check exitcode").required(false))
-        .arg(arg!(--output <testcase_number> "check stdout").required(false))
+        .arg(arg!(--justrun <problem_number> ... "just run").required(false))
+        .arg(arg!(--exitcode <problem_number> ... "check exitcode").required(false))
+        .arg(arg!(--output <problem_number> "check stdout").required(false))
         .arg(arg!(<is_ce> "is compile error"))
         .arg(arg!(<asm> "assembly"))
         .get_matches();
@@ -48,22 +48,22 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
             app.is_present("output"),
         )
     };
-    let (exe_option, testcase_num) = match flag_map() {
+    let (exe_option, problem_num) = match flag_map() {
         (true, _, _) => (
             ExeOption::JustRun,
-            app.value_of("justrun").expect("missing testcase_num"),
+            app.value_of("justrun").expect("missing problem_num"),
         ),
         (_, true, _) => (
             ExeOption::ExitCode,
-            app.value_of("exitcode").expect("missing testcase_num"),
+            app.value_of("exitcode").expect("missing problem_num"),
         ),
         (_, _, true) => (
             ExeOption::Output,
-            app.value_of("output").expect("missing testcase_num"),
+            app.value_of("output").expect("missing problem_num"),
         ),
         _ => (
             ExeOption::JustRun,
-            app.value_of("justrun").expect("missing testcase_num"),
+            app.value_of("justrun").expect("missing problem_num"),
         ),
     };
 
@@ -83,7 +83,7 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
         exe_option,
         is_ce,
         asm,
-        testcase_path: format!("./testcase/case{}.json", testcase_num),
+        problem_path: format!("./problem/case{}.json", problem_num),
     })
 }
 
@@ -130,7 +130,7 @@ async fn create_elf() {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = get_arg().unwrap();
-    let testcases: Testcases = serde_json::from_str(&cmd.testcase_path).unwrap();
+    let testcases: Testcases = serde_json::from_str(&cmd.problem_path).unwrap();
 
     if cmd.is_ce && !testcases.is_wrong_code {
         eprintln!("wrong compile error!");
