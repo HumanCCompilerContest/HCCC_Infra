@@ -6,7 +6,7 @@ use axum::{
 use crate::controllers::submissions::submit;
 use crate::database::RepositoryProvider;
 use crate::entities::{AllProblems, Problem};
-use crate::is_contest_underway;
+use crate::is_contest_has_not_yet_begun;
 use crate::request::UserContext;
 use crate::services;
 
@@ -22,14 +22,14 @@ async fn all_problem(
     Extension(repository_provider): Extension<RepositoryProvider>,
 ) -> Json<AllProblems> {
     tracing::debug!("/api/problems");
-    if is_contest_underway() {
-        let problem_repo = repository_provider.problem();
-        Json(services::get_all_problems(&problem_repo).await)
-    } else {
+    if is_contest_has_not_yet_begun() {
         Json(AllProblems::error(
             "forbidden",
             "problems has not been opened yet",
         ))
+    } else {
+        let problem_repo = repository_provider.problem();
+        Json(services::get_all_problems(&problem_repo).await)
     }
 }
 
@@ -39,13 +39,13 @@ async fn problem_from_id(
     Extension(repository_provider): Extension<RepositoryProvider>,
 ) -> Json<Problem> {
     tracing::debug!("/api/problems/:id");
-    if is_contest_underway() {
-        let problem_repo = repository_provider.problem();
-        Json(services::get_problem(&problem_repo, id).await)
-    } else {
+    if is_contest_has_not_yet_begun() {
         Json(Problem::error(
             "forbidden",
             "problems has not been opened yet",
         ))
+    } else {
+        let problem_repo = repository_provider.problem();
+        Json(services::get_problem(&problem_repo, id).await)
     }
 }
