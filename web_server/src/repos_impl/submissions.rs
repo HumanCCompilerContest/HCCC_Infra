@@ -27,8 +27,8 @@ impl<'a> Submissions for SubmissionImpl<'a> {
         problem_id: i32,
         submit_time: DateTime<Local>,
         asm: &'b str,
-        judge_result: JudgeResult,
         is_ce: bool,
+        judge_result: JudgeResult,
     ) -> Option<i32> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
@@ -85,6 +85,7 @@ impl From<Row> for Submission {
             r.get("id"),
             r.get("time"),
             r.get("asm"),
+            r.get("is_ce"),
             r.get("result"),
             UserObject::new(r.get("user_id"), r.get("name")),
             ProblemObject::new(
@@ -106,6 +107,7 @@ impl From<Row> for SubmissionObject {
             r.get("id"),
             r.get("time"),
             r.get("asm"),
+            r.get("is_ce"),
             r.get("result"),
             UserObject::new(r.get("user_id"), r.get("name")),
             ProblemObject::new(

@@ -23,6 +23,7 @@ pub struct SubmissionObject {
     id: i32,
     time: DateTime<Local>,
     asm: String,
+    is_ce: bool,
     result: JudgeResult,
     user: UserObject,
     problem: ProblemObject,
@@ -50,6 +51,7 @@ impl SubmissionObject {
         id: i32,
         time: DateTime<Local>,
         asm: String,
+        is_ce: bool,
         result: JudgeResult,
         user: UserObject,
         problem: ProblemObject,
@@ -58,6 +60,7 @@ impl SubmissionObject {
             id,
             time,
             asm,
+            is_ce,
             result,
             user,
             problem,
@@ -69,6 +72,7 @@ impl SubmissionObject {
             id: 0,
             time: Local::now(),
             asm: String::new(),
+            is_ce: false,
             result: JudgeResult::SystemError,
             user: UserObject::dummy(),
             problem: ProblemObject::dummy(),
@@ -81,13 +85,14 @@ impl Submission {
         id: i32,
         time: DateTime<Local>,
         asm: String,
+        is_ce: bool,
         result: JudgeResult,
         user: UserObject,
         problem: ProblemObject,
     ) -> Self {
         Submission {
             status: "ok".to_string(),
-            submission: SubmissionObject::new(id, time, asm, result, user, problem),
+            submission: SubmissionObject::new(id, time, asm, is_ce, result, user, problem),
             errorMessage: None,
         }
     }

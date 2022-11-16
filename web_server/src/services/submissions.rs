@@ -32,8 +32,8 @@ pub async fn submit_asm(
             problem_id,
             submit_time,
             &asm,
-            JudgeResult::Pending,
             is_ce,
+            JudgeResult::Pending,
         )
         .await
     {
@@ -52,6 +52,7 @@ pub async fn submit_asm(
         submission_id,
         submit_time,
         asm,
+        is_ce,
         JudgeResult::Pending,
         user_obj.get_object(),
         problem_obj.get_object(),

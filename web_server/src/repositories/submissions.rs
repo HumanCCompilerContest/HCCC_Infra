@@ -12,7 +12,7 @@ pub trait Submissions {
         problem_id: i32,
         submit_time: DateTime<Local>,
         asm: &'a str,
-        judge_result: JudgeResult,
         is_ce: bool,
+        judge_result: JudgeResult,
     ) -> Option<i32>;
 }
