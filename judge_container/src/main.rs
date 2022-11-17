@@ -48,7 +48,7 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
     Ok(CmdOption {
         is_ce,
         asm,
-        problem_path: format!("./problem/case{}.json", problem_num),
+        problem_path: format!("./testcase/case{}.json", problem_num),
     })
 }
 
@@ -95,7 +95,11 @@ async fn create_elf() {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = get_arg().unwrap();
-    let testcases: Testcases = serde_json::from_str(&cmd.problem_path).unwrap();
+    let testcase_str = std::fs::read_to_string(&dbg!(cmd.problem_path)).unwrap_or_else(|_| {
+        eprintln!("System Error");
+        std::process::exit(ExitCode::SystemError as i32);
+    });
+    let testcases: Testcases = serde_json::from_str(&testcase_str).unwrap();
 
     if cmd.is_ce && !testcases.is_wrong_code {
         eprintln!("wrong compile error!");
@@ -108,7 +112,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     create_elf().await;
 
-    match testcases.test_target {
+    match testcases.judge_target {
         TestTarget::NoTestCase => run_test::just_exec().await,
         TestTarget::ExitCode | TestTarget::StdOut => {
             run_test::with_testcase(testcases).await;

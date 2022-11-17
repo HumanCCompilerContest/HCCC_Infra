@@ -24,7 +24,7 @@ pub enum TestTarget {
 
 #[derive(Deserialize)]
 pub struct Testcases {
-    pub test_target: TestTarget,
+    pub judge_target: TestTarget,
     pub is_wrong_code: bool,
     tests: Vec<Testcase>,
 }
@@ -73,7 +73,7 @@ pub async fn with_testcase(testcases: Testcases) {
             std::process::exit(ExitCode::RE as i32);
         });
 
-        match testcases.test_target {
+        match testcases.judge_target {
             TestTarget::ExitCode => {
                 let exit_status = output.status.code().unwrap();
                 let expect: i32 = case.expect.parse().unwrap();
