@@ -16,7 +16,9 @@ pub async fn app() -> Router {
     let allowed_origins = [
         "http://localhost:3000".parse::<HeaderValue>().unwrap(),
         "https://hccc.vercel.app".parse::<HeaderValue>().unwrap(),
-        "https://stg-hccc.vercel.app".parse::<HeaderValue>().unwrap(),
+        "https://stg-hccc.vercel.app"
+            .parse::<HeaderValue>()
+            .unwrap(),
     ];
 
     let cors_layer = CorsLayer::new()
