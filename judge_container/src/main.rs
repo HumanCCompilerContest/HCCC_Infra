@@ -48,7 +48,7 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
     Ok(CmdOption {
         is_ce,
         asm,
-        problem_path: format!("./testcase/case{}.json", problem_num),
+        problem_path: format!("/work/testcase/case{}.json", problem_num),
     })
 }
 
