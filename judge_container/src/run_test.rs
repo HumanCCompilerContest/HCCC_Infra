@@ -1,4 +1,4 @@
-use crate::{ExeOption, ExitCode};
+use crate::ExitCode;
 use serde::Deserialize;
 use std::time::Duration;
 use tokio::process::Command;
@@ -13,7 +13,18 @@ struct Testcase {
 }
 
 #[derive(Deserialize)]
+pub enum TestTarget {
+    #[serde(rename = "exitcode")]
+    ExitCode,
+    #[serde(rename = "stdout")]
+    StdOut,
+    #[serde(rename = "none")]
+    NoTestCase,
+}
+
+#[derive(Deserialize)]
 pub struct Testcases {
+    pub test_target: TestTarget,
     pub is_wrong_code: bool,
     tests: Vec<Testcase>,
 }
@@ -41,7 +52,7 @@ pub async fn just_exec() {
     println!("{:?}", String::from_utf8_lossy(&output.stdout));
 }
 
-pub async fn with_testcase(testcases: Testcases, exe_option: ExeOption) {
+pub async fn with_testcase(testcases: Testcases) {
     for case in testcases.tests {
         // exec and test
         let output = tokio::time::timeout(
@@ -62,8 +73,8 @@ pub async fn with_testcase(testcases: Testcases, exe_option: ExeOption) {
             std::process::exit(ExitCode::RE as i32);
         });
 
-        match exe_option {
-            ExeOption::ExitCode => {
+        match testcases.test_target {
+            TestTarget::ExitCode => {
                 let exit_status = output.status.code().unwrap();
                 let expect: i32 = case.expect.parse().unwrap();
                 if exit_status != expect {
@@ -71,7 +82,7 @@ pub async fn with_testcase(testcases: Testcases, exe_option: ExeOption) {
                     std::process::exit(ExitCode::WA as i32);
                 }
             }
-            ExeOption::Output => {
+            TestTarget::StdOut => {
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 if stdout != case.expect {
                     eprintln!("output: {:?}", stdout);
