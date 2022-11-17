@@ -14,6 +14,6 @@ RUN cargo build --release --bin judge_container
 
 FROM gcc:12.2.0
 COPY --from=builder /app/target/release/judge_container /work/
-COPY --from=builder /app/testcase/ /work/
+COPY --from=builder /app/testcase/ /work/testcase/
 ENTRYPOINT ["/work/judge_container"]
 
