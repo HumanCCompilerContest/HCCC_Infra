@@ -1,11 +1,26 @@
 {
-    "judge_target": "exitcode",
+    "judge_target": "stdout",
     "is_wrong_code": false,
     "tests": [
         {
             "_id": 1,
-            "input": "",
+            "input": "42",
             "expect": "42"
+        },
+        {
+            "_id": 2,
+            "input": "0",
+            "expect": "0"
+        },
+        {
+            "_id": 3,
+            "input": "1",
+            "expect": "1"
+        },
+        {
+            "_id": 4,
+            "input": "-5",
+            "expect": "-5"
         }
     ]
 }

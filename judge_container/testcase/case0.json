@@ -1,0 +1,11 @@
+{
+    "judge_target": "exitcode",
+    "is_wrong_code": false,
+    "tests": [
+        {
+            "_id": 1,
+            "input": "",
+            "expect": "42"
+        }
+    ]
+}
