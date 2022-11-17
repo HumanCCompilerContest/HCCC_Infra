@@ -48,7 +48,7 @@ pub struct SessionToken(String);
 impl SessionToken {
     pub fn cookie(&self) -> String {
         format!(
-            "{}={}; Max-Age=604800; Path=/; HttpOnly",
+            "{}={}; Max-Age=604800; Path=/; HttpOnly; SameSite=None, Secure",
             AXUM_SESSION_COOKIE_NAME, &self.0
         )
     }
