@@ -13,8 +13,14 @@ use crate::request;
 use crate::services;
 
 pub async fn app() -> Router {
+    let allowed_origins = [
+        "http://localhost:3000".parse::<HeaderValue>().unwrap(),
+        "https://hccc.vercel.app".parse::<HeaderValue>().unwrap(),
+        "https://stg-hccc.vercel.app".parse::<HeaderValue>().unwrap(),
+    ];
+
     let cors_layer = CorsLayer::new()
-        .allow_origin("http://localhost:3000".parse::<HeaderValue>().unwrap())
+        .allow_origin(allowed_origins)
         .allow_credentials(true)
         .allow_methods([Method::GET, Method::POST, Method::HEAD, Method::OPTIONS])
         .allow_headers([CONTENT_TYPE]);
