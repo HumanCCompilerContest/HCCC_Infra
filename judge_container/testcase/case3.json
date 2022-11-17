@@ -1,4 +1,5 @@
 {
-	"is_wrong_code": true,
-	"tests": []
+    "judge_target": "none",
+    "is_wrong_code": true,
+    "tests": []
 }
