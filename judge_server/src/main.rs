@@ -6,14 +6,16 @@ use tokio::process::Command;
 use tokio::time::{sleep, Duration};
 
 async fn judge(submit: &Submit) -> (JudgeResult, i32) {
+    const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:judge_container-develop";
     let result = Command::new("bash")
         .arg("-c")
-        .arg(format!(
-            "sudo docker run --rm --memory=128M --cpus=\"0.05\" ghcr.io/humanccompilercontest/hccc_infra:judge_container-develop {} {} {}",
+        .arg(dbg!(format!(
+            "sudo docker run --rm --memory=128M --cpus=\"0.05\" -v '/home/ubuntu/HCCC_Infra/judge_container/testcase/:/work/testcase/' {} {} {} {}",
+            CONTAINER_NAME,
             submit.problem_id,
             submit.is_ce,
             base64::encode(&submit.asm)
-        ))
+        )))
         .output()
         .await;
 
