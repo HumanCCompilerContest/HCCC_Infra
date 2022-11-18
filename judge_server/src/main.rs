@@ -5,12 +5,13 @@ use judge_server::repositories::submit::Submits;
 use tokio::process::Command;
 use tokio::time::{sleep, Duration};
 
-async fn judge(submit: &Submit) -> (JudgeResult, i32) {
+async fn judge(testcase_path: &str, submit: &Submit) -> (JudgeResult, i32) {
     const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:judge_container-develop";
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
-            "sudo docker run --rm --memory=128M --cpus=\"0.05\" -v '/home/ubuntu/HCCC_Infra/judge_container/testcase/:/work/testcase/' {} {} {} {}",
+            "sudo docker run --rm --memory=128M --cpus=\"0.05\" -v '{}:/work/testcase/' {} {} {} {}",
+            testcase_path,
             CONTAINER_NAME,
             submit.problem_id,
             submit.is_ce,
@@ -44,11 +45,28 @@ async fn main() {
     }
     tracing_subscriber::fmt::init();
 
+    let testcase_path = Command::new("bash")
+        .arg("-c")
+        .arg("realpath ../judge_container/testcase/")
+        .output()
+        .await
+        .unwrap()
+        .stdout;
+    let testcase_path = String::from_utf8_lossy(&testcase_path);
+
     let repo = new_repo().await;
     let repo_submit = repo.submit();
     loop {
         let submits = repo_submit.get_pending_submits().await;
-        let works: Vec<_> = submits.iter().map(|submit| judge(submit)).collect();
+        let works: Vec<_> = submits
+            .iter()
+            .map(|submit| {
+                judge(
+                    dbg!(&testcase_path.strip_suffix("\n").unwrap_or(&testcase_path)),
+                    submit,
+                )
+            })
+            .collect();
         let rets = future::join_all(works).await;
 
         for ret in rets {
