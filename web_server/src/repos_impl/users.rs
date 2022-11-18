@@ -37,7 +37,9 @@ impl<'a> Users for UserImpl<'a> {
                     SELECT a.name AS name, s.problem_id AS problem_id, p.score AS score, MIN(s.time) AS min_time FROM submits AS s 
                     JOIN accounts AS a ON s.user_id = a.id
                     JOIN problems AS p ON s.problem_id = p.id
-                    WHERE s.result = 'AC'
+                    WHERE s.result = 'AC'　
+                    AND $1 <= s.time 
+                    AND s.time <= $2
                     GROUP BY a.name, s.problem_id, p.score
                 ) AS sub
                 RIGHT JOIN accounts AS a_outer ON sub.name = a_outer.name
@@ -55,6 +57,8 @@ impl<'a> Users for UserImpl<'a> {
                 JOIN (
                 SELECT user_id, problem_id FROM submits
                     WHERE result = 'AC'
+                    AND $1 <= time 
+                    AND time <= $2
                     GROUP BY user_id, problem_id
                 ) AS sub ON s.user_id = sub.user_id AND s.problem_id = sub.problem_id
                 RIGHT JOIN accounts AS a ON s.user_id = a.id
