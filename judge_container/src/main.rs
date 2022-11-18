@@ -95,7 +95,7 @@ async fn create_elf() {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = get_arg().unwrap();
-    let testcase_str = std::fs::read_to_string(&dbg!(cmd.problem_path)).unwrap_or_else(|_| {
+    let testcase_str = std::fs::read_to_string(&cmd.problem_path).unwrap_or_else(|_| {
         eprintln!("System Error");
         std::process::exit(ExitCode::SystemError as i32);
     });
@@ -107,7 +107,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let mut file = File::create("./submit.s")?;
-    writeln!(file, "{}", dbg!(cmd.asm))?;
+    writeln!(file, "{}", cmd.asm)?;
     file.flush()?;
 
     create_elf().await;

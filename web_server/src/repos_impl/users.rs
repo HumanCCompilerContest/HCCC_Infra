@@ -1,5 +1,6 @@
 use tokio_postgres::Row;
 
+use crate::constants::contest_duration;
 use crate::database::ConnectionPool;
 use crate::entities::{Rank, User, UserObject};
 use crate::repositories::Users;
@@ -28,6 +29,7 @@ impl<'a> Users for UserImpl<'a> {
     }
 
     async fn create_ranking(&self) -> Vec<Rank> {
+        let (start, end) = contest_duration();
         let conn = self.pool.get().await.unwrap();
         let ac = conn
             .query(
@@ -37,7 +39,7 @@ impl<'a> Users for UserImpl<'a> {
                     SELECT a.name AS name, s.problem_id AS problem_id, p.score AS score, MIN(s.time) AS min_time FROM submits AS s 
                     JOIN accounts AS a ON s.user_id = a.id
                     JOIN problems AS p ON s.problem_id = p.id
-                    WHERE s.result = 'AC'　
+                    WHERE s.result = 'AC'
                     AND $1 <= s.time 
                     AND s.time <= $2
                     GROUP BY a.name, s.problem_id, p.score
@@ -46,14 +48,14 @@ impl<'a> Users for UserImpl<'a> {
                 GROUP BY a_outer.name
                 ORDER BY a_outer.name
                 ;",
-                &[]
+                &[&start, &end]
             )
             .await
             .unwrap();
 
         let not_ac = conn
             .query(
-                "SELECT a.name AS name, COUNT( (s.result != 'AC' AND s.result != 'WC') or NULL) AS wrong_count FROM submits AS s
+                "SELECT a.name AS name, COUNT((s.result != 'AC' AND s.result != 'WC') or NULL) AS wrong_count FROM submits AS s
                 JOIN (
                 SELECT user_id, problem_id FROM submits
                     WHERE result = 'AC'
@@ -65,7 +67,7 @@ impl<'a> Users for UserImpl<'a> {
                 GROUP BY a.name
                 ORDER BY a.name
                 ;",
-                &[],
+                &[&start, &end]
             )
             .await
             .unwrap();
