@@ -60,7 +60,7 @@ pub async fn with_testcase(testcases: Testcases) {
             Command::new("bash")
                 .kill_on_drop(true)
                 .arg("-c")
-                .arg(format!("echo {} | ./test_target", case.input))
+                .arg(format!("echo {} | ./test_target 2>&1", case.input))
                 .output(),
         )
         .await
@@ -75,6 +75,11 @@ pub async fn with_testcase(testcases: Testcases) {
 
         match testcases.judge_target {
             TestTarget::ExitCode => {
+                if output.stderr.len() != 0 {
+                    eprintln!("Runtime Error");
+                    std::process::exit(ExitCode::RE as i32);
+                }
+
                 let exit_status = output.status.code().unwrap();
                 let expect: i32 = case.expect.parse().unwrap();
                 if exit_status != expect {
@@ -83,6 +88,11 @@ pub async fn with_testcase(testcases: Testcases) {
                 }
             }
             TestTarget::StdOut => {
+                if output.status.code().unwrap() != 0 {
+                    eprintln!("Runtime Error");
+                    std::process::exit(ExitCode::RE as i32);
+                }
+
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 if stdout != case.expect {
                     eprintln!("output: {:?}", stdout);
