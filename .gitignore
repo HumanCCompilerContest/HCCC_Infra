@@ -14,3 +14,5 @@ target/
 test_target
 
 .env
+
+judge_container/testcase/
