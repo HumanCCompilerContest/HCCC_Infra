@@ -16,7 +16,7 @@ async fn judge(submit: &Submit) -> (JudgeResult, i32) {
             TESTCASE_PATH,
             CONTAINER_NAME,
             submit.problem_id,
-            submit.is_ce,
+            dbg!(submit.is_ce),
             base64::encode(&submit.asm)
         )))
         .output()
