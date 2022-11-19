@@ -7,7 +7,8 @@ use tokio::time::{sleep, Duration};
 
 async fn judge(submit: &Submit) -> (JudgeResult, i32) {
     const TESTCASE_PATH: &str = "/home/ubuntu/HCCC_Infra/judge_container/testcase/";
-    const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:judge_container-develop";
+    const CONTAINER_NAME: &str =
+        "ghcr.io/humanccompilercontest/hccc_infra:judge_container-hccc_001";
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
