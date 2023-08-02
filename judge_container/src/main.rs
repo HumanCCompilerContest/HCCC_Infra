@@ -106,6 +106,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(ExitCode::WC as i32);
     }
 
+    if cmd.is_ce && testcases.is_wrong_code {
+        std::process::exit(ExitCode::AC as i32);
+    }
+
     let mut file = File::create("./submit.s")?;
     writeln!(file, "{}", cmd.asm)?;
     file.flush()?;

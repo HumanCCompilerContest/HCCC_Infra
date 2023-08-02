@@ -49,7 +49,13 @@ pub async fn just_exec() {
         std::process::exit(ExitCode::RE as i32);
     });
 
-    println!("{:?}", String::from_utf8_lossy(&output.stdout));
+    if output.status.code().unwrap() != 0 {
+        eprintln!("Runtime Error");
+        std::process::exit(ExitCode::RE as i32);
+    }
+
+    // WA when submit to wrong code
+    std::process::exit(ExitCode::WA as i32);
 }
 
 pub async fn with_testcase(testcases: Testcases) {
