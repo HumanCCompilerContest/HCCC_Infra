@@ -96,7 +96,7 @@ async fn create_elf() {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = get_arg().unwrap();
     let testcase_str = std::fs::read_to_string(&cmd.problem_path).unwrap_or_else(|_| {
-        eprintln!("System Error");
+        eprintln!("Failed to read file: {}", &cmd.problem_path);
         std::process::exit(ExitCode::SystemError as i32);
     });
     let testcases: Testcases = serde_json::from_str(&testcase_str).unwrap();
