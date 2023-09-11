@@ -33,7 +33,7 @@ pub async fn create_session(
         session
             .insert(AXUM_SESSION_USER_ID_KEY, account.id().unwrap())
             .unwrap();
-        session.expire_in(Duration::from_secs(804800));
+        session.expire_in(Duration::from_secs(804_800));
 
         let cookie = store.store_session(session).await.unwrap().unwrap();
 

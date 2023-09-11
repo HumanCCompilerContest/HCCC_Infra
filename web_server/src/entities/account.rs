@@ -64,5 +64,5 @@ fn to_sha256(str: &str) -> String {
     let str = str.as_bytes();
     let hashed_str = Sha256::digest(str);
 
-    format!("{:x}", hashed_str)
+    format!("{hashed_str:x}")
 }

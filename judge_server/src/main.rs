@@ -62,7 +62,7 @@ async fn main() {
     let repo_submit = repo.submit();
     loop {
         let submits = repo_submit.get_pending_submits().await;
-        let works: Vec<_> = submits.iter().map(|submit| judge(submit)).collect();
+        let works: Vec<_> = submits.iter().map(judge).collect();
         let rets = future::join_all(works).await;
 
         for ret in rets {

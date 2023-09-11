@@ -32,7 +32,7 @@ pub struct Testcases {
 pub async fn just_exec() {
     // exec
     let output = tokio::time::timeout(
-        Duration::from_secs(TLE_SEC as u64),
+        Duration::from_secs(TLE_SEC),
         Command::new("bash")
             .kill_on_drop(true)
             .arg("-c")
@@ -62,7 +62,7 @@ pub async fn with_testcase(testcases: Testcases) {
     for case in testcases.tests {
         // exec and test
         let output = tokio::time::timeout(
-            Duration::from_secs(TLE_SEC as u64),
+            Duration::from_secs(TLE_SEC),
             Command::new("bash")
                 .kill_on_drop(true)
                 .arg("-c")
@@ -81,7 +81,7 @@ pub async fn with_testcase(testcases: Testcases) {
 
         match testcases.judge_target {
             TestTarget::ExitCode => {
-                if output.stderr.len() != 0 {
+                if !output.stderr.is_empty() {
                     eprintln!("Runtime Error");
                     std::process::exit(ExitCode::RE as i32);
                 }
@@ -89,7 +89,7 @@ pub async fn with_testcase(testcases: Testcases) {
                 let exit_status = output.status.code().unwrap();
                 let expect: i32 = case.expect.parse().unwrap();
                 if exit_status != expect {
-                    eprintln!("output: {:?}", exit_status);
+                    eprintln!("output: {exit_status:?}");
                     std::process::exit(ExitCode::WA as i32);
                 }
             }
@@ -101,7 +101,7 @@ pub async fn with_testcase(testcases: Testcases) {
 
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 if stdout != case.expect {
-                    eprintln!("output: {:?}", stdout);
+                    eprintln!("output: {stdout:?}");
                     std::process::exit(ExitCode::WA as i32);
                 }
             }

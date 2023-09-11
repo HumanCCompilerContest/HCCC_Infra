@@ -19,7 +19,7 @@ impl<'a> Submits for SubmitImpl<'a> {
         .await
         .unwrap()
         .into_iter()
-        .map(|r| r.into())
+        .map(std::convert::Into::into)
         .collect()
     }
 

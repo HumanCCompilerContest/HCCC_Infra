@@ -18,7 +18,7 @@ impl<'a> Submissions for SubmissionImpl<'a> {
             .await
             .unwrap();
 
-        row.map(|r| r.into())
+        row.map(std::convert::Into::into)
     }
 
     async fn store_submission<'b>(
@@ -48,16 +48,13 @@ impl<'a> Submissions for SubmissionImpl<'a> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
             .query(
-                &format!(
-                    "SELECT {} FROM {} ORDER BY time DESC",
-                    TARGET_COLUMN, TARGET_TABLES
-                ),
+                &format!("SELECT {TARGET_COLUMN} FROM {TARGET_TABLES} ORDER BY time DESC"),
                 &[],
             )
             .await
             .unwrap();
 
-        row.into_iter().map(|r| r.into()).collect()
+        row.into_iter().map(std::convert::Into::into).collect()
     }
 
     async fn user_submitted(&self, user_id: i32) -> Vec<SubmissionObject> {
@@ -67,15 +64,14 @@ impl<'a> Submissions for SubmissionImpl<'a> {
         let row = conn
             .query(
                 &format!(
-                    "SELECT {} FROM {} WHERE user_id = $1 ORDER BY time DESC",
-                    TARGET_COLUMN, TARGET_TABLES
+                    "SELECT {TARGET_COLUMN} FROM {TARGET_TABLES} WHERE user_id = $1 ORDER BY time DESC"
                 ),
                 &[&user_id],
             )
             .await
             .unwrap();
 
-        row.into_iter().map(|r| r.into()).collect()
+        row.into_iter().map(std::convert::Into::into).collect()
     }
 }
 

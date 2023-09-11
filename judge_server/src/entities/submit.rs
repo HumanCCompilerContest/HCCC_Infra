@@ -27,6 +27,7 @@ pub struct Submit {
 }
 
 impl Submit {
+    #[must_use]
     pub fn new(
         id: i32,
         user_id: i32,
@@ -47,6 +48,7 @@ impl Submit {
         }
     }
 
+    #[must_use]
     pub fn id(&self) -> i32 {
         self.id
     }

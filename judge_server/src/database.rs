@@ -18,6 +18,7 @@ pub async fn new_repo() -> RepositoryProvider {
 pub struct RepositoryProvider(ConnectionPool);
 
 impl RepositoryProvider {
+    #[must_use]
     pub fn submit(&self) -> SubmitImpl {
         SubmitImpl { pool: &self.0 }
     }

@@ -32,15 +32,13 @@ async fn from_user_id(
         } else {
             Json(services::get_user_submissions(&submission_repo, user_id).await)
         }
+    } else if is_contest_underway() {
+        Json(UserSubmissions::error(
+            "forbidden",
+            "You won't be able to see other users' submissions during the contest",
+        ))
     } else {
-        if is_contest_underway() {
-            Json(UserSubmissions::error(
-                "forbidden",
-                "You won't be able to see other users' submissions during the contest",
-            ))
-        } else {
-            Json(services::get_all_users_submissions(&submission_repo).await)
-        }
+        Json(services::get_all_users_submissions(&submission_repo).await)
     }
 }
 

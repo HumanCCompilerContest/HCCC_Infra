@@ -17,7 +17,7 @@ impl<'a> Problems for ProblemImpl<'a> {
             .await
             .unwrap();
 
-        row.map(|r| r.into())
+        row.map(std::convert::Into::into)
     }
 
     async fn all_problems(&self) -> Vec<ProblemObject> {
@@ -27,7 +27,7 @@ impl<'a> Problems for ProblemImpl<'a> {
             .await
             .unwrap();
 
-        row.into_iter().map(|r| r.into()).collect()
+        row.into_iter().map(std::convert::Into::into).collect()
     }
 }
 

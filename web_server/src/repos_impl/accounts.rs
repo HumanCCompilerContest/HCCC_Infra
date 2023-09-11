@@ -19,7 +19,7 @@ impl<'a> Accounts for AccountsImpl<'a> {
             )
             .await
             .unwrap();
-        row.map(|r| r.into())
+        row.map(std::convert::Into::into)
     }
 
     async fn store(&self, entity: &Account) -> Result<u64, tokio_postgres::Error> {

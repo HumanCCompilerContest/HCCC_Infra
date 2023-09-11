@@ -18,14 +18,14 @@ impl<'a> Users for UserImpl<'a> {
             .await
             .unwrap();
 
-        row.map(|r| r.into())
+        row.map(std::convert::Into::into)
     }
 
     async fn all_users(&self) -> Vec<UserObject> {
         let conn = self.pool.get().await.unwrap();
         let row = conn.query("SELECT * FROM accounts", &[]).await.unwrap();
 
-        row.into_iter().map(|r| r.into()).collect()
+        row.into_iter().map(std::convert::Into::into).collect()
     }
 
     async fn create_ranking(&self) -> Vec<Rank> {
