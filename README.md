@@ -10,7 +10,7 @@
 
 ## 起動方法
 
-web_server, judge_server, judge_container, DB の構成です。
+web_server, judge_server, test_runner, DB の構成です。
 
 ```bash
 # /
