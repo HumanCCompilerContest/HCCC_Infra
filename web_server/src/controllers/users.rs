@@ -8,6 +8,7 @@ use crate::entities::{AllUsers, User};
 use crate::request::UserContext;
 use crate::services;
 
+/// Return `/api/users/*` api.
 pub fn user() -> Router {
     Router::new()
         .route("/", routing::get(all_user))
@@ -15,6 +16,7 @@ pub fn user() -> Router {
         .route("/me", routing::get(me))
 }
 
+/// Return all users.
 async fn all_user(
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>,
@@ -24,6 +26,7 @@ async fn all_user(
     Json(services::get_all_users(&user_repo).await)
 }
 
+/// Retrieve the specified user by their user id.
 async fn user_from_id(
     Path(id): Path<i32>,
     _: UserContext,
@@ -34,6 +37,7 @@ async fn user_from_id(
     Json(services::get_user(&user_repo, id).await)
 }
 
+/// Return the registered user.
 async fn me(
     user_context: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>,

@@ -2,15 +2,22 @@ use crate::entities::UserObject;
 use serde::Serialize;
 use sha2::{Digest, Sha256};
 
+/// The response for create account.
 #[allow(non_snake_case)]
 #[derive(Serialize)]
 pub struct AccountResponse {
+    /// Creating account successeed or not.
+    /// * `ok` - successeed
+    /// * `ng` - failed
     status: String,
+    /// Created user account.
     user: UserObject,
+    /// Error message.
     errorMessage: Option<String>,
 }
 
 impl AccountResponse {
+    /// Return ok response.
     pub fn new(id: i32, name: String) -> Self {
         AccountResponse {
             status: "ok".to_string(),
@@ -19,6 +26,7 @@ impl AccountResponse {
         }
     }
 
+    /// Called when failed to create account
     pub fn error(errmsg: &str) -> Self {
         AccountResponse {
             status: "ng".to_string(),
@@ -28,13 +36,18 @@ impl AccountResponse {
     }
 }
 
+/// User account.
 pub struct Account {
+    /// Account id.
     id: Option<i32>,
+    /// User name.
     pub user_name: String,
+    /// password hashed by sha256.
     pub hashed_password: String,
 }
 
 impl Account {
+    /// Return new `Account`.
     pub fn new(id: i32, user_name: String, hashed_password: String) -> Account {
         Account {
             id: Some(id),
@@ -43,6 +56,7 @@ impl Account {
         }
     }
 
+    /// Create new account.
     pub fn create(user_name: &str, password: &str) -> Account {
         Account {
             id: None,
@@ -51,10 +65,12 @@ impl Account {
         }
     }
 
+    /// Return its id.
     pub fn id(&self) -> Option<i32> {
         self.id
     }
 
+    /// Whether given password matches stored password or not.
     pub fn matches_password(&self, password: &str) -> bool {
         self.hashed_password == to_sha256(password)
     }

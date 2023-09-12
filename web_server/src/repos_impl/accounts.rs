@@ -4,12 +4,14 @@ use crate::database::ConnectionPool;
 use crate::entities::Account;
 use crate::repositories::Accounts;
 
+/// Implementation for `Accounts`.
 pub struct AccountsImpl<'a> {
     pub pool: &'a ConnectionPool,
 }
 
 #[axum::async_trait]
 impl<'a> Accounts for AccountsImpl<'a> {
+    /// Find `Account` by user name.
     async fn find_by(&self, user_name: &str) -> Option<Account> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
@@ -22,6 +24,7 @@ impl<'a> Accounts for AccountsImpl<'a> {
         row.map(std::convert::Into::into)
     }
 
+    /// Store `Account` data to database.
     async fn store(&self, entity: &Account) -> Result<u64, tokio_postgres::Error> {
         let conn = self.pool.get().await.unwrap();
         conn.execute(
@@ -33,6 +36,7 @@ impl<'a> Accounts for AccountsImpl<'a> {
 }
 
 impl From<Row> for Account {
+    /// Convert SQL result to `Account`.
     fn from(r: Row) -> Self {
         Account::new(r.get("id"), r.get("name"), r.get("password"))
     }

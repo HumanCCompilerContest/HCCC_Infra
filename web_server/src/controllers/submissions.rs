@@ -10,12 +10,14 @@ use crate::is_contest_underway;
 use crate::request::UserContext;
 use crate::services;
 
+/// Return `/api/submissions/*` api.
 pub fn submissions() -> Router {
     Router::new()
         .route("/", routing::get(from_user_id))
         .route("/:id", routing::get(from_submit_id))
 }
 
+/// Get submissions by selected user id.
 async fn from_user_id(
     Query(param): Query<UserIdParam>,
     user_context: UserContext,
@@ -42,6 +44,7 @@ async fn from_user_id(
     }
 }
 
+/// Get submissions by selected submit id.
 async fn from_submit_id(
     Path(id): Path<i32>,
     _: UserContext,
@@ -52,6 +55,7 @@ async fn from_submit_id(
     Json(services::get_submission(&submission_repo, id).await)
 }
 
+/// Get all submissions regardless of selected problems id.
 pub async fn submit(
     Path(id): Path<i32>,
     extract::Json(req): extract::Json<SubmitReq>,
@@ -76,6 +80,7 @@ pub async fn submit(
     )
 }
 
+/// api for `/api/problems/:id/submissions`.
 #[derive(Deserialize)]
 pub struct SubmitReq {
     asm: String,
@@ -83,6 +88,7 @@ pub struct SubmitReq {
     is_ce: bool,
 }
 
+/// api for `/api/submissions`.
 #[derive(Deserialize)]
 struct UserIdParam {
     user_id: Option<i32>,

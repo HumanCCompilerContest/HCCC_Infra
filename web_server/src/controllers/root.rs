@@ -12,6 +12,11 @@ use crate::entities::Ranking;
 use crate::request;
 use crate::services;
 
+/// Root of router.
+/// It is also setting the allowed origins for CORS.
+///
+/// # Panics
+/// When url parse failed.
 pub async fn app() -> Router {
     let allowed_origins = [
         "http://localhost:3000".parse::<HeaderValue>().unwrap(),
@@ -43,10 +48,12 @@ pub async fn app() -> Router {
         .layer(session_layer)
 }
 
+/// Return 404 to `/`.
 async fn get() -> StatusCode {
     StatusCode::NOT_FOUND
 }
 
+/// Return `/api/ranking` api.
 async fn ranking(Extension(repository_provider): Extension<RepositoryProvider>) -> Json<Ranking> {
     tracing::debug!("/api/ranking");
     let user_repo = repository_provider.user();

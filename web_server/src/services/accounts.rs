@@ -6,6 +6,7 @@ use crate::constants::{database_url, AXUM_SESSION_COOKIE_NAME, AXUM_SESSION_USER
 use crate::entities::Account;
 use crate::repositories::Accounts;
 
+/// Create user account.
 pub async fn create_account(
     repo: &impl Accounts,
     user_name: &str,
@@ -15,6 +16,7 @@ pub async fn create_account(
     repo.store(&new_account).await
 }
 
+/// Create new postgres session.
 pub async fn create_session(
     repo: &impl Accounts,
     user_name: &str,
@@ -43,9 +45,11 @@ pub async fn create_session(
     }
 }
 
+/// Token of postgres session.
 pub struct SessionToken(String);
 
 impl SessionToken {
+    /// Return cookie.
     pub fn cookie(&self) -> String {
         format!(
             "{}={}; Max-Age=604800; Path=/; HttpOnly; SameSite=None; Secure",

@@ -15,6 +15,7 @@ use crate::entities::AccountResponse;
 use crate::request::UserContext;
 use crate::services;
 
+/// Regist new user account.
 pub async fn register(
     extract::Json(account_data): extract::Json<SignUp>,
     Extension(repository_provider): Extension<RepositoryProvider>,
@@ -42,6 +43,7 @@ pub async fn register(
     }
 }
 
+/// Login into an existing account.
 pub async fn login(
     extract::Json(account_data): extract::Json<SignIn>,
     Extension(repository_provider): Extension<RepositoryProvider>,
@@ -63,6 +65,7 @@ pub async fn login(
     }
 }
 
+/// Sign out of current account.
 pub async fn logout(
     user_context: UserContext,
 ) -> Result<Json<serde_json::Value>, Json<serde_json::Value>> {
@@ -80,12 +83,14 @@ pub async fn logout(
     }
 }
 
+/// api for `login`.
 #[derive(Deserialize)]
 pub struct SignIn {
     name: String,
     password: String,
 }
 
+/// api for `logout`.
 #[derive(Deserialize)]
 pub struct SignUp {
     name: String,

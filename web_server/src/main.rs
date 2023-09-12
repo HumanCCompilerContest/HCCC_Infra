@@ -1,5 +1,8 @@
+//! This crate is the web server for contest site of HCCC.
+//! Fronend: [Human-C-Compiler-Contest_frontend](https://github.com/HumanCCompilerContest/Human-C-Compiler-Contest_frontend)
 use std::net::SocketAddr;
 
+/// Main function
 #[tokio::main]
 async fn main() {
     if std::env::var_os("RUST_LOG").is_none() {

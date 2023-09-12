@@ -1,36 +1,57 @@
 use postgres_types::{FromSql, ToSql};
 use serde::Serialize;
 
+/// Problem data.
 #[derive(Serialize, Debug, ToSql, FromSql)]
 pub struct ProblemObject {
+    /// Problem id.
     id: i32,
+    /// Problem title.
     title: String,
+    /// Problem statement.
     statement: String,
+    /// C source code.
     code: String,
+    /// Description of input.
     input_desc: String,
+    /// Description of output.
     output_desc: String,
+    /// Score.
     score: i32,
 }
 
+/// Api data for `/api/problem/:id`.
 #[derive(Serialize, Debug, ToSql, FromSql)]
 pub struct Problem {
+    /// Getting problem successeed or not.
+    /// * `ok` - successeed
+    /// * `ng` - failed
     status: String,
+    /// User selected problem.
     problem: ProblemObject,
+    /// Error message.
     #[serde(rename = "errorMessage")]
     error_message: Option<String>,
 }
 
+/// Api data for `/api/problem/`.
 #[derive(Serialize)]
 #[allow(non_snake_case)]
 pub struct AllProblems {
+    /// Getting all problems successeed or not.
+    /// * `ok` - successeed
+    /// * `ng` - failed
     status: String,
+    /// All problems.
     #[serde(rename = "items")]
     problems: Vec<ProblemObject>,
+    /// Error message.
     #[serde(rename = "errorMessage")]
     error_message: Option<String>,
 }
 
 impl ProblemObject {
+    /// Return new `ProblemObject`.
     pub fn new(
         id: i32,
         title: String,
@@ -51,6 +72,7 @@ impl ProblemObject {
         }
     }
 
+    /// Return dummy `ProblemObject`.
     pub fn dummy() -> Self {
         ProblemObject {
             id: 0,
@@ -65,6 +87,7 @@ impl ProblemObject {
 }
 
 impl Problem {
+    /// Return new `Problem`.
     pub fn new(
         id: i32,
         title: String,
@@ -81,6 +104,7 @@ impl Problem {
         }
     }
 
+    /// Return error response.
     pub fn error(status: &str, msg: &str) -> Self {
         Problem {
             status: status.to_string(),
@@ -89,6 +113,7 @@ impl Problem {
         }
     }
 
+    /// Return problem object.
     pub fn get_object(self) -> ProblemObject {
         self.problem
     }

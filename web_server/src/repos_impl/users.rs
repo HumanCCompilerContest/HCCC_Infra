@@ -5,12 +5,14 @@ use crate::database::ConnectionPool;
 use crate::entities::{Rank, User, UserObject};
 use crate::repositories::Users;
 
+/// Implementation for `Users`.
 pub struct UserImpl<'a> {
     pub pool: &'a ConnectionPool,
 }
 
 #[axum::async_trait]
 impl<'a> Users for UserImpl<'a> {
+    /// Find a user by id.
     async fn find_user(&self, id: i32) -> Option<User> {
         let conn = self.pool.get().await.unwrap();
         let row = conn
@@ -21,6 +23,7 @@ impl<'a> Users for UserImpl<'a> {
         row.map(std::convert::Into::into)
     }
 
+    /// Get all users from database.
     async fn all_users(&self) -> Vec<UserObject> {
         let conn = self.pool.get().await.unwrap();
         let row = conn.query("SELECT * FROM accounts", &[]).await.unwrap();
@@ -28,6 +31,16 @@ impl<'a> Users for UserImpl<'a> {
         row.into_iter().map(std::convert::Into::into).collect()
     }
 
+    /// Assemble a ranking from database record.
+    /// Getting accepted and wrong answers, Then calculating score.
+    /// The score calculate according to the pseudo code as follows.
+    /// ```ignore
+    /// let score = if problem.is_ac() {
+    ///     problem.score - number_of_wrong_submission * 1;
+    /// } else {
+    ///     0
+    /// };
+    /// ```
     async fn create_ranking(&self) -> Vec<Rank> {
         let (start, end) = contest_duration();
         let conn = self.pool.get().await.unwrap();
@@ -92,7 +105,8 @@ impl<'a> Users for UserImpl<'a> {
             std::cmp::Ordering::Equal => x.time.cmp(&y.time),
             other => other,
         });
-        dbg!(ranking)
+
+        ranking
             .into_iter()
             .enumerate()
             .map(|(rank, r)| r.set_rank(rank + 1))
@@ -101,12 +115,14 @@ impl<'a> Users for UserImpl<'a> {
 }
 
 impl From<Row> for User {
+    /// Convert SQL result to `User`.
     fn from(r: Row) -> Self {
         User::new("ok".to_string(), r.get("id"), r.get("name"), None)
     }
 }
 
 impl From<Row> for UserObject {
+    /// Convert SQL result to `UserObject`.
     fn from(r: Row) -> Self {
         UserObject::new(r.get("id"), r.get("name"))
     }
