@@ -1,10 +1,15 @@
+//! Module for running an elf created by submittion
+//! and judge its correctness with testcases.
+
 use crate::ExitCode;
 use serde::Deserialize;
 use std::time::Duration;
 use tokio::process::Command;
 
+/// The test runner times out at 2000ms.
 const TLE_SEC: u64 = 2;
 
+/// Testcase
 #[derive(Deserialize)]
 struct Testcase {
     _id: i32,
@@ -12,6 +17,10 @@ struct Testcase {
     expect: String,
 }
 
+/// Answer output
+/// * `ExitCode` - Exit status of `$ bash -c ./test_target`.
+/// * `StdOut` - Output from stdout.
+/// * `NoTestCase` - No test case.
 #[derive(Deserialize)]
 pub enum TestTarget {
     #[serde(rename = "exitcode")]
@@ -22,6 +31,10 @@ pub enum TestTarget {
     NoTestCase,
 }
 
+/// Testcase deserialized from json file.
+/// * `judge_target` - Answer output to.
+/// * `is_wrong_code` - Is probelm ivalid code.
+/// * `tests` - Testcases.
 #[derive(Deserialize)]
 pub struct Testcases {
     pub judge_target: TestTarget,
@@ -29,6 +42,8 @@ pub struct Testcases {
     tests: Vec<Testcase>,
 }
 
+/// Just exec `test_target`.
+/// If the file exited successfully, it will be `AC`.
 pub async fn just_exec() {
     // exec
     let output = tokio::time::timeout(
@@ -58,6 +73,7 @@ pub async fn just_exec() {
     std::process::exit(ExitCode::WA as i32);
 }
 
+/// Judge with testcases.
 pub async fn with_testcase(testcases: Testcases) {
     for case in testcases.tests {
         // exec and test

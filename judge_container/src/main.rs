@@ -1,3 +1,7 @@
+//! This crate is a test runner
+//! that retrieves submissions from the database and runs the testcases.  
+//! Testcases must be provided by json file for now.
+
 mod run_test;
 
 use crate::run_test::{TestTarget, Testcases};
@@ -6,25 +10,42 @@ use std::fs::File;
 use std::io::Write;
 use tokio::process::Command;
 
+/// Judge status (also serves as exit code).
+/// This test runner returns the result via exit code.
+/// `ExitCode` must be consistent with `judge_server::entities::JudgeResult`.
 #[allow(dead_code)]
 pub enum ExitCode {
+    /// ACcepted
     AC = 0,
+    /// Wrong Answer
     WA,
+    /// Wrong Compile Error
     WC,
+    /// Assembly Error
     AE,
+    /// Linker Error
     LE,
+    /// Runtime Error
     RE,
+    /// Time Limit Exceeded
     TLE,
+    /// the submit is pending.
     Pending,
+    /// The judge failed due to system error.
     SystemError,
 }
 
+/// Command line option of the test runner.
+/// * `is_ce` - Is compile error submission or not.
+/// * `asm` - Submitted assembly that encoded by base64.
+/// * `testcase_path` - File path of json format testcase.
 struct CmdOption {
     is_ce: bool,
     asm: String,
     testcase_path: String,
 }
 
+/// Create `CmdOption` used by clap crate.
 fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
     let app = clap::app_from_crate!()
         .arg(arg!(<problem_number> "number for testcase"))
@@ -49,6 +70,8 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
     })
 }
 
+/// Create `test_target` elf file to judge submission correctness.
+/// When failed to generate execute file, exit with `ExitCode`.
 async fn create_elf() {
     // assemble
     let exit_code_asm = Command::new("bash")
@@ -89,6 +112,7 @@ async fn create_elf() {
     }
 }
 
+/// Main function.
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = get_arg().unwrap();
