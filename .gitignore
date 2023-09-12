@@ -15,4 +15,4 @@ test_target
 
 .env
 
-judge_container/testcase/
+test_runner/testcase/*
