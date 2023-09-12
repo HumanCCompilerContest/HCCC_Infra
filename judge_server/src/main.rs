@@ -1,5 +1,5 @@
 use futures::future;
-use judge_server::database::new_repo;
+use judge_server::database::RepositoryProvider;
 use judge_server::entities::{JudgeResult, Submit};
 use judge_server::repositories::submit::Submits;
 use tokio::process::Command;
@@ -46,18 +46,7 @@ async fn main() {
     }
     tracing_subscriber::fmt::init();
 
-    /*
-    let testcase_path = Command::new("bash")
-        .arg("-c")
-        .arg("realpath ../test_runner/testcase/")
-        .output()
-        .await
-        .unwrap()
-        .stdout;
-    let testcase_path = String::from_utf8_lossy(&testcase_path);
-    */
-
-    let repo = new_repo().await;
+    let repo = RepositoryProvider::new().await;
     let repo_submit = repo.submit();
     loop {
         let submits = repo_submit.get_pending_submits().await;
