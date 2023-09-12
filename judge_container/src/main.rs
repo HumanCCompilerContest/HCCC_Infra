@@ -22,7 +22,7 @@ pub enum ExitCode {
 struct CmdOption {
     is_ce: bool,
     asm: String,
-    problem_path: String,
+    testcase_path: String,
 }
 
 fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
@@ -45,7 +45,7 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
     Ok(CmdOption {
         is_ce,
         asm,
-        problem_path: format!("/work/testcase/case{problem_num}.json"),
+        testcase_path: format!("/work/testcase/case{problem_num}.json"),
     })
 }
 
@@ -92,8 +92,8 @@ async fn create_elf() {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = get_arg().unwrap();
-    let testcase_str = std::fs::read_to_string(&cmd.problem_path).unwrap_or_else(|_| {
-        eprintln!("Failed to read file: {}", &cmd.problem_path);
+    let testcase_str = std::fs::read_to_string(&cmd.testcase_path).unwrap_or_else(|_| {
+        eprintln!("Failed to read file: {}", &cmd.testcase_path);
         std::process::exit(ExitCode::SystemError as i32);
     });
     let testcases: Testcases = serde_json::from_str(&testcase_str).unwrap();
