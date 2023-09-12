@@ -13,7 +13,7 @@ services:
       - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
   test_runner:
-    image: ghcr.io/humanccompilercontest/hccc_infra:test_runner-hccc_001
+    image: ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop
     container_name: test_runner
     tty: true
     stdin_open: true
