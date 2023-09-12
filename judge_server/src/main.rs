@@ -43,7 +43,7 @@ async fn judge(submit: &Submit) -> (JudgeResult, i32) {
 #[tokio::main]
 async fn main() {
     if std::env::var_os("RUST_LOG").is_none() {
-        std::env::set_var("RUST_LOG", "judge_server=debug")
+        std::env::set_var("RUST_LOG", "judge_server=debug");
     }
     tracing_subscriber::fmt::init();
 

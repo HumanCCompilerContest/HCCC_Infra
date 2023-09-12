@@ -105,7 +105,7 @@ pub async fn with_testcase(testcases: Testcases) {
                     std::process::exit(ExitCode::WA as i32);
                 }
             }
-            _ => panic!("invalid ExeOption"),
+            TestTarget::NoTestCase => panic!("invalid ExeOption"),
         }
     }
 }

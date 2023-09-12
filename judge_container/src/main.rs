@@ -34,10 +34,7 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
 
     let problem_num = app.value_of("problem_number").unwrap();
     let is_ce = match app.value_of("is_ce") {
-        Some(a) => match a {
-            "true" => true,
-            _ => false,
-        },
+        Some(a) => matches!(a, "true"),
         None => panic!("please specify target ELF file."),
     };
     let asm = match app.value_of("asm") {

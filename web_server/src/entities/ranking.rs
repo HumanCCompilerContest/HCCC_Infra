@@ -31,7 +31,7 @@ impl Rank {
     }
 
     pub fn set_rank(mut self, rank: usize) -> Self {
-        self.rank = rank as i32;
+        self.rank = i32::try_from(rank).expect("cast error: usize -> i32");
         self
     }
 }

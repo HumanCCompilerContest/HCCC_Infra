@@ -26,7 +26,7 @@ pub async fn submit_asm(
     is_ce: bool,
 ) -> Submission {
     let submit_time = Local::now();
-    let submission_id = match repo_submit
+    let Some(submission_id) = repo_submit
         .store_submission(
             user_id,
             problem_id,
@@ -36,9 +36,8 @@ pub async fn submit_asm(
             JudgeResult::Pending,
         )
         .await
-    {
-        Some(id) => id,
-        None => return Submission::error(),
+    else {
+        return Submission::error();
     };
     let user_obj = repo_user
         .find_user(user_id)
