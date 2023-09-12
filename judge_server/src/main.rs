@@ -1,3 +1,7 @@
+//! This crate is the server that judges submissions.  
+//! It monitors the database tables, retrieves Pending submissions,
+//! judges them using `test_runner`, and stores the results in the database.
+
 use futures::future;
 use judge_server::database::RepositoryProvider;
 use judge_server::entities::{JudgeResult, Submit};
@@ -5,6 +9,7 @@ use judge_server::repositories::submit::Submits;
 use tokio::process::Command;
 use tokio::time::{sleep, Duration};
 
+/// Judge the submission using `test_runner`.
 async fn judge(submit: &Submit) -> (JudgeResult, i32) {
     const TESTCASE_PATH: &str = "/home/ubuntu/HCCC_Infra/test_runner/testcase/";
     const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:test_runner-hccc_001";
@@ -39,6 +44,7 @@ async fn judge(submit: &Submit) -> (JudgeResult, i32) {
     }
 }
 
+/// Main function.
 #[tokio::main]
 async fn main() {
     if std::env::var_os("RUST_LOG").is_none() {

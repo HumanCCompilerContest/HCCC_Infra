@@ -1,3 +1,5 @@
+//! Set up for database connection.
+
 use bb8::Pool;
 use bb8_postgres::PostgresConnectionManager;
 use tokio_postgres::NoTls;
@@ -5,12 +7,17 @@ use tokio_postgres::NoTls;
 use crate::constants::database_url;
 use crate::repos_impl::SubmitImpl;
 
+/// Connection pool of postgres
 pub type ConnectionPool = Pool<PostgresConnectionManager<NoTls>>;
 
 #[derive(Clone)]
 pub struct RepositoryProvider(ConnectionPool);
 
 impl RepositoryProvider {
+    /// Setup connection pool.
+    ///
+    /// # Panics
+    /// It will panic when fail to build connection pool.
     #[must_use]
     pub async fn new() -> Self {
         let manager =
