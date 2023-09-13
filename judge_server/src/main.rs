@@ -1,14 +1,18 @@
+//! This crate is the server that judges submissions.  
+//! It monitors the database tables, retrieves Pending submissions,
+//! judges them using `test_runner`, and stores the results in the database.
+
 use futures::future;
-use judge_server::database::new_repo;
+use judge_server::database::RepositoryProvider;
 use judge_server::entities::{JudgeResult, Submit};
 use judge_server::repositories::submit::Submits;
 use tokio::process::Command;
 use tokio::time::{sleep, Duration};
 
+/// Judge the submission using `test_runner`.
 async fn judge(submit: &Submit) -> (JudgeResult, i32) {
-    const TESTCASE_PATH: &str = "/home/ubuntu/HCCC_Infra/judge_container/testcase/";
-    const CONTAINER_NAME: &str =
-        "ghcr.io/humanccompilercontest/hccc_infra:judge_container-hccc_001";
+    const TESTCASE_PATH: &str = "/home/ubuntu/HCCC_Infra/test_runner/testcase/";
+    const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:test_runner-hccc_001";
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
@@ -40,25 +44,15 @@ async fn judge(submit: &Submit) -> (JudgeResult, i32) {
     }
 }
 
+/// Main function.
 #[tokio::main]
 async fn main() {
     if std::env::var_os("RUST_LOG").is_none() {
-        std::env::set_var("RUST_LOG", "judge_server=debug")
+        std::env::set_var("RUST_LOG", "judge_server=debug");
     }
     tracing_subscriber::fmt::init();
 
-    /*
-    let testcase_path = Command::new("bash")
-        .arg("-c")
-        .arg("realpath ../judge_container/testcase/")
-        .output()
-        .await
-        .unwrap()
-        .stdout;
-    let testcase_path = String::from_utf8_lossy(&testcase_path);
-    */
-
-    let repo = new_repo().await;
+    let repo = RepositoryProvider::new().await;
     let repo_submit = repo.submit();
     loop {
         let submits = repo_submit.get_pending_submits().await;

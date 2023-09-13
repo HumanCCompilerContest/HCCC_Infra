@@ -1,3 +1,5 @@
+//! Set up for database connection.
+
 use axum::Extension;
 use bb8::Pool;
 use bb8_postgres::PostgresConnectionManager;
@@ -6,8 +8,10 @@ use tokio_postgres::NoTls;
 use crate::constants::database_url;
 use crate::repos_impl::{AccountsImpl, ProblemImpl, SubmissionImpl, UserImpl};
 
+/// Connection pool of postgres
 pub type ConnectionPool = Pool<PostgresConnectionManager<NoTls>>;
 
+/// Create new `RepositoryProvider`.
 pub async fn layer() -> Extension<RepositoryProvider> {
     let manager = PostgresConnectionManager::new_from_stringlike(database_url(), NoTls).unwrap();
     let pool = Pool::builder().build(manager).await.unwrap();

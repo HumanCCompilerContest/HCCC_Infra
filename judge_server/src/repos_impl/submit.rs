@@ -4,12 +4,14 @@ use crate::database::ConnectionPool;
 use crate::entities::{JudgeResult, Submit};
 use crate::repositories::Submits;
 
+/// A struct for database connection.
 pub struct SubmitImpl<'a> {
     pub pool: &'a ConnectionPool,
 }
 
 #[axum::async_trait]
 impl<'a> Submits for SubmitImpl<'a> {
+    /// Get pending submits from database.
     async fn get_pending_submits(&self) -> Vec<Submit> {
         let conn = self.pool.get().await.unwrap();
         conn.query(
@@ -23,6 +25,7 @@ impl<'a> Submits for SubmitImpl<'a> {
         .collect()
     }
 
+    /// Store Judged result.
     async fn store_result(&self, result: JudgeResult, submit_id: i32) {
         let conn = self.pool.get().await.unwrap();
         conn.query_opt(
@@ -35,6 +38,7 @@ impl<'a> Submits for SubmitImpl<'a> {
 }
 
 impl From<Row> for Submit {
+    /// Convert SQL output to `Submit`.
     fn from(r: Row) -> Self {
         Submit::new(
             r.get("id"),

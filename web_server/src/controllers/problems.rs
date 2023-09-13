@@ -10,6 +10,7 @@ use crate::is_contest_has_not_yet_begun;
 use crate::request::UserContext;
 use crate::services;
 
+/// Return `/api/problem/*` api.
 pub fn problem() -> Router {
     Router::new()
         .route("/", routing::get(all_problem))
@@ -17,6 +18,7 @@ pub fn problem() -> Router {
         .route("/:id/submissions", routing::post(submit))
 }
 
+/// Return all problems
 async fn all_problem(
     _: UserContext,
     Extension(repository_provider): Extension<RepositoryProvider>,
@@ -33,6 +35,7 @@ async fn all_problem(
     }
 }
 
+/// Return problems by selected id.
 async fn problem_from_id(
     Path(id): Path<i32>,
     _: UserContext,

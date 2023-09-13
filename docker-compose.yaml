@@ -12,9 +12,9 @@ services:
     volumes:
       - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
-  judge_container:
-    image: ghcr.io/humanccompilercontest/hccc_infra:judge_container-hccc_001
-    container_name: judge_container
+  test_runner:
+    image: ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop
+    container_name: test_runner
     tty: true
     stdin_open: true
 

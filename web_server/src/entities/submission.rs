@@ -3,50 +3,82 @@ use chrono::{DateTime, Local};
 use postgres_types::{FromSql, ToSql};
 use serde::Serialize;
 
+/// Judge result  
+/// It is provied by exit status of `test_runner` and `judge_server`.
 #[derive(Debug, Copy, Clone, Serialize, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
 pub enum JudgeResult {
+    /// ACcepted
     AC = 0,
+    /// Wrong Answer
     WA,
+    /// Wrong Compile Error
     WC,
+    /// Assembly Error
     AE,
+    /// Linker Error
     LE,
+    /// Runtime Error
     RE,
+    /// Time Limit Exceeded
     TLE,
+    /// the submit is pending.
     Pending,
+    /// The judge failed due to system error.
     SystemError,
 }
 
+/// Submission data
 #[derive(Serialize)]
 #[allow(non_snake_case)]
 pub struct SubmissionObject {
+    /// Submission id.
     id: i32,
+    /// Submission time.
     time: DateTime<Local>,
+    /// Submitted assembly.
     asm: String,
+    /// Did submited as `compile error`.
     is_ce: bool,
+    /// Judge result.
     result: JudgeResult,
+    /// Submitted user.
     user: UserObject,
+    /// Problem.
     problem: ProblemObject,
 }
 
+/// Getting submission result
 #[derive(Serialize)]
 #[allow(non_snake_case)]
 pub struct Submission {
+    /// Getting submission successeed or not.
+    /// * `ok` - successeed
+    /// * `ng` - failed
     status: String,
+    /// Submissions
     submission: SubmissionObject,
+    /// Error message.
     errorMessage: Option<String>,
 }
 
+/// Getting submission result submitted by specified user.
 #[derive(Serialize)]
 #[allow(non_snake_case)]
 pub struct UserSubmissions {
+    /// Getting submission that submitted by specified user successeed or not.
+    /// * `ok` - successeed
+    /// * `ng` - failed
     status: String,
+    /// Submissions
     #[serde(rename = "items")]
     submissions: Vec<SubmissionObject>,
+    /// Error message.
     errorMessage: Option<String>,
 }
 
 impl SubmissionObject {
+    /// Return new `SubmissionObject`.
     pub fn new(
         id: i32,
         time: DateTime<Local>,
@@ -67,6 +99,7 @@ impl SubmissionObject {
         }
     }
 
+    /// Return dummy `SubmissionObject`.
     pub fn dummy() -> Self {
         SubmissionObject {
             id: 0,
@@ -81,6 +114,7 @@ impl SubmissionObject {
 }
 
 impl Submission {
+    /// Return successeed response.
     pub fn new(
         id: i32,
         time: DateTime<Local>,
@@ -97,6 +131,7 @@ impl Submission {
         }
     }
 
+    /// Return error response.
     pub fn error() -> Self {
         Submission {
             status: "ng".to_string(),
@@ -107,6 +142,7 @@ impl Submission {
 }
 
 impl UserSubmissions {
+    /// Return successeed response.
     pub fn new(
         status: String,
         submissions: Vec<SubmissionObject>,
@@ -119,6 +155,7 @@ impl UserSubmissions {
         }
     }
 
+    /// Return error response.
     pub fn error(status: &str, msg: &str) -> Self {
         UserSubmissions {
             status: status.to_string(),

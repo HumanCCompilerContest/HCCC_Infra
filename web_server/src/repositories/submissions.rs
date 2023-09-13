@@ -1,6 +1,7 @@
 use crate::entities::{JudgeResult, Submission, SubmissionObject};
 use chrono::{DateTime, Local};
 
+/// A trait for defining requests about submissions to the database.
 #[axum::async_trait]
 pub trait Submissions {
     async fn find_submission(&self, problem_id: i32) -> Option<Submission>;
