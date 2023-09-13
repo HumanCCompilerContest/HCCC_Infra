@@ -74,40 +74,34 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
 /// When failed to generate execute file, exit with `ExitCode`.
 async fn create_elf() {
     // assemble
-    let exit_code_asm = Command::new("bash")
+    let asm_result = Command::new("bash")
         .arg("-c")
         .arg("as submit.s -o tmp.o")
         .output()
         .await
         .unwrap_or_else(|_| {
-            eprintln!("Assembling Error");
             std::process::exit(ExitCode::AE as i32);
-        })
-        .status
-        .code()
-        .unwrap_or(-1);
+        });
+    let exit_code_asm = asm_result.status.code().unwrap_or(-1);
 
     if exit_code_asm != 0 {
-        eprintln!("Assembling Error");
+        eprintln!("{}", std::str::from_utf8(&asm_result.stderr).unwrap());
         std::process::exit(ExitCode::AE as i32);
     }
 
     // link
-    let exit_code_link = Command::new("bash")
+    let link_result = Command::new("bash")
         .arg("-c")
         .arg("gcc -v -static -no-pie tmp.o -o test_target")
         .output()
         .await
         .unwrap_or_else(|_| {
-            eprintln!("Linking Error");
             std::process::exit(ExitCode::LE as i32);
-        })
-        .status
-        .code()
-        .unwrap_or(-1);
+        });
+    let exit_code_link = link_result.status.code().unwrap_or(-1);
 
     if exit_code_link != 0 {
-        eprintln!("Linking Error");
+        eprintln!("{}", std::str::from_utf8(&link_result.stderr).unwrap());
         std::process::exit(ExitCode::LE as i32);
     }
 }
