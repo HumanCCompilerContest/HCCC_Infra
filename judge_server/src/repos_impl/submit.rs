@@ -26,11 +26,11 @@ impl<'a> Submits for SubmitImpl<'a> {
     }
 
     /// Store Judged result.
-    async fn store_result(&self, result: JudgeResult, submit_id: i32) {
+    async fn store_result(&self, result: JudgeResult, error_message: String, submit_id: i32) {
         let conn = self.pool.get().await.unwrap();
         conn.query_opt(
-            "UPDATE submits set result = $1 WHERE id = $2",
-            &[&result, &submit_id],
+            "UPDATE submits set result = $1, error_message = $2 WHERE id = $3",
+            &[&result, &error_message, &submit_id],
         )
         .await
         .unwrap();
@@ -46,6 +46,7 @@ impl From<Row> for Submit {
             r.get("problem_id"),
             r.get("time"),
             r.get("asm"),
+            r.get("error_message"),
             r.get("is_ce"),
             r.get("result"),
         )
