@@ -48,7 +48,7 @@ pub async fn submit_asm(
         submission_id,
         submit_time,
         asm,
-        "".to_string(),
+        String::new(),
         is_ce,
         JudgeResult::Pending,
         user_obj.get_object(),

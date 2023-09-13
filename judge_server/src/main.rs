@@ -48,7 +48,7 @@ async fn judge(submit: &Submit) -> (JudgeResult, Option<String>, i32) {
             }
             // get error message from stderr
             _ => std::str::from_utf8(&result.stderr)
-                .map(|s| s.to_string())
+                .map(std::string::ToString::to_string)
                 .ok(),
         };
 
@@ -82,7 +82,7 @@ async fn main() {
             repo_submit
                 .store_result(
                     judge_result,
-                    error_message.unwrap_or("".to_string()),
+                    error_message.unwrap_or(String::new()),
                     submit_id,
                 )
                 .await;
