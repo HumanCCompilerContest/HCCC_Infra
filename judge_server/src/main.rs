@@ -10,9 +10,9 @@ use tokio::process::Command;
 use tokio::time::{sleep, Duration};
 
 /// Judge the submission using `test_runner`.
-async fn judge(submit: &Submit) -> (JudgeResult, i32) {
+async fn judge(submit: &Submit) -> (JudgeResult, Option<String>, i32) {
     const TESTCASE_PATH: &str = "/home/ubuntu/HCCC_Infra/test_runner/testcase/";
-    const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:test_runner-hccc_001";
+    const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop";
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
@@ -37,10 +37,28 @@ async fn judge(submit: &Submit) -> (JudgeResult, i32) {
             6 => JudgeResult::TLE,
             _ => JudgeResult::SystemError,
         };
+        let error_message = match judge_result {
+            JudgeResult::AC => None,
+            JudgeResult::SystemError => {
+                tracing::debug!(
+                    "SystemError: {}",
+                    std::str::from_utf8(&result.stderr).unwrap()
+                );
+                Some("System error: Please contact the competition management.".to_string())
+            }
+            // get error message from stderr
+            _ => std::str::from_utf8(&result.stderr)
+                .map(std::string::ToString::to_string)
+                .ok(),
+        };
 
-        (judge_result, submit.id())
+        (judge_result, error_message, submit.id())
     } else {
-        (JudgeResult::SystemError, submit.id())
+        (
+            JudgeResult::SystemError,
+            Some("Unknown Result.".to_string()),
+            submit.id(),
+        )
     }
 }
 
@@ -60,8 +78,14 @@ async fn main() {
         let rets = future::join_all(works).await;
 
         for ret in rets {
-            let (judge_result, submit_id) = ret;
-            repo_submit.store_result(judge_result, submit_id).await;
+            let (judge_result, error_message, submit_id) = ret;
+            repo_submit
+                .store_result(
+                    judge_result,
+                    error_message.unwrap_or(String::new()),
+                    submit_id,
+                )
+                .await;
         }
         sleep(Duration::from_millis(5000)).await;
     }

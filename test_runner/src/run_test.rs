@@ -56,16 +56,14 @@ pub async fn just_exec() {
     )
     .await
     .unwrap_or_else(|_| {
-        eprintln!("Time Limit Exceeded");
         std::process::exit(ExitCode::TLE as i32);
     })
     .unwrap_or_else(|_| {
-        eprintln!("Runtime Error");
         std::process::exit(ExitCode::RE as i32);
     });
 
     if output.status.code().unwrap() != 0 {
-        eprintln!("Runtime Error");
+        eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
         std::process::exit(ExitCode::RE as i32);
     }
 
@@ -87,18 +85,16 @@ pub async fn with_testcase(testcases: Testcases) {
         )
         .await
         .unwrap_or_else(|_| {
-            eprintln!("Time Limit Exceeded");
             std::process::exit(ExitCode::TLE as i32);
         })
         .unwrap_or_else(|_| {
-            eprintln!("Runtime Error");
             std::process::exit(ExitCode::RE as i32);
         });
 
         match testcases.judge_target {
             TestTarget::ExitCode => {
                 if !output.stderr.is_empty() {
-                    eprintln!("Runtime Error");
+                    eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
                     std::process::exit(ExitCode::RE as i32);
                 }
 
@@ -111,7 +107,7 @@ pub async fn with_testcase(testcases: Testcases) {
             }
             TestTarget::StdOut => {
                 if output.status.code().unwrap() != 0 {
-                    eprintln!("Runtime Error");
+                    eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
                     std::process::exit(ExitCode::RE as i32);
                 }
 

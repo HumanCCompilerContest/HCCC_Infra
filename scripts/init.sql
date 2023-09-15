@@ -42,6 +42,7 @@ CREATE TABLE submits -- submit
 	problem_id integer REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
 	time timestamptz not null,
 	asm text not null,
+	error_message text not null,
 	is_ce boolean not null,
 	result JudgeResult not null
 );

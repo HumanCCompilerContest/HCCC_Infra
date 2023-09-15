@@ -1,4 +1,4 @@
-use crate::entities::{JudgeResult, Submission, SubmissionObject};
+use crate::entities::{Submission, SubmissionObject};
 use chrono::{DateTime, Local};
 
 /// A trait for defining requests about submissions to the database.
@@ -14,6 +14,5 @@ pub trait Submissions {
         submit_time: DateTime<Local>,
         asm: &'a str,
         is_ce: bool,
-        judge_result: JudgeResult,
     ) -> Option<i32>;
 }
