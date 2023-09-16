@@ -35,6 +35,14 @@ CREATE TABLE problems -- 問題
 	score integer not null
 );
 
+CREATE TABLE testcase -- テストケース
+(
+	id serial primary key,
+    problem_id REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+	input text not null,
+	expect text not null,
+);
+
 CREATE TABLE submits -- submit
 (
 	id serial primary key,
