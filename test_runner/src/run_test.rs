@@ -38,8 +38,16 @@ pub enum TestTarget {
 #[derive(Deserialize)]
 pub struct Testcases {
     pub judge_target: TestTarget,
-    pub is_wrong_code: bool,
     tests: Vec<Testcase>,
+}
+
+impl Testcases {
+    pub fn new(test_target: TestTarget, testcases: String) -> Self {
+        Testcases {
+            judge_target: test_target,
+            tests: serde_json::from_str(&testcases).unwrap(),
+        }
+    }
 }
 
 /// Just exec `test_target`.
