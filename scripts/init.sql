@@ -10,7 +10,7 @@ CREATE TYPE JudgeResult AS ENUM (
     'SystemError'
 );
 
-CREATE TYPE JudgeTarget AS ENUM (
+CREATE TYPE TestTarget AS ENUM (
     'ExitCode',
     'StdOut',
     'NoTestCase'
@@ -38,7 +38,7 @@ CREATE TABLE problems -- 問題
     code text not null,
     input_desc text,
     output_desc text,
-    judge_target JudgeTarget,
+    judge_target TestTarget,
     is_wrong_code bool,
     score integer not null
 );
@@ -63,13 +63,15 @@ CREATE TABLE submits -- submit
     result JudgeResult not null
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, judge_target, is_wrong_code, score) VALUES (
     0,
     'Return 42',
     '42を返すプログラムを作成してください．',
     E'int main(void) {\nreturn 42;\n}',
     '無し',
     '無し',
+    ExitCode,
+    false,
     100
 );
 
@@ -80,5 +82,7 @@ INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score
     E'int main(void) {\n\tnt d;\n\tcanf("%d", &d);\n\tprintf("%d\n", d);\n}',
     '1 <= n <= 10000',
     '入力と同じ値',
+    ExitCode,
+    false,
     100
 );
