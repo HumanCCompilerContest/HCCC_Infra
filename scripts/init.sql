@@ -10,49 +10,57 @@ CREATE TYPE JudgeResult AS ENUM (
     'SystemError'
 );
 
+CREATE TYPE JudgeTarget AS ENUM (
+    'ExitCode',
+    'StdOut',
+    'NoTestCase'
+);
+
 CREATE TABLE accounts -- ユーザ
 (
-	id serial primary key,
-	name text unique not null,
-	password text not null
+    id serial primary key,
+    name text unique not null,
+    password text not null
 );
 
 CREATE TABLE sessions
 (
-	session_key text primary key,
-	user_id integer REFERENCES accounts(id) ON UPDATE NO ACTION ON DELETE CASCADE,
-	created_at timestamptz not null
+    session_key text primary key,
+    user_id integer REFERENCES accounts(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+    created_at timestamptz not null
 );
 
 CREATE TABLE problems -- 問題
 (
-	id serial primary key,
-	title text not null,
-	statement text not null,
-	code text not null,
-	input_desc text,
-	output_desc text,
-	score integer not null
+    id serial primary key,
+    title text not null,
+    statement text not null,
+    code text not null,
+    input_desc text,
+    output_desc text,
+    judge_target JudgeTarget,
+    is_wrong_code bool,
+    score integer not null
 );
 
 CREATE TABLE testcase -- テストケース
 (
-	id serial primary key,
+    id serial primary key,
     problem_id REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
-	input text not null,
-	expect text not null,
+    input text not null,
+    expect text not null
 );
 
 CREATE TABLE submits -- submit
 (
-	id serial primary key,
-	user_id integer REFERENCES accounts(id) ON UPDATE NO ACTION ON DELETE CASCADE,
-	problem_id integer REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
-	time timestamptz not null,
-	asm text not null,
-	error_message text not null,
-	is_ce boolean not null,
-	result JudgeResult not null
+    id serial primary key,
+    user_id integer REFERENCES accounts(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+    problem_id integer REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+    time timestamptz not null,
+    asm text not null,
+    error_message text not null,
+    is_ce boolean not null,
+    result JudgeResult not null
 );
 
 INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score) VALUES (
