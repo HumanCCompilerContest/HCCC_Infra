@@ -21,9 +21,9 @@ pub struct Problem {
     /// Submit id.
     id: i32,
     /// Test target
-    test_target: TestTarget,
+    pub test_target: TestTarget,
     /// Is wrong code or not.
-    is_wrong_code: bool,
+    pub is_wrong_code: bool,
 }
 
 impl Problem {
