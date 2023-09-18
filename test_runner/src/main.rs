@@ -36,12 +36,12 @@ pub enum ExitCode {
 }
 
 /// Command line option of the test runner.
-/// * `is_ce` - Is compile error submission or not.
-/// * `asm` - Submitted assembly that encoded by base64.
-/// * `testcase_path` - File path of json format testcase.
 struct CmdOption {
+    /// Submitted assembly that encoded by base64.
     asm: String,
+    /// Test target (exit code or stdout).
     test_target: TestTarget,
+    /// Test cases that decoded by base64.
     testcases: String,
 }
 

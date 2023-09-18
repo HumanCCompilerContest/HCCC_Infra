@@ -18,33 +18,32 @@ struct Testcase {
 }
 
 /// Answer output
-/// * `ExitCode` - Exit status of `$ bash -c ./test_target`.
-/// * `StdOut` - Output from stdout.
-/// * `NoTestCase` - No test case.
 #[derive(Deserialize)]
 pub enum TestTarget {
+    /// Exit status of `$ bash -c ./test_target`.
     #[serde(rename = "exitcode")]
     ExitCode,
+    /// Output from stdout.
     #[serde(rename = "stdout")]
     StdOut,
+    /// No test case.
     #[serde(rename = "none")]
     NoTestCase,
 }
 
 /// Testcase deserialized from json file.
-/// * `judge_target` - Answer output to.
-/// * `is_wrong_code` - Is probelm ivalid code.
-/// * `tests` - Testcases.
 #[derive(Deserialize)]
 pub struct Testcases {
-    pub judge_target: TestTarget,
+    /// Test target (exit code or stdout).
+    pub test_target: TestTarget,
+    /// Testcases.
     tests: Vec<Testcase>,
 }
 
 impl Testcases {
     pub fn new(test_target: TestTarget, testcases: String) -> Self {
         Testcases {
-            judge_target: test_target,
+            test_target,
             tests: serde_json::from_str(&testcases).unwrap(),
         }
     }
@@ -99,7 +98,7 @@ pub async fn with_testcase(testcases: Testcases) {
             std::process::exit(ExitCode::RE as i32);
         });
 
-        match testcases.judge_target {
+        match testcases.test_target {
             TestTarget::ExitCode => {
                 if !output.stderr.is_empty() {
                     eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
