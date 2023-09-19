@@ -38,12 +38,12 @@ CREATE TABLE problems -- 問題
     code text not null,
     input_desc text,
     output_desc text,
-    judge_target TestTarget,
+    test_target TestTarget,
     is_wrong_code bool,
     score integer not null
 );
 
-CREATE TABLE testcase -- テストケース
+CREATE TABLE testcases -- テストケース
 (
     id serial primary key,
     problem_id REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
