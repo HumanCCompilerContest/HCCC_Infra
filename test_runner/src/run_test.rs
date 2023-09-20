@@ -44,10 +44,10 @@ pub struct Testcases {
 }
 
 impl Testcases {
-    pub fn new(test_target: TestTarget, testcases: String) -> Self {
+    pub fn new(test_target: TestTarget, testcases: &str) -> Self {
         Testcases {
             test_target,
-            tests: serde_json::from_str(&testcases).unwrap(),
+            tests: serde_json::from_str(testcases).unwrap(),
         }
     }
 }

@@ -118,7 +118,7 @@ async fn create_elf() {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cmd = get_arg().expect("parsing arguments failed.");
-    let testcases: Testcases = Testcases::new(cmd.test_target, cmd.testcases);
+    let testcases: Testcases = Testcases::new(cmd.test_target, &cmd.testcases);
 
     let mut file = File::create("./submit.s")?;
     writeln!(file, "{}", cmd.asm)?;

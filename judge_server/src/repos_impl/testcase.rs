@@ -26,7 +26,7 @@ impl<'a> Testcases for TestcaseImpl<'a> {
                 .into_iter()
                 .map(std::convert::Into::into)
                 .collect(),
-            )
+            );
         }
 
         testcases

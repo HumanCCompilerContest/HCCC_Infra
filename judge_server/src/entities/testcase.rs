@@ -14,6 +14,7 @@ pub struct Testcase {
 }
 
 impl Testcase {
+    #[must_use]
     pub fn new(id: i32, problem_id: i32, input: String, expect: String) -> Self {
         Testcase {
             id,

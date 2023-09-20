@@ -31,7 +31,7 @@ async fn judge(
             CONTAINER_NAME,
             base64::encode(&submit.asm),
             serde_json::to_string(&problem.test_target).expect("getting renamed name failed"),
-            base64::encode(&serde_json::to_string(&testcase).expect("serialization failed")),
+            base64::encode(serde_json::to_string(&testcase).expect("serialization failed")),
         )))
         .output()
         .await;

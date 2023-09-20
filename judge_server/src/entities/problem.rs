@@ -28,6 +28,7 @@ pub struct Problem {
 }
 
 impl Problem {
+    #[must_use]
     pub fn new(id: i32, test_target: TestTarget, is_wrong_code: bool) -> Self {
         Problem {
             _id: id,
