@@ -2,7 +2,7 @@ use postgres_types::FromSql;
 use serde::Deserialize;
 
 /// Answer output
-#[derive(FromSql, Deserialize)]
+#[derive(FromSql, Deserialize, Debug)]
 pub enum TestTarget {
     /// Exit status of `$ bash -c ./test_target`.
     #[serde(rename = "exitcode")]
@@ -19,7 +19,7 @@ pub enum TestTarget {
 #[derive(FromSql)]
 pub struct Problem {
     /// Submit id.
-    id: i32,
+    _id: i32,
     /// Test target
     pub test_target: TestTarget,
     /// Is wrong code or not.
@@ -29,7 +29,7 @@ pub struct Problem {
 impl Problem {
     pub fn new(id: i32, test_target: TestTarget, is_wrong_code: bool) -> Self {
         Problem {
-            id,
+            _id: id,
             test_target,
             is_wrong_code,
         }

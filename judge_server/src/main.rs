@@ -4,31 +4,34 @@
 
 use futures::future;
 use judge_server::database::RepositoryProvider;
-use judge_server::entities::{JudgeResult, Submit};
-use judge_server::repositories::submit::Submits;
-use judge_server::repositories::Problems;
+use judge_server::entities::{JudgeResult, Problem, Submit, Testcase};
+use judge_server::repositories::{Problems, Submits, Testcases};
 use tokio::process::Command;
 use tokio::time::{sleep, Duration};
 
 /// Judge the submission using `test_runner`.
-async fn judge(submit: &Submit) -> (JudgeResult, Option<String>, i32) {
+async fn judge(
+    submit: &Submit,
+    problem: &Problem,
+    testcase: &Vec<Testcase>,
+) -> (JudgeResult, Option<String>, i32) {
     const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop";
-    if submit.is_ce && !testcases.is_wrong_code {
+    if submit.is_ce && !problem.is_wrong_code {
         std::process::exit(JudgeResult::WC as i32);
     }
 
-    if submit.is_ce && testcases.is_wrong_code {
+    if submit.is_ce && problem.is_wrong_code {
         std::process::exit(JudgeResult::AC as i32);
     }
 
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
-            "sudo docker run --rm --memory=128M --cpus=\"0.05\" -v {} {} {} {}",
+            "sudo docker run --rm --memory=128M --cpus=\"0.05\" -v {} {} {:?} {}",
             CONTAINER_NAME,
             base64::encode(&submit.asm),
-            /* test_target */,
-            /* testcases */,
+            problem.test_target,
+            base64::encode(&serde_json::to_string(&testcase).expect("serialization failed")),
         )))
         .output()
         .await;
@@ -80,9 +83,23 @@ async fn main() {
     let repo = RepositoryProvider::new().await;
     let repo_submit = repo.submit();
     let problems = repo.problem().get_all_problems().await;
+    let testcases = repo
+        .testcase()
+        .get_all_testcases(problems.len() as u32)
+        .await;
+
     loop {
         let submits = repo_submit.get_pending_submits().await;
-        let works: Vec<_> = submits.iter().map(judge).collect();
+        let works: Vec<_> = submits
+            .iter()
+            .map(|submit| {
+                judge(
+                    submit,
+                    &problems[submit.id() as usize],
+                    &testcases[submit.id() as usize],
+                )
+            })
+            .collect();
         let rets = future::join_all(works).await;
 
         for ret in rets {

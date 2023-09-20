@@ -13,8 +13,10 @@ pub mod entities {
 
     mod problem;
     mod submit;
+    mod testcase;
     pub use problem::Problem;
     pub use submit::{JudgeResult, Submit};
+    pub use testcase::Testcase;
 }
 
 mod repos_impl {
@@ -22,15 +24,19 @@ mod repos_impl {
 
     mod problem;
     mod submit;
+    mod testcase;
     pub use problem::ProblemImpl;
     pub use submit::SubmitImpl;
+    pub use testcase::TestcaseImpl;
 }
 
 pub mod repositories {
     //! Definition interface for communicate database.
 
     mod problem;
-    pub mod submit;
+    mod submit;
+    mod testcase;
     pub use problem::Problems;
     pub use submit::Submits;
+    pub use testcase::Testcases;
 }

@@ -1,7 +1,8 @@
 use postgres_types::FromSql;
+use serde::Serialize;
 
 /// Testcase
-#[derive(FromSql)]
+#[derive(FromSql, Serialize)]
 pub struct Testcase {
     id: i32,
     /// Problem ID.

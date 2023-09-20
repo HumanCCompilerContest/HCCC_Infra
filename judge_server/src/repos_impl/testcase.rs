@@ -12,14 +12,24 @@ pub struct TestcaseImpl<'a> {
 #[axum::async_trait]
 impl<'a> Testcases for TestcaseImpl<'a> {
     /// Get pending submits from database.
-    async fn get_all_testcases(&self) -> Vec<Testcase> {
+    async fn get_all_testcases(&self, num_of_testcases: u32) -> Vec<Vec<Testcase>> {
         let conn = self.pool.get().await.unwrap();
-        conn.query("SELECT * FROM testcases", &[])
-            .await
-            .unwrap()
-            .into_iter()
-            .map(std::convert::Into::into)
-            .collect()
+        let mut testcases = Vec::new();
+        for problem_id in 0..num_of_testcases {
+            testcases.push(
+                conn.query(
+                    "SELECT * FROM testcases WHERE problem_id = $1",
+                    &[&problem_id],
+                )
+                .await
+                .unwrap()
+                .into_iter()
+                .map(std::convert::Into::into)
+                .collect(),
+            )
+        }
+
+        testcases
     }
 }
 
