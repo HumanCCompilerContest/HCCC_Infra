@@ -27,7 +27,7 @@ async fn judge(
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
-            "sudo docker run --rm --memory=128M --cpus=\"0.05\" -v {} {} {:?} {}",
+            "sudo docker run --rm --memory=128M --cpus=\"0.05\" {} {} {} {}",
             CONTAINER_NAME,
             base64::encode(&submit.asm),
             serde_json::to_string(&problem.test_target).expect("getting renamed name failed"),
