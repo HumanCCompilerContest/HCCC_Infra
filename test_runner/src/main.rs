@@ -36,37 +36,45 @@ pub enum ExitCode {
 }
 
 /// Command line option of the test runner.
-/// * `is_ce` - Is compile error submission or not.
-/// * `asm` - Submitted assembly that encoded by base64.
-/// * `testcase_path` - File path of json format testcase.
 struct CmdOption {
-    is_ce: bool,
+    /// Submitted assembly that encoded by base64.
     asm: String,
-    testcase_path: String,
+    /// Test target (exit code or stdout).
+    test_target: TestTarget,
+    /// Test cases that decoded by base64.
+    testcases: String,
 }
 
 /// Create `CmdOption` used by clap crate.
 fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
     let app = clap::app_from_crate!()
-        .arg(arg!(<problem_number> "number for testcase"))
-        .arg(arg!(<is_ce> "is compile error"))
         .arg(arg!(<asm> "assembly"))
+        .arg(arg!(<test_target> "test cases target"))
+        .arg(arg!(<testcases> "testcases json"))
         .get_matches();
 
-    let problem_num = app.value_of("problem_number").unwrap();
-    let is_ce = match app.value_of("is_ce") {
-        Some(a) => matches!(a, "true"),
-        None => panic!("please specify target ELF file."),
-    };
     let asm = match app.value_of("asm") {
         Some(a) => String::from_utf8(base64::decode(a)?)?,
         None => panic!("please input assembly."),
     };
+    let test_target = match app
+        .value_of("test_target")
+        .expect("please specify target for test cases.")
+    {
+        "exitcode" => TestTarget::ExitCode,
+        "stdout" => TestTarget::StdOut,
+        "none" => TestTarget::NoTestCase,
+        _ => panic!("test_target is invalid value."),
+    };
+    let testcases = match app.value_of("testcases") {
+        Some(t) => String::from_utf8(base64::decode(t)?)?,
+        None => panic!("please specify target ELF file."),
+    };
 
     Ok(CmdOption {
-        is_ce,
         asm,
-        testcase_path: format!("/work/testcase/case{problem_num}.json"),
+        test_target,
+        testcases,
     })
 }
 
@@ -109,21 +117,8 @@ async fn create_elf() {
 /// Main function.
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let cmd = get_arg().unwrap();
-    let testcase_str = std::fs::read_to_string(&cmd.testcase_path).unwrap_or_else(|_| {
-        eprintln!("Failed to read file: {}", &cmd.testcase_path);
-        std::process::exit(ExitCode::SystemError as i32);
-    });
-    let testcases: Testcases = serde_json::from_str(&testcase_str).unwrap();
-
-    if cmd.is_ce && !testcases.is_wrong_code {
-        eprintln!("wrong compile error!");
-        std::process::exit(ExitCode::WC as i32);
-    }
-
-    if cmd.is_ce && testcases.is_wrong_code {
-        std::process::exit(ExitCode::AC as i32);
-    }
+    let cmd = get_arg().expect("parsing arguments failed.");
+    let testcases: Testcases = Testcases::new(cmd.test_target, &cmd.testcases);
 
     let mut file = File::create("./submit.s")?;
     writeln!(file, "{}", cmd.asm)?;
@@ -131,7 +126,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     create_elf().await;
 
-    match testcases.judge_target {
+    match testcases.test_target {
         TestTarget::NoTestCase => run_test::just_exec().await,
         TestTarget::ExitCode | TestTarget::StdOut => {
             run_test::with_testcase(testcases).await;

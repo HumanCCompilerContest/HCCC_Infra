@@ -11,20 +11,32 @@ pub mod database;
 pub mod entities {
     //! Definition deta structure.
 
+    mod problem;
     mod submit;
+    mod testcase;
+    pub use problem::Problem;
     pub use submit::{JudgeResult, Submit};
+    pub use testcase::Testcase;
 }
 
 mod repos_impl {
     //! Connect to database and load/store data.
 
+    mod problem;
     mod submit;
+    mod testcase;
+    pub use problem::ProblemImpl;
     pub use submit::SubmitImpl;
+    pub use testcase::TestcaseImpl;
 }
 
 pub mod repositories {
     //! Definition interface for communicate database.
 
-    pub mod submit;
+    mod problem;
+    mod submit;
+    mod testcase;
+    pub use problem::Problems;
     pub use submit::Submits;
+    pub use testcase::Testcases;
 }
