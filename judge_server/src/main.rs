@@ -30,7 +30,7 @@ async fn judge(
             "sudo docker run --rm --memory=128M --cpus=\"0.05\" -v {} {} {:?} {}",
             CONTAINER_NAME,
             base64::encode(&submit.asm),
-            problem.test_target,
+            serde_json::to_string(&problem.test_target).expect("getting renamed name failed"),
             base64::encode(&serde_json::to_string(&testcase).expect("serialization failed")),
         )))
         .output()
@@ -95,8 +95,8 @@ async fn main() {
             .map(|submit| {
                 judge(
                     submit,
-                    &problems[submit.id() as usize],
-                    &testcases[submit.id() as usize],
+                    &problems[submit.problem_id() as usize],
+                    &testcases[submit.problem_id() as usize],
                 )
             })
             .collect();
