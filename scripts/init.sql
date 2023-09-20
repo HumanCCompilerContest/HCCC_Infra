@@ -46,7 +46,7 @@ CREATE TABLE problems -- 問題
 CREATE TABLE testcases -- テストケース
 (
     id serial primary key,
-    problem_id REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
+    problem_id integer REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
     input text not null,
     expect text not null
 );
@@ -63,26 +63,45 @@ CREATE TABLE submits -- submit
     result JudgeResult not null
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, judge_target, is_wrong_code, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, score) VALUES (
     0,
     'Return 42',
     '42を返すプログラムを作成してください．',
     E'int main(void) {\nreturn 42;\n}',
     '無し',
     '無し',
-    ExitCode,
+    'ExitCode',
     false,
     100
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score) VALUES (
+INSERT INTO testcases (problem_id, input, expect) VALUES(
+    0,
+    '',
+    '42'
+);
+
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, score) VALUES (
     1,
     'オウム返し',
     '数値をオウム返しするコードをコンパイルしてください．',
-    E'int main(void) {\n\tnt d;\n\tcanf("%d", &d);\n\tprintf("%d\n", d);\n}',
+    E'int main(void) {\n\tint d;\n\tscanf("%d", &d);\n\tprintf("%d\\n", d);\n}',
     '1 <= n <= 10000',
     '入力と同じ値',
-    ExitCode,
+    'ExitCode',
     false,
     100
 );
+
+INSERT INTO testcases (problem_id, input, expect) VALUES(
+    1,
+    '42',
+    '42'
+);
+
+INSERT INTO testcases (problem_id, input, expect) VALUES(
+    1,
+    '37',
+    '37'
+);
+
