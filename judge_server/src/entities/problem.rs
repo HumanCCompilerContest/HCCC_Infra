@@ -1,8 +1,8 @@
 use postgres_types::FromSql;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// Answer output
-#[derive(FromSql, Deserialize, Debug)]
+#[derive(FromSql, Serialize, Deserialize, Debug)]
 #[postgres(name = "testtarget")]
 pub enum TestTarget {
     /// Exit status of `$ bash -c ./test_target`.
