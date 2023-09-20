@@ -126,7 +126,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     create_elf().await;
 
-    match testcases.judge_target {
+    match testcases.test_target {
         TestTarget::NoTestCase => run_test::just_exec().await,
         TestTarget::ExitCode | TestTarget::StdOut => {
             run_test::with_testcase(testcases).await;

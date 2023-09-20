@@ -13,7 +13,9 @@ const TLE_SEC: u64 = 2;
 #[derive(Deserialize)]
 struct Testcase {
     _id: i32,
+    /// Input of testcase.
     input: String,
+    /// Expect result.
     expect: String,
 }
 
