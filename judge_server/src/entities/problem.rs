@@ -3,6 +3,7 @@ use serde::Deserialize;
 
 /// Answer output
 #[derive(FromSql, Deserialize, Debug)]
+#[postgres(name = "testtarget")]
 pub enum TestTarget {
     /// Exit status of `$ bash -c ./test_target`.
     #[serde(rename = "exitcode")]

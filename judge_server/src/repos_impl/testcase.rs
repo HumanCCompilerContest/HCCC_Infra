@@ -19,7 +19,7 @@ impl<'a> Testcases for TestcaseImpl<'a> {
             testcases.push(
                 conn.query(
                     "SELECT * FROM testcases WHERE problem_id = $1",
-                    &[&problem_id],
+                    &[&(problem_id as i32)],
                 )
                 .await
                 .unwrap()
