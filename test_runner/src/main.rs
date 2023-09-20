@@ -64,12 +64,12 @@ fn get_arg() -> Result<CmdOption, Box<dyn std::error::Error>> {
         "exitcode" => TestTarget::ExitCode,
         "stdout" => TestTarget::StdOut,
         "none" => TestTarget::NoTestCase,
-        _ => panic!(""),
+        _ => panic!("test_target is invalid value."),
     };
-    let testcases = app
-        .value_of("testcases")
-        .expect("please specify target ELF file.")
-        .to_string();
+    let testcases = match app.value_of("testcases") {
+        Some(t) => String::from_utf8(base64::decode(t)?)?,
+        None => panic!("please specify target ELF file."),
+    };
 
     Ok(CmdOption {
         asm,
