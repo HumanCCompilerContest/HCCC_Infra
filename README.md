@@ -15,12 +15,6 @@ web_server, judge_server, test_runner, DB の構成です。
 ```bash
 # /
 docker-compose up
-
-# /web_server
-cargo run
-
-# /judge_server
-cargo run
 ```
 
 ※ 同時にフロントエンド側の起動も必要です。
