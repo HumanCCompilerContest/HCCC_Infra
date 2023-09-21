@@ -4,12 +4,12 @@ services:
     build: web_server
     container_name: web_server
     ports:
-      - 55301:55301
+      - ${BACKEND_PORT:-55301}:55301
     environment:
-      RUST_LOG: "web_server=trace"
-      DATABASE_URL: "postgres://non_manaka@db:5432/hccc_judge"
-      CONTEST_BEGIN: "2022-11-13T18:00:00+09:00"
-      CONTEST_END: "2022-11-13T19:00:00+09:00"
+      RUST_LOG: ${RUST_LOG:-web_server=info}
+      DATABASE_URL: postgres://${POSTGRES_USER:-non_manaka}:${POSTGRES_PASSWORD:-NonSugar}@db:5432/${POSTGRES_DB:-hccc_judge}
+      CONTEST_BEGIN: ${CONTEST_BEGIN:-2022-11-13T19:00:00+09:00}
+      CONTEST_END: ${CONTEST_END:-2022-11-13T21:00:00+09:00}
     depends_on:
       - db
     
@@ -19,7 +19,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      DATABASE_URL: "postgres://non_manaka@db:5432/hccc_judge"
+      DATABASE_URL: postgres://${POSTGRES_USER:-non_manaka}:${POSTGRES_PASSWORD:-NonSugar}@db:5432/${POSTGRES_DB:-hccc_judge}
     depends_on:
       - db
 
@@ -27,9 +27,9 @@ services:
     image: postgres:14-alpine
     container_name: postgres
     environment:
-      POSTGRES_USER: non_manaka
-      POSTGRES_DB: hccc_judge
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: ${POSTGRES_USER:-non_manaka}
+      POSTGRES_DB: ${POSTGRES_DB:-hccc_judge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-NonSugar}
     volumes:
       - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
