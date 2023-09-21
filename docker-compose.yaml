@@ -1,10 +1,27 @@
 version: '3'
 services:
+  web_server:
+    build: web_server
+    container_name: web_server
+    ports:
+      - 55301:55301
+    environment:
+      RUST_LOG: "web_server=trace"
+      DATABASE_URL: "postgres://non_manaka@db:5432/hccc_judge"
+      CONTEST_BEGIN: "2022-11-13T18:00:00+09:00"
+      CONTEST_END: "2022-11-13T19:00:00+09:00"
+    
+  judge_server:
+    build: judge_server
+    container_name: judge_server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DATABASE_URL: "postgres://non_manaka@db:5432/hccc_judge"
+
   db:
     image: postgres:14-alpine
     container_name: postgres
-    ports:
-      - 5433:5432
     environment:
       POSTGRES_USER: non_manaka
       POSTGRES_DB: hccc_judge
@@ -12,6 +29,7 @@ services:
     volumes:
       - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
+
   test_runner:
     image: ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop
     container_name: test_runner

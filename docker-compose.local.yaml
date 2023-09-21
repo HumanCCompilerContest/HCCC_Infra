@@ -1,0 +1,36 @@
+version: '3'
+services:
+  web_server:
+    build:
+      context: ./web_server
+      dockerfile: Dockerfile.local
+    volumes:
+      - ./web_server/Cargo.toml:/app/Cargo.toml
+      - ./web_server/Cargo.lock:/app/Cargo.lock
+      - ./web_server/src:/app/src
+      - web_server_cargo_registry:/usr/local/cargo/registry
+      - web_server_target:/app/target
+    command: cargo watch -x run
+
+  judge_server:
+    build:
+      context: ./judge_server
+      dockerfile: Dockerfile.local
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./judge_server/Cargo.toml:/app/Cargo.toml
+      - ./judge_server/Cargo.lock:/app/Cargo.lock
+      - ./judge_server/src:/app/src
+      - judge_server_cargo_registry:/usr/local/cargo/registry
+      - judge_server_target:/app/target
+    command: cargo watch -x run
+
+  db:
+    ports:
+      - "5433:5432"
+
+volumes:
+  web_server_cargo_registry:
+  web_server_target:
+  judge_server_cargo_registry:
+  judge_server_target:
