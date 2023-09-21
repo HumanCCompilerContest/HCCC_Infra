@@ -14,6 +14,7 @@ web_server, judge_server, test_runner, DB の構成です。
 
 ```bash
 # /
+docker-compose pull test_runner
 docker-compose up
 ```
 
