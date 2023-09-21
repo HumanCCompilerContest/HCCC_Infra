@@ -10,6 +10,8 @@ services:
       DATABASE_URL: "postgres://non_manaka@db:5432/hccc_judge"
       CONTEST_BEGIN: "2022-11-13T18:00:00+09:00"
       CONTEST_END: "2022-11-13T19:00:00+09:00"
+    depends_on:
+      - db
     
   judge_server:
     build: judge_server
@@ -18,6 +20,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       DATABASE_URL: "postgres://non_manaka@db:5432/hccc_judge"
+    depends_on:
+      - db
 
   db:
     image: postgres:14-alpine
