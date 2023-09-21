@@ -39,6 +39,8 @@ services:
     container_name: test_runner
     tty: true
     stdin_open: true
+    profiles:
+      - test_runner
 
 volumes:
   db_store:

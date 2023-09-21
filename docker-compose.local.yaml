@@ -29,6 +29,9 @@ services:
     ports:
       - "5433:5432"
 
+  test_runner:
+    build: test_runner
+
 volumes:
   web_server_cargo_registry:
   web_server_target:
