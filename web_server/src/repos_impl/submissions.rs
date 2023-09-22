@@ -88,6 +88,7 @@ impl From<Row> for Submission {
             r.get("asm"),
             r.get("error_message"),
             r.get("is_ce"),
+            r.get("error_line_number"),
             r.get("result"),
             UserObject::new(r.get("user_id"), r.get("name")),
             ProblemObject::new(
@@ -112,6 +113,7 @@ impl From<Row> for SubmissionObject {
             r.get("asm"),
             r.get("error_message"),
             r.get("is_ce"),
+            r.get("error_line_number"),
             r.get("result"),
             UserObject::new(r.get("user_id"), r.get("name")),
             ProblemObject::new(
