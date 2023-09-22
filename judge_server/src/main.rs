@@ -16,16 +16,16 @@ async fn judge(
     testcase: &Vec<Testcase>,
 ) -> (JudgeResult, Option<String>, i32) {
     const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop";
-    if submit.is_ce && !problem.is_wrong_code {
-        return (
-            JudgeResult::WC,
-            Some("Wrong Compile Error".to_string()),
-            submit.id(),
-        );
-    }
-
-    if submit.is_ce && problem.is_wrong_code {
-        return (JudgeResult::AC, None, submit.id());
+    if submit.is_ce {
+        if problem.is_wrong_code && submit.error_line_number == problem.error_line_number {
+            return (JudgeResult::AC, None, submit.id());
+        } else {
+            return (
+                JudgeResult::WC,
+                Some("Wrong Compile Error".to_string()),
+                submit.id(),
+            );
+        }
     }
 
     let result = Command::new("bash")
