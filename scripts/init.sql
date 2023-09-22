@@ -109,7 +109,7 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     '37'
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
     2,
     'return else',
     '以下のプログラムをコードの通りにコンパイルしてください.',
