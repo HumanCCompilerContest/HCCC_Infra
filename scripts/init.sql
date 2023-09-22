@@ -40,6 +40,7 @@ CREATE TABLE problems -- 問題
     output_desc text,
     test_target TestTarget,
     is_wrong_code bool,
+    error_line_number integer,
     score integer not null
 );
 
@@ -47,8 +48,8 @@ CREATE TABLE testcases -- テストケース
 (
     id serial primary key,
     problem_id integer REFERENCES problems(id) ON UPDATE NO ACTION ON DELETE CASCADE,
-    input text not null,
-    expect text not null
+    input text,
+    expect text
 );
 
 CREATE TABLE submits -- submit
@@ -64,7 +65,7 @@ CREATE TABLE submits -- submit
     result JudgeResult not null
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
     0,
     'Return 42',
     '42を返すプログラムを作成してください．',
@@ -73,6 +74,7 @@ INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_
     '無し',
     'ExitCode',
     false,
+    null,
     100
 );
 
@@ -82,7 +84,7 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     '42'
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
     1,
     'オウム返し',
     '数値をオウム返しするコードをコンパイルしてください．',
@@ -91,6 +93,7 @@ INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_
     '入力と同じ値',
     'ExitCode',
     false,
+    null,
     100
 );
 
@@ -106,3 +109,20 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     '37'
 );
 
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, score) VALUES (
+    2,
+    'return else',
+    '以下のプログラムをコードの通りにコンパイルしてください.',
+    'int main(void) {\n\treturn else;\n}',
+    '無し',
+    'exitcodeで出力',
+    true,
+    2,
+    100
+);
+
+INSERT INTO testcases (problem_id, input, expect) VALUES(
+    2,
+    null,
+    null
+);
