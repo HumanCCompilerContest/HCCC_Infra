@@ -17,11 +17,15 @@ async fn judge(
 ) -> (JudgeResult, Option<String>, i32) {
     const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop";
     if submit.is_ce && !problem.is_wrong_code {
-        std::process::exit(JudgeResult::WC as i32);
+        return (
+            JudgeResult::WC,
+            Some("Wrong Compile Error".to_string()),
+            submit.id(),
+        );
     }
 
     if submit.is_ce && problem.is_wrong_code {
-        std::process::exit(JudgeResult::AC as i32);
+        return (JudgeResult::AC, None, submit.id());
     }
 
     let result = Command::new("bash")
