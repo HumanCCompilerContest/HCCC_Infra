@@ -1,0 +1,45 @@
+version: '3'
+services:
+  web_server:
+    build:
+      context: ./web_server
+      dockerfile: Dockerfile.local
+    environment:
+      RUST_LOG: ${RUST_LOG:-web_server=trace}
+      DATABASE_URL: postgres://${POSTGRES_USER:-non_manaka}@db:5432/${POSTGRES_DB:-hccc_judge}
+    volumes:
+      - ./web_server/Cargo.toml:/app/Cargo.toml
+      - ./web_server/Cargo.lock:/app/Cargo.lock
+      - ./web_server/src:/app/src
+      - web_server_cargo_registry:/usr/local/cargo/registry
+      - web_server_target:/app/target
+    command: cargo watch -x run
+
+  judge_server:
+    build:
+      context: ./judge_server
+      dockerfile: Dockerfile.local
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-non_manaka}@db:5432/${POSTGRES_DB:-hccc_judge}
+    volumes:
+      - ./judge_server/Cargo.toml:/app/Cargo.toml
+      - ./judge_server/Cargo.lock:/app/Cargo.lock
+      - ./judge_server/src:/app/src
+      - judge_server_cargo_registry:/usr/local/cargo/registry
+      - judge_server_target:/app/target
+    command: cargo watch -x run
+
+  db:
+    ports:
+      - ${POSTGRES_PORT:-5433}:5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  test_runner:
+    build: test_runner
+
+volumes:
+  web_server_cargo_registry:
+  web_server_target:
+  judge_server_cargo_registry:
+  judge_server_target:

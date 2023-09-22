@@ -12,16 +12,15 @@
 
 web_server, judge_server, test_runner, DB の構成です。
 
+以下のコマンドで起動出来ます。
+
 ```bash
 # /
-docker-compose up
-
-# /web_server
-cargo run
-
-# /judge_server
-cargo run
+docker compose pull test_runner
+docker compose up
 ```
+
+また、`.env.example`の環境変数をセットすることが出来ます。
 
 ※ 同時にフロントエンド側の起動も必要です。
 
@@ -31,5 +30,19 @@ cargo run
 - axum
 - Docker
 - postgres
+
+## 開発者向け
+以下のコマンドで開発向け環境を立ち上げることができます。
+
+```bash
+# 開発向け環境(ホットリロード，dbポート解放)
+docker compose -f docker-compose.yaml -f docker-compose.local.yaml up
+```
+
+また、実際に提出物を実行するtest_runnerは、以下のコマンドでコンテナイメージ作成が行えます。
+
+```bash
+docker compose -f docker-compose.yaml -f docker-compose.local.yaml build test_runner
+```
 
 infrastructure for [HCCC](https://github.com/Alignof/Human_C_Compiler_Contest)
