@@ -25,15 +25,23 @@ pub struct Problem {
     pub test_target: TestTarget,
     /// Is wrong code or not.
     pub is_wrong_code: bool,
+    /// Line number where the first syntax discrepancy occurs.
+    pub error_line_number: Option<u32>,
 }
 
 impl Problem {
     #[must_use]
-    pub fn new(id: i32, test_target: TestTarget, is_wrong_code: bool) -> Self {
+    pub fn new(
+        id: i32,
+        test_target: TestTarget,
+        is_wrong_code: bool,
+        error_line_number: Option<u32>,
+    ) -> Self {
         Problem {
             _id: id,
             test_target,
             is_wrong_code,
+            error_line_number,
         }
     }
 }

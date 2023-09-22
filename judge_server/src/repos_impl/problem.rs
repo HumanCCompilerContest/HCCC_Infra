@@ -26,6 +26,11 @@ impl<'a> Problems for ProblemImpl<'a> {
 impl From<Row> for Problem {
     /// Convert SQL output to `Problem`.
     fn from(r: Row) -> Self {
-        Problem::new(r.get("id"), r.get("test_target"), r.get("is_wrong_code"))
+        Problem::new(
+            r.get("id"),
+            r.get("test_target"),
+            r.get("is_wrong_code"),
+            r.get("error_line_number"),
+        )
     }
 }
