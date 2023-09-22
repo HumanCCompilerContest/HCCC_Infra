@@ -48,6 +48,7 @@ impl From<Row> for Submit {
             r.get("asm"),
             r.get("error_message"),
             r.get("is_ce"),
+            r.get("error_line_number"),
             r.get("result"),
         )
     }

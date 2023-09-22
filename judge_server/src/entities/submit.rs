@@ -43,6 +43,8 @@ pub struct Submit {
     error_message: String,
     /// Is compile error submit.
     pub is_ce: bool,
+    /// Line number where the first syntax discrepancy occurs.
+    pub error_line_number: Option<u32>,
     /// Result of submit.
     result: JudgeResult,
 }
@@ -57,6 +59,7 @@ impl Submit {
         asm: String,
         error_message: String,
         is_ce: bool,
+        error_line_number: Option<u32>,
         result: JudgeResult,
     ) -> Self {
         Submit {
@@ -67,6 +70,7 @@ impl Submit {
             asm,
             error_message,
             is_ce,
+            error_line_number,
             result,
         }
     }
