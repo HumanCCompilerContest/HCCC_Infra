@@ -60,6 +60,7 @@ CREATE TABLE submits -- submit
     asm text not null,
     error_message text not null,
     is_ce boolean not null,
+    error_line_number integer not null
     result JudgeResult not null
 );
 
