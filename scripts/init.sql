@@ -61,7 +61,7 @@ CREATE TABLE submits -- submit
     asm text not null,
     error_message text not null,
     is_ce boolean not null,
-    error_line_number integer not null
+    error_line_number integer,
     result JudgeResult not null
 );
 
@@ -113,9 +113,10 @@ INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_
     2,
     'return else',
     '以下のプログラムをコードの通りにコンパイルしてください.',
-    'int main(void) {\n\treturn else;\n}',
+    E'int main(void) {\n\treturn else;\n}',
     '無し',
     'exitcodeで出力',
+    'ExitCode',
     true,
     2,
     100

@@ -26,7 +26,7 @@ pub struct Problem {
     /// Is wrong code or not.
     pub is_wrong_code: bool,
     /// Line number where the first syntax discrepancy occurs.
-    pub error_line_number: Option<u32>,
+    pub error_line_number: Option<i32>,
 }
 
 impl Problem {
@@ -35,7 +35,7 @@ impl Problem {
         id: i32,
         test_target: TestTarget,
         is_wrong_code: bool,
-        error_line_number: Option<u32>,
+        error_line_number: Option<i32>,
     ) -> Self {
         Problem {
             _id: id,
