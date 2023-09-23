@@ -28,6 +28,11 @@ async fn judge(
         }
     }
 
+    if problem.is_wrong_code && !submit.is_ce {
+        sleep(Duration::from_millis(8000)).await;
+        return (JudgeResult::WA, None, submit.id());
+    }
+
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
