@@ -87,7 +87,7 @@ pub struct SubmitReq {
     asm: String,
     #[serde(rename = "isCE")]
     is_ce: bool,
-    error_line_number: Option<u32>,
+    error_line_number: Option<i32>,
 }
 
 /// api for `/api/submissions`.

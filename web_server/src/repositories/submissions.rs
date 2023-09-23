@@ -14,5 +14,6 @@ pub trait Submissions {
         submit_time: DateTime<Local>,
         asm: &'a str,
         is_ce: bool,
+        error_line_number: Option<i32>,
     ) -> Option<i32>;
 }
