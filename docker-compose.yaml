@@ -12,6 +12,7 @@ services:
       CONTEST_END: ${CONTEST_END:-2022-11-13T21:00:00+09:00}
     depends_on:
       - db
+    restart: always
     
   judge_server:
     build: judge_server
@@ -22,6 +23,7 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER:-non_manaka}:${POSTGRES_PASSWORD:-NonSugar}@db:5432/${POSTGRES_DB:-hccc_judge}
     depends_on:
       - db
+    restart: always
 
   db:
     image: postgres:14-alpine
@@ -33,6 +35,7 @@ services:
     volumes:
       - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
+    restart: always
 
   test_runner:
     image: ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop
