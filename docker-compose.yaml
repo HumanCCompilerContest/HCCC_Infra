@@ -11,7 +11,8 @@ services:
       CONTEST_BEGIN: ${CONTEST_BEGIN:-2022-11-13T19:00:00+09:00}
       CONTEST_END: ${CONTEST_END:-2022-11-13T21:00:00+09:00}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: always
     
   judge_server:
@@ -22,7 +23,8 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-non_manaka}:${POSTGRES_PASSWORD:-NonSugar}@db:5432/${POSTGRES_DB:-hccc_judge}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: always
 
   db:
@@ -36,6 +38,12 @@ services:
       - db_store:/var/lib/postgresql/data
       - ./scripts:/docker-entrypoint-initdb.d
     restart: always
+    healthcheck:
+      test: psql -U ${POSTGRES_USER:-non_manaka} -d ${POSTGRES_DB:-hccc_judge} -c 'SELECT 1' || exit 1
+      interval: 2s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   test_runner:
     image: ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop
