@@ -15,9 +15,9 @@ struct Testcase {
     #[allow(dead_code)]
     id: i32,
     /// Input of testcase.
-    input: String,
+    input: Option<String>,
     /// Expect result.
-    expect: String,
+    expect: Option<String>,
 }
 
 /// Answer output
@@ -90,7 +90,10 @@ pub async fn with_testcase(testcases: Testcases) {
             Command::new("bash")
                 .kill_on_drop(true)
                 .arg("-c")
-                .arg(format!("echo {} | ./test_target 2>&1", case.input))
+                .arg(format!(
+                    "echo {} | ./test_target 2>&1",
+                    case.input.expect("no testcase input")
+                ))
                 .output(),
         )
         .await
@@ -109,7 +112,7 @@ pub async fn with_testcase(testcases: Testcases) {
                 }
 
                 let exit_status = output.status.code().unwrap();
-                let expect: i32 = case.expect.parse().unwrap();
+                let expect: i32 = case.expect.expect("no testcase expect").parse().unwrap();
                 if exit_status != expect {
                     eprintln!("output: {exit_status:?}");
                     std::process::exit(ExitCode::WA as i32);
@@ -122,7 +125,7 @@ pub async fn with_testcase(testcases: Testcases) {
                 }
 
                 let stdout = String::from_utf8_lossy(&output.stdout);
-                if stdout != case.expect {
+                if stdout != case.expect.expect("no testcase expect") {
                     eprintln!("output: {stdout:?}");
                     std::process::exit(ExitCode::WA as i32);
                 }
