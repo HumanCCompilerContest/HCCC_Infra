@@ -17,7 +17,7 @@ web_server, judge_server, test_runner, DB の構成です。
 ```bash
 # /
 docker compose pull test_runner
-docker compose up
+docker compose up --build
 ```
 
 また、`.env.example`の環境変数をセットすることが出来ます。
@@ -36,7 +36,7 @@ docker compose up
 
 ```bash
 # 開発向け環境(ホットリロード，dbポート解放)
-docker compose -f docker-compose.yaml -f docker-compose.local.yaml up
+docker compose -f docker-compose.yaml -f docker-compose.local.yaml up --build
 ```
 
 また、実際に提出物を実行するtest_runnerは、以下のコマンドでコンテナイメージ作成が行えます。
