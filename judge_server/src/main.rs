@@ -28,11 +28,6 @@ async fn judge(
         }
     }
 
-    if problem.is_wrong_code && !submit.is_ce {
-        sleep(Duration::from_millis(8000)).await;
-        return (JudgeResult::WA, None, submit.id());
-    }
-
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
@@ -56,6 +51,15 @@ async fn judge(
             6 => JudgeResult::TLE,
             _ => JudgeResult::SystemError,
         };
+
+        // submit Compile Error to correct code
+        if problem.is_wrong_code && !submit.is_ce {
+            match judge_result {
+                JudgeResult::AC => return (JudgeResult::WA, None, submit.id()),
+                _ => (),
+            }
+        }
+
         let error_message = match judge_result {
             JudgeResult::AC => None,
             JudgeResult::SystemError => {

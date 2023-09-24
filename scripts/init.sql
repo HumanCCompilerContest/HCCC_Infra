@@ -116,7 +116,7 @@ INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_
     E'int main(void) {\n\treturn else;\n}',
     '無し',
     'exitcodeで出力',
-    'ExitCode',
+    'NoTestCase',
     true,
     2,
     100
