@@ -14,6 +14,7 @@ services:
       - web_server_cargo_registry:/usr/local/cargo/registry
       - web_server_target:/app/target
     command: cargo watch -x run
+    restart: no
 
   judge_server:
     build:
@@ -28,12 +29,14 @@ services:
       - judge_server_cargo_registry:/usr/local/cargo/registry
       - judge_server_target:/app/target
     command: cargo watch -x run
+    restart: no
 
   db:
     ports:
       - ${POSTGRES_PORT:-5433}:5432
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
+    restart: no
 
   test_runner:
     build: test_runner
