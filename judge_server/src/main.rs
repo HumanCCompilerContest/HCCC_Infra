@@ -53,10 +53,8 @@ async fn judge(
         };
 
         // submit Compile Error to correct code
-        if problem.is_wrong_code && !submit.is_ce {
-            if JudgeResult::AC == judge_result {
-                return (JudgeResult::WA, None, submit.id());
-            }
+        if problem.is_wrong_code && !submit.is_ce && JudgeResult::AC == judge_result {
+            return (JudgeResult::WA, None, submit.id());
         }
 
         let error_message = match judge_result {
