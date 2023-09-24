@@ -8,14 +8,14 @@ pub struct Testcase {
     /// Problem ID.
     problem_id: i32,
     /// Input of testcase.
-    input: String,
+    input: Option<String>,
     /// Expect result.
-    expect: String,
+    expect: Option<String>,
 }
 
 impl Testcase {
     #[must_use]
-    pub fn new(id: i32, problem_id: i32, input: String, expect: String) -> Self {
+    pub fn new(id: i32, problem_id: i32, input: Option<String>, expect: Option<String>) -> Self {
         Testcase {
             id,
             problem_id,

@@ -75,6 +75,7 @@ pub async fn submit(
             id,
             req.asm,
             req.is_ce,
+            req.error_line_number,
         )
         .await,
     )
@@ -86,6 +87,7 @@ pub struct SubmitReq {
     asm: String,
     #[serde(rename = "isCE")]
     is_ce: bool,
+    error_line_number: Option<i32>,
 }
 
 /// api for `/api/submissions`.

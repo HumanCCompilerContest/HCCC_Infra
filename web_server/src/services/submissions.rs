@@ -28,10 +28,18 @@ pub async fn submit_asm(
     problem_id: i32,
     asm: String,
     is_ce: bool,
+    error_line_number: Option<i32>,
 ) -> Submission {
     let submit_time = Local::now();
     let Some(submission_id) = repo_submit
-        .store_submission(user_id, problem_id, submit_time, &asm, is_ce)
+        .store_submission(
+            user_id,
+            problem_id,
+            submit_time,
+            &asm,
+            is_ce,
+            error_line_number,
+        )
         .await
     else {
         return Submission::error();
@@ -50,6 +58,7 @@ pub async fn submit_asm(
         asm,
         String::new(),
         is_ce,
+        error_line_number,
         JudgeResult::Pending,
         user_obj.get_object(),
         problem_obj.get_object(),

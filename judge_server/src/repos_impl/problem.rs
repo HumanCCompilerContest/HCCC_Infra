@@ -14,18 +14,26 @@ impl<'a> Problems for ProblemImpl<'a> {
     /// Get pending submits from database.
     async fn get_all_problems(&self) -> Vec<Problem> {
         let conn = self.pool.get().await.unwrap();
-        conn.query("SELECT id, test_target, is_wrong_code FROM problems", &[])
-            .await
-            .unwrap()
-            .into_iter()
-            .map(std::convert::Into::into)
-            .collect()
+        conn.query(
+            "SELECT id, test_target, is_wrong_code, error_line_number FROM problems",
+            &[],
+        )
+        .await
+        .unwrap()
+        .into_iter()
+        .map(std::convert::Into::into)
+        .collect()
     }
 }
 
 impl From<Row> for Problem {
     /// Convert SQL output to `Problem`.
     fn from(r: Row) -> Self {
-        Problem::new(r.get("id"), r.get("test_target"), r.get("is_wrong_code"))
+        Problem::new(
+            r.get("id"),
+            r.get("test_target"),
+            r.get("is_wrong_code"),
+            r.get("error_line_number"),
+        )
     }
 }
