@@ -46,7 +46,7 @@ impl<'a> Submissions for SubmissionImpl<'a> {
 
     /// Get all submissions.
     async fn get_all_submissions(&self) -> Vec<SubmissionObject> {
-        const TARGET_COLUMN: &str = "submits.id, time, asm, error_message, is_ce, result, user_id, name, problem_id, title, statement, code, input_desc, output_desc, problems.score";
+        const TARGET_COLUMN: &str = "submits.id, time, asm, error_message, is_ce, submits.error_line_number, result, user_id, name, problem_id, title, statement, code, input_desc, output_desc, problems.score";
         const TARGET_TABLES: &str = "submits JOIN accounts ON submits.user_id = accounts.id JOIN problems ON submits.problem_id = problems.id";
         let conn = self.pool.get().await.unwrap();
         let row = conn
