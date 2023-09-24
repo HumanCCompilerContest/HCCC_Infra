@@ -3,7 +3,7 @@ use postgres_types::{FromSql, ToSql};
 
 /// Judge result  
 /// It is provied by exit status of `test_runner`.
-#[derive(Debug, Copy, Clone, ToSql, FromSql)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, ToSql, FromSql)]
 #[postgres(name = "judgeresult")]
 pub enum JudgeResult {
     /// ACcepted
