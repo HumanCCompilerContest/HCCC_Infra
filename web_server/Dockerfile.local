@@ -8,6 +8,6 @@ WORKDIR /app
 COPY . .
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/app/target \
-    cargo build
+    cargo build && cp target/debug/web_server /app/web_server
 
-CMD ["/app/target/debug/web_server"]
+CMD ["/app/web_server"]

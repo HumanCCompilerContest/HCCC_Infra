@@ -1,0 +1,9 @@
+version: '3'
+services:
+  frontend:
+    image: ghcr.io/humanccompilercontest/human-c-compiler-contest_frontend:main
+    ports:
+      - ${FRONTEND_PORT:-3000}:3000
+    depends_on:
+      - web_server
+    restart: always
