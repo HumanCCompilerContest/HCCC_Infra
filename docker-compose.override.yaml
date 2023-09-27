@@ -4,10 +4,6 @@ services:
     image: ghcr.io/humanccompilercontest/human-c-compiler-contest_frontend:main
     ports:
       - ${FRONTEND_PORT:-3000}:3000
-    environment:
-      - NEXT_PUBLIC_API_URL=${BACKEND_URL:-http://localhost:55301/}
-      - NEXT_PUBLIC_CONTEST_BEGIN=${CONTEST_BEGIN:-2022-11-13T19:00:00+09:00}
-      - NEXT_PUBLIC_CONTEST_END=${CONTEST_END:-2022-11-13T21:00:00+09:00}
     depends_on:
       - web_server
     restart: always
