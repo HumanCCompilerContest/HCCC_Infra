@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile.local
     environment:
       RUST_LOG: ${RUST_LOG:-web_server=trace}
-      DATABASE_URL: postgres://${POSTGRES_USER:-non_manaka}@db:5432/${POSTGRES_DB:-hccc_judge}
     volumes:
       - ./web_server/Cargo.toml:/app/Cargo.toml
       - ./web_server/Cargo.lock:/app/Cargo.lock
@@ -20,8 +19,6 @@ services:
     build:
       context: ./judge_server
       dockerfile: Dockerfile.local
-    environment:
-      DATABASE_URL: postgres://${POSTGRES_USER:-non_manaka}@db:5432/${POSTGRES_DB:-hccc_judge}
     volumes:
       - ./judge_server/Cargo.toml:/app/Cargo.toml
       - ./judge_server/Cargo.lock:/app/Cargo.lock
@@ -34,8 +31,6 @@ services:
   db:
     ports:
       - ${POSTGRES_PORT:-5433}:5432
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: trust
     restart: no
 
   test_runner:
