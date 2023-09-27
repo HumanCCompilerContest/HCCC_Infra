@@ -5,6 +5,10 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+x8664 = []
+riscv = []
+
 [dependencies]
 tokio = { version = "1.21.2", features=["full"] }
 clap = {version = "3.0.5", features=["cargo"]}
