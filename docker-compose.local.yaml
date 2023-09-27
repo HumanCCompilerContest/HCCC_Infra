@@ -4,6 +4,7 @@ services:
     build:
       context: ./web_server
       dockerfile: Dockerfile.local
+    image: ${COMPOSE_PROJECT_NAME}-web_server-local
     environment:
       RUST_LOG: ${RUST_LOG:-web_server=trace}
     volumes:
@@ -19,6 +20,7 @@ services:
     build:
       context: ./judge_server
       dockerfile: Dockerfile.local
+    image: ${COMPOSE_PROJECT_NAME}-judge_server-local
     volumes:
       - ./judge_server/Cargo.toml:/app/Cargo.toml
       - ./judge_server/Cargo.lock:/app/Cargo.lock
