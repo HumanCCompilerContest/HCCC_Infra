@@ -18,13 +18,13 @@ pub enum TestTarget {
 
 /// Architecture
 #[derive(FromSql, Serialize, Deserialize, Debug)]
+#[postgres(name = "arch")]
+#[allow(non_camel_case_types)]
 pub enum Arch {
     /// x86_64
-    #[serde(rename = "x8664")]
-    X8664,
+    x8664,
     /// RISC-V.
-    #[serde(rename = "riscv")]
-    RiscV,
+    riscv,
 }
 
 /// Problem data for judge submits.

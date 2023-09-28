@@ -28,8 +28,8 @@ async fn judge(
     }
 
     let docker_container = match problem.arch {
-        Arch::X8664 => "ghcr.io/humanccompilercontest/hccc_infra:test_runner_x8664-develop",
-        Arch::RiscV => "ghcr.io/humanccompilercontest/hccc_infra:test_runner_riscv-develop",
+        Arch::x8664 => "ghcr.io/humanccompilercontest/hccc_infra:test_runner_x8664-develop",
+        Arch::riscv => "ghcr.io/humanccompilercontest/hccc_infra:test_runner_riscv-develop",
     };
 
     let result = Command::new("bash")
