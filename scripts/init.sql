@@ -10,6 +10,11 @@ CREATE TYPE JudgeResult AS ENUM (
     'SystemError'
 );
 
+CREATE TYPE Arch AS ENUM (
+    'x8664',
+    'riscv'
+);
+
 CREATE TYPE TestTarget AS ENUM (
     'ExitCode',
     'StdOut',
@@ -38,6 +43,7 @@ CREATE TABLE problems -- 問題
     code text not null,
     input_desc text,
     output_desc text,
+    arch Arch,
     test_target TestTarget,
     is_wrong_code bool,
     error_line_number integer,
@@ -72,6 +78,7 @@ INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_
     E'int main(void) {\nreturn 42;\n}',
     '無し',
     '無し',
+    'x8664',
     'ExitCode',
     false,
     null,
@@ -91,6 +98,7 @@ INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_
     E'int main(void) {\n\tint d;\n\tscanf("%d", &d);\n\tprintf("%d\\n", d);\n}',
     '1 <= n <= 10000',
     '入力と同じ値',
+    'x8664',
     'ExitCode',
     false,
     null,
@@ -116,6 +124,7 @@ INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_
     E'int main(void) {\n\treturn else;\n}',
     '無し',
     'exitcodeで出力',
+    'x8664',
     'NoTestCase',
     true,
     2,
