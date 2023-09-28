@@ -24,6 +24,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Remove unnecessary files
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v4
