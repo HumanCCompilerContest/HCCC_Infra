@@ -14,7 +14,7 @@ pub mod entities {
     mod problem;
     mod submit;
     mod testcase;
-    pub use problem::Problem;
+    pub use problem::{Arch, Problem};
     pub use submit::{JudgeResult, Submit};
     pub use testcase::Testcase;
 }
