@@ -35,8 +35,15 @@ services:
       - ${POSTGRES_PORT:-5433}:5432
     restart: no
 
-  test_runner:
-    build: test_runner
+  test_runner_x8664:
+    build:
+      context: ./test_runner
+      dockerfile: Dockerfile
+
+  test_runner_riscv:
+    build:
+      context: ./test_runner
+      dockerfile: riscv.Dockerfile
 
 volumes:
   web_server_cargo_registry:

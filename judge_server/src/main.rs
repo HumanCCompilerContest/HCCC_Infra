@@ -4,7 +4,7 @@
 
 use futures::future;
 use judge_server::database::RepositoryProvider;
-use judge_server::entities::{JudgeResult, Problem, Submit, Testcase};
+use judge_server::entities::{Arch, JudgeResult, Problem, Submit, Testcase};
 use judge_server::repositories::{Problems, Submits, Testcases};
 use tokio::process::Command;
 use tokio::time::{sleep, Duration};
@@ -15,7 +15,6 @@ async fn judge(
     problem: &Problem,
     testcase: &Vec<Testcase>,
 ) -> (JudgeResult, Option<String>, i32) {
-    const CONTAINER_NAME: &str = "ghcr.io/humanccompilercontest/hccc_infra:test_runner-develop";
     if submit.is_ce {
         if problem.is_wrong_code && submit.error_line_number == problem.error_line_number {
             return (JudgeResult::AC, None, submit.id());
@@ -28,11 +27,16 @@ async fn judge(
         }
     }
 
+    let docker_container = match problem.arch {
+        Arch::x8664 => "ghcr.io/humanccompilercontest/hccc_infra:test_runner_x8664-develop",
+        Arch::riscv => "ghcr.io/humanccompilercontest/hccc_infra:test_runner_riscv-develop",
+    };
+
     let result = Command::new("bash")
         .arg("-c")
         .arg(dbg!(format!(
             "docker run --rm --memory=128M --cpus=\"0.05\" {} {} {} {}",
-            CONTAINER_NAME,
+            docker_container,
             base64::encode(&submit.asm),
             serde_json::to_string(&problem.test_target).expect("getting renamed name failed"),
             base64::encode(serde_json::to_string(&testcase).expect("serialization failed")),

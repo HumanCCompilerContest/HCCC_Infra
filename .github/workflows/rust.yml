@@ -41,3 +41,4 @@ jobs:
         uses: actions-rs/cargo@v1.0.3
         with:
           command: test
+          args: --features x8664

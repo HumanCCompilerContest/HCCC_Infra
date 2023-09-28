@@ -10,6 +10,11 @@ CREATE TYPE JudgeResult AS ENUM (
     'SystemError'
 );
 
+CREATE TYPE Arch AS ENUM (
+    'x8664',
+    'riscv'
+);
+
 CREATE TYPE TestTarget AS ENUM (
     'ExitCode',
     'StdOut',
@@ -38,6 +43,7 @@ CREATE TABLE problems -- 問題
     code text not null,
     input_desc text,
     output_desc text,
+    arch Arch,
     test_target TestTarget,
     is_wrong_code bool,
     error_line_number integer,
@@ -65,13 +71,14 @@ CREATE TABLE submits -- submit
     result JudgeResult not null
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
     0,
     'Return 42',
-    '42を返すプログラムを作成してください．',
+    '42を返すプログラムをコンパイルしてください．',
     E'int main(void) {\nreturn 42;\n}',
     '無し',
     '無し',
+    'x8664',
     'ExitCode',
     false,
     null,
@@ -84,13 +91,14 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     '42'
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
     1,
     'オウム返し',
     '数値をオウム返しするコードをコンパイルしてください．',
     E'int main(void) {\n\tint d;\n\tscanf("%d", &d);\n\tprintf("%d\\n", d);\n}',
     '1 <= n <= 10000',
     '入力と同じ値',
+    'x8664',
     'ExitCode',
     false,
     null,
@@ -109,13 +117,14 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     '37'
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
     2,
     'return else',
     '以下のプログラムをコードの通りにコンパイルしてください.',
     E'int main(void) {\n\treturn else;\n}',
     '無し',
     'exitcodeで出力',
+    'x8664',
     'NoTestCase',
     true,
     2,
@@ -127,3 +136,24 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     null,
     null
 );
+
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
+    3,
+    'Return 42 in RISC-V',
+    '42を返すプログラムをRISC-V向けにコンパイルしてください．',
+    E'int main(void) {\nreturn 42;\n}',
+    '無し',
+    '無し',
+    'riscv',
+    'ExitCode',
+    false,
+    null,
+    100
+);
+
+INSERT INTO testcases (problem_id, input, expect) VALUES(
+    3,
+    '',
+    '42'
+);
+

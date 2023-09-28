@@ -1,6 +1,7 @@
 //! Module for running an elf created by submittion
 //! and judge its correctness with testcases.
 
+use crate::arch::constants::EXEC_CMD;
 use crate::ExitCode;
 use serde::Deserialize;
 use std::time::Duration;
@@ -61,7 +62,7 @@ pub async fn just_exec() {
         Command::new("bash")
             .kill_on_drop(true)
             .arg("-c")
-            .arg("./test_target")
+            .arg(EXEC_CMD)
             .output(),
     )
     .await
@@ -91,8 +92,9 @@ pub async fn with_testcase(testcases: Testcases) {
                 .kill_on_drop(true)
                 .arg("-c")
                 .arg(format!(
-                    "echo {} | ./test_target 2>&1",
-                    case.input.expect("no testcase input")
+                    "echo {} | {} 2>&1",
+                    case.input.expect("no testcase input"),
+                    EXEC_CMD,
                 ))
                 .output(),
         )

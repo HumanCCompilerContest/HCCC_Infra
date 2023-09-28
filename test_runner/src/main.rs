@@ -2,8 +2,10 @@
 //! that retrieves submissions from the database and runs the testcases.  
 //! Testcases must be provided by json file for now.
 
+mod arch;
 mod run_test;
 
+use crate::arch::constants::{ASSEMBLE_CMD, LINK_CMD};
 use crate::run_test::{TestTarget, Testcases};
 use clap::arg;
 use std::fs::File;
@@ -84,7 +86,7 @@ async fn create_elf() {
     // assemble
     let asm_result = Command::new("bash")
         .arg("-c")
-        .arg("as submit.s -o tmp.o")
+        .arg(ASSEMBLE_CMD)
         .output()
         .await
         .unwrap_or_else(|_| {
@@ -100,7 +102,7 @@ async fn create_elf() {
     // link
     let link_result = Command::new("bash")
         .arg("-c")
-        .arg("gcc -v -static -no-pie tmp.o -o test_target")
+        .arg(LINK_CMD)
         .output()
         .await
         .unwrap_or_else(|_| {
