@@ -15,9 +15,11 @@ jobs:
       matrix:
         include: 
           - label: test_runner_x8664
-            context: test_runner/Dockerfile
+            context: test_runner
+            file: test_runner/Dockerfile
           - label: test_runner_riscv
-            context: test_runner/riscv.Dockerfile
+            context: test_runner
+            file: test_runner/riscv.Dockerfile
 
     steps:
     - uses: actions/checkout@v3
@@ -45,6 +47,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: ${{ matrix.context }}
+        file: ${{ matrix.file }}
         push: ${{ github.event_name == 'push' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
