@@ -40,4 +40,4 @@ jobs:
       - name: unit test
         uses: actions-rs/cargo@v1.0.3
         with:
-          command: test
+          command: test --features x8664
