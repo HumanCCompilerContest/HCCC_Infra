@@ -31,6 +31,7 @@ impl From<Row> for Problem {
     fn from(r: Row) -> Self {
         Problem::new(
             r.get("id"),
+            r.get("arch"),
             r.get("test_target"),
             r.get("is_wrong_code"),
             r.get("error_line_number"),
