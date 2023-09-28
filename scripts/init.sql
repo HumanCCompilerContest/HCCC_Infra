@@ -74,7 +74,7 @@ CREATE TABLE submits -- submit
 INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
     0,
     'Return 42',
-    '42を返すプログラムを作成してください．',
+    '42を返すプログラムをコンパイルしてください．',
     E'int main(void) {\nreturn 42;\n}',
     '無し',
     '無し',
@@ -136,3 +136,24 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     null,
     null
 );
+
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
+    3,
+    'Return 42 in RISC-V',
+    '42を返すプログラムをRISC-V向けにコンパイルしてください．',
+    E'int main(void) {\nreturn 42;\n}',
+    '無し',
+    '無し',
+    'riscv',
+    'ExitCode',
+    false,
+    null,
+    100
+);
+
+INSERT INTO testcases (problem_id, input, expect) VALUES(
+    3,
+    '',
+    '42'
+);
+
