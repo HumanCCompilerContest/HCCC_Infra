@@ -71,7 +71,7 @@ CREATE TABLE submits -- submit
     result JudgeResult not null
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
     0,
     'Return 42',
     '42を返すプログラムを作成してください．',
@@ -91,7 +91,7 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     '42'
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
     1,
     'オウム返し',
     '数値をオウム返しするコードをコンパイルしてください．',
@@ -117,7 +117,7 @@ INSERT INTO testcases (problem_id, input, expect) VALUES(
     '37'
 );
 
-INSERT INTO problems (id, title, statement, code, input_desc, output_desc, test_target, is_wrong_code, error_line_number, score) VALUES (
+INSERT INTO problems (id, title, statement, code, input_desc, output_desc, arch, test_target, is_wrong_code, error_line_number, score) VALUES (
     2,
     'return else',
     '以下のプログラムをコードの通りにコンパイルしてください.',

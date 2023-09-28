@@ -15,7 +15,7 @@ impl<'a> Problems for ProblemImpl<'a> {
     async fn get_all_problems(&self) -> Vec<Problem> {
         let conn = self.pool.get().await.unwrap();
         conn.query(
-            "SELECT id, test_target, is_wrong_code, error_line_number FROM problems",
+            "SELECT id, arch, test_target, is_wrong_code, error_line_number FROM problems",
             &[],
         )
         .await
