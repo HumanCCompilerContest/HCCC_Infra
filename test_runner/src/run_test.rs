@@ -93,8 +93,8 @@ pub async fn with_testcase(testcases: Testcases) {
                 .arg("-c")
                 .arg(format!(
                     "echo {} | {} 2>&1",
+                    case.input.expect("no testcase input"),
                     EXEC_CMD,
-                    case.input.expect("no testcase input")
                 ))
                 .output(),
         )
