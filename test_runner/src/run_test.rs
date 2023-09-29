@@ -127,6 +127,7 @@ pub async fn with_testcase(testcases: Testcases) {
                 }
 
                 let stdout = String::from_utf8_lossy(&output.stdout);
+                let stdout = stdout.strip_prefix("bbl loader\r\n").unwrap_or(&stdout);
                 if stdout != case.expect.expect("no testcase expect") {
                     eprintln!("output: {stdout:?}");
                     std::process::exit(ExitCode::WA as i32);
