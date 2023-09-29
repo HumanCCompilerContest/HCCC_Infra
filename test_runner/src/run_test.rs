@@ -62,7 +62,7 @@ pub async fn just_exec() {
         Command::new("bash")
             .kill_on_drop(true)
             .arg("-c")
-            .arg(EXEC_CMD)
+            .arg(format!("{EXEC_CMD} 2>&1"))
             .output(),
     )
     .await
