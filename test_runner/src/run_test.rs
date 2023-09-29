@@ -73,7 +73,7 @@ pub async fn just_exec() {
         std::process::exit(ExitCode::RE as i32);
     });
 
-    if output.status.code().unwrap() != 0 {
+    if !output.stderr.is_empty() {
         eprintln!("{}", std::str::from_utf8(&output.stderr).unwrap());
         std::process::exit(ExitCode::RE as i32);
     }
